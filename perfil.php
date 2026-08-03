@@ -92,7 +92,7 @@ include('conexao.php');
 
                 <div class="field">
                     <label>Nome completo</label>
-                    <input type="text" value="<h2><?php echo $_SESSION["nome_usuario"]; ?></h2>>
+                    <input type="text"
                 </div>
 
                 <div class="field">

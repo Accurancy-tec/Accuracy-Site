@@ -1,0 +1,227 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Inter',sans-serif;
+}
+
+body{
+    background:#071427;
+    color:white;
+}
+
+.app{
+    display:flex;
+    height:100vh;
+}
+
+/* SIDEBAR (igual dashboard) */
+.sidebar{
+    width:260px;
+    background:#0e1f3d;
+    padding:25px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    border: 1px solid #2a3f66;
+}
+.icons{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.notification-btn{
+    width:38px;
+    height:38px;
+    border:none;
+    border-radius:10px;
+    background:#0f223f;
+    border:1px solid #2a3f66;
+    color:#9bb0d1;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    transition:.2s;
+}
+
+.notification-btn:hover{
+    background:#1c3563;
+    color:white;
+}
+
+.notification-dot{
+    position:absolute;
+    top:8px;
+    right:8px;
+    width:8px;
+    height:8px;
+    background:#22c55e;
+    border-radius:50%;
+}
+.top{
+    display:flex;
+    flex-direction:column;
+}
+
+.logo{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-weight:700;
+}
+
+.logo-box{
+    width:30px;
+    height:30px;
+    background:#3b82f6;
+    border-radius:8px;
+}
+
+.divider{
+    width:112%;
+    height:1px;
+    background:#2a3f66;
+    margin:20px 0;
+}
+a{
+    text-decoration:none;
+    color:inherit;
+}
+/* MENU */
+.menu{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+
+.menu a{
+    padding:10px;
+    border-radius:8px;
+    color:#9bb0d1;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.menu a:hover{
+    background:#1c3563;
+    color:white;
+}
+
+.menu a.active{
+    background:#1c3563;
+    color:white;
+}
+
+/* USER */
+.user{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-top:auto;
+    font-size: 14px;
+}
+
+.avatar{
+    width:35px;
+    height:35px;
+    border-radius:50%;
+    background:#3b82f6;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:600;
+}
+
+/* MAIN */
+.main{
+    flex:1;
+    padding:25px 30px;
+    
+}
+
+/* TOPBAR */
+.topbar h1{
+    font-size:22px;
+}
+
+.topbar p{
+    font-size:12px;
+    color:#8aa0c2;
+}
+
+/* PROFILE CARD */
+.profile-card{
+    margin-top:20px;
+    background:#0f223f;
+    padding:25px;
+    border-radius:14px;
+}
+
+/* HEADER PERFIL */
+.profile-header{
+    display:flex;
+    align-items:center;
+    gap:15px;
+    margin-bottom:25px;
+}
+
+.big-avatar{
+    width:60px;
+    height:60px;
+    border-radius:50%;
+    background:#3b82f6;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:22px;
+    font-weight:600;
+}
+
+/* GRID FORM */
+.profile-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:15px;
+}
+
+.field{
+    display:flex;
+    flex-direction:column;
+}
+
+label{
+    font-size:12px;
+    color:#8aa0c2;
+    margin-bottom:6px;
+}
+
+input{
+    height:45px;
+    background:#071427;
+    border:1px solid #2a3f66;
+    border-radius:8px;
+    padding:0 12px;
+    color:white;
+    outline:none;
+}
+
+/* BOTÃO */
+.btn{
+    margin-top:20px;
+    width:100%;
+    height:50px;
+    background:#3b82f6;
+    border:none;
+    border-radius:8px;
+    color:white;
+    font-size:16px;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.btn:hover{
+    background:#2563eb;
+}

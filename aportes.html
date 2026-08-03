@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Aportes - Accuracy</title>
+
+<link rel="stylesheet" href="css/aportes.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <div class="top">
+
+            <div class="logo">
+                <div class="logo-box"></div>
+                <span>Accuracy</span>
+            </div>
+
+            <div class="divider"></div>
+
+            <nav class="menu">
+                <a href="dashboard.html">Dashboard</a>
+                <a href="carteira.html">Carteira</a>
+                <a href="historico.html">Histórico</a>
+                <a class="active">Aportes</a>
+                <a>Relatórios</a>
+                <a href="perfil.html">Perfil</a>
+            </nav>
+
+        </div>
+
+        <div class="user">
+
+            <a href="perfil.html">
+                <div class="avatar">N</div>
+            </a>
+
+            <div>
+                <strong>Nome da pessoa</strong>
+                <p>Perfil do usuário</p>
+            </div>
+
+        </div>
+
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+
+        <header class="topbar">
+
+            <div>
+                <h1>Aportes</h1>
+                <p>Quinta-feira, 18 de junho de 2026</p>
+            </div>
+
+            <div class="icons">
+
+    <button class="notification-btn">
+        <i class="bi bi-bell"></i>
+        <span class="notification-dot"></span>
+    </button>
+
+    <a href="perfil.html">
+        <div class="avatar small">N</div>
+    </a>
+
+</div>
+
+        </header>
+
+        <!-- CARDS -->
+        <section class="cards-top">
+
+            <div class="info-card">
+                <span>TOTAL APORTADO ESTE MÊS</span>
+                <h3>R$ 2.300</h3>
+                <small class="green">▲ +15% vs. mês anterior</small>
+            </div>
+
+            <div class="info-card">
+                <span>APORTES RECORRENTES ATIVOS</span>
+                <h3>4 ativos</h3>
+                <small class="blue">Próximo em 3 dias</small>
+            </div>
+
+            <div class="info-card">
+                <span>MÉDIA MENSAL (6 MESES)</span>
+                <h3>R$ 1.960</h3>
+                <small class="green">▲ +7% tendência</small>
+            </div>
+
+        </section>
+
+        <!-- CONTEUDO -->
+        <section class="content-grid">
+
+            <!-- FORM -->
+            <div class="aporte-form">
+
+                <h3>Novo aporte</h3>
+
+                <label>Ativo</label>
+                <select>
+                    <option>PETR4 — Petrobras</option>
+                </select>
+
+                <label>Valor do aporte</label>
+                <input type="text" value="R$ 500,00">
+
+                <label>Valores rápidos</label>
+
+                <div class="quick-values">
+                    <button>R$100</button>
+                    <button>R$250</button>
+                    <button>R$500</button>
+                    <button>R$750</button>
+                    <button>R$1.000</button>
+                    <button>Outro</button>
+                </div>
+
+                <div class="row">
+
+                    <div>
+                        <label>Tipo</label>
+                        <select>
+                            <option>Compra</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label>Data</label>
+                        <input type="text" value="18/06/2026">
+                    </div>
+
+                </div>
+
+                <label>Recorrência</label>
+
+                <select>
+                    <option>Nenhuma (único)</option>
+                </select>
+
+                <label>Observação (opcional)</label>
+
+                <input type="text" placeholder="Ex: aporte programado">
+
+                <button class="confirm-btn">
+                    Confirmar aporte
+                </button>
+
+            </div>
+
+            <!-- LISTA -->
+            <div class="aporte-list">
+
+                <div class="list-header">
+                    <h3>Aportes recorrentes</h3>
+                    <span>4 ativos</span>
+                </div>
+
+                <div class="aporte-item">
+
+                    <div class="left">
+                        <div class="asset-icon green-bg">P4</div>
+
+                        <div>
+                            <strong>PETR4</strong>
+                            <p>Mensal - todo dia 5</p>
+                        </div>
+                    </div>
+
+                    <div class="right">
+                        <strong>R$ 500</strong>
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span></span>
+                        </label>
+                    </div>
+
+                </div>
+
+                <div class="aporte-item">
+
+                    <div class="left">
+                        <div class="asset-icon orange-bg">₿</div>
+
+                        <div>
+                            <strong>Bitcoin</strong>
+                            <p>Semanal - toda segunda</p>
+                        </div>
+                    </div>
+
+                    <div class="right">
+                        <strong>R$ 200</strong>
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span></span>
+                        </label>
+                    </div>
+
+                </div>
+
+                <div class="aporte-item">
+
+                    <div class="left">
+                        <div class="asset-icon cyan-bg">CDB</div>
+
+                        <div>
+                            <strong>CDB Nubank</strong>
+                            <p>Mensal - todo dia 1</p>
+                        </div>
+                    </div>
+
+                    <div class="right">
+                        <strong>R$ 1.000</strong>
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span></span>
+                        </label>
+                    </div>
+
+                </div>
+
+                <div class="aporte-item">
+
+                    <div class="left">
+                        <div class="asset-icon yellow-bg">FII</div>
+
+                        <div>
+                            <strong>XPML11</strong>
+                            <p>Mensal - todo dia 15</p>
+                        </div>
+                    </div>
+
+                    <div class="right">
+                        <strong>R$ 250</strong>
+                        <label class="switch">
+                            <input type="checkbox">
+                            <span></span>
+                        </label>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+</html>

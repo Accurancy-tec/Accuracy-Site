@@ -1,0 +1,402 @@
+/* ====================================
+CORES DO TRABALHO
+- Tema escuro (#0a1628)
+
+- Azul principal (#2563eb)
+
+- Azul gradiente (#1d4ed8)
+
+- Verde (#34d399)
+
+- Vermelho (#f87171)
+==================================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Inter',sans-serif;
+}
+
+body{
+
+    background:#08111f;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+    color:white;
+}
+
+.container{
+
+    width:1200px;
+    height:760px;
+
+    background:#101d34;
+
+    border-radius:18px;
+
+    overflow:hidden;
+
+    display:flex;
+
+    box-shadow:0 30px 70px rgba(0,0,0,.45);
+
+}
+
+.left{
+
+    width:40%;
+
+    background:linear-gradient(180deg,#13274a,#0b1730);
+
+    padding:50px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:space-between;
+
+    position:relative;
+    overflow: hidden;
+    z-index: 1;
+}
+.left > *{
+    position: relative;
+    z-index: 1;
+}
+
+.left::before{
+
+    content:"";
+
+    width:350px;
+    height:350px;
+
+    background:#1d3f78;
+
+    border-radius:50%;
+
+    position:absolute;
+
+    top:-120px;
+    left:-80px;
+
+    opacity:.25;
+
+    z-index: 0;
+}
+
+.logo{
+
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.logo-box{
+
+    width:36px;
+    height:36px;
+
+    border-radius:10px;
+
+    background:#3B82F6;
+}
+
+.hero h1{
+
+    font-size:54px;
+
+    line-height:1.1;
+
+    margin-bottom:25px;
+}
+
+.hero p{
+
+    color:#8EA5D3;
+
+    line-height:1.8;
+
+    width:330px;
+}
+
+.cards{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:18px;
+}
+
+.info-card{
+
+    background:#14284c;
+
+    border:1px solid rgba(255,255,255,.08);
+
+    border-radius:16px;
+
+    padding:20px;
+}
+
+.info-card span{
+
+    color:#7f95bc;
+
+    font-size:14px;
+}
+
+.info-card h3{
+
+    margin-top:10px;
+
+    color:white;
+
+    font-size:22px;
+}
+
+.right{
+
+    flex:1;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    background:#13213c;
+
+    margin-left: -80px;
+}
+
+.login{
+
+    width:430px;
+}
+
+.tabs{
+
+    display:flex;
+    position: relative;
+    left: 270px;
+
+    background:#1d2d4b;
+
+    border-radius:10px;
+
+    overflow:hidden;
+
+    margin-bottom:700px;
+    
+}
+
+.tabs button{
+
+    flex:1;
+
+    padding:15px;
+
+    border:none;
+
+    background:transparent;
+
+    color:#8aa2c9;
+
+    cursor:pointer;
+
+    font-size:15px;
+}
+
+.tabs .active{
+
+    background:#3B82F6;
+
+    color:white;
+}
+
+.login h2{
+
+    font-size:36px;
+}
+
+.login p{
+
+    color:#8da4ca;
+
+    margin:10px 0 40px;
+}
+
+label{
+
+    display:block;
+
+    margin-bottom:10px;
+
+    color:#8ca2c8;
+
+    font-size:14px;
+}
+
+input{
+
+    width:100%;
+
+    height:56px;
+
+    border-radius:10px;
+
+    border:1px solid rgba(255,255,255,.15);
+
+    background:#1b2946;
+
+    color:white;
+
+    padding:0 20px;
+
+    margin-bottom:20px;
+
+    outline:none;
+}
+
+input:focus{
+
+    border-color:#3B82F6;
+}
+
+.login a{
+
+    color:#3B82F6;
+
+    text-decoration:none;
+
+    display:block;
+
+    text-align:right;
+
+    margin-bottom:30px;
+}
+
+.login-btn{
+
+    width:100%;
+
+    height:55px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:#3B82F6;
+
+    color:white;
+
+    font-size:16px;
+
+    cursor:pointer;
+
+    margin-bottom:35px;
+}
+
+.divider{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:15px;
+
+    color:#6d7d99;
+
+    margin-bottom:25px;
+}
+
+.divider::before,
+.divider::after{
+
+    content:"";
+
+    flex:1;
+
+    height:1px;
+
+    background:#31415f;
+}
+
+.social{
+
+    display:flex;
+
+    gap:15px;
+}
+
+.social button{
+
+    flex:1;
+
+    height:52px;
+
+    background:#162541;
+
+    border:1px solid rgba(255,255,255,.1);
+
+    border-radius:10px;
+
+    color:white;
+
+    cursor:pointer;
+}
+
+.register{
+
+    text-align:center;
+
+    margin-top:35px;
+
+    color:#8ca2c8;
+}
+
+.register a{
+
+    display:inline;
+
+    margin:0;
+
+    color:#3B82F6;
+}
+
+@media(max-width:900px){
+
+.container{
+
+flex-direction:column;
+height:auto;
+width:95%;
+}
+
+.left{
+
+width:100%;
+}
+
+.right{
+
+padding:50px 20px;
+}
+
+.login{
+
+width:100%;
+}
+
+.hero h1{
+
+font-size:40px;
+}
+
+}

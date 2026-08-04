@@ -156,7 +156,7 @@
 
             </label>
 
-            <button type="submit">
+            <button type="submit" name="btnCadastro">
 
                 Criar minha conta
 
@@ -179,7 +179,7 @@
 </body>
 </html>
 <?php
-include ("conexao.php");
+require_once ("conexao.php");
 
 if($_SERVER["REQUEST_METHOD"]== "POST"){
      

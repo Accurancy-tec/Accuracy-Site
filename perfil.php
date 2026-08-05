@@ -1,5 +1,5 @@
 <?php
-include('conexao.php');
+include('configs/conexao.php');
 
 ?>
 <!DOCTYPE html>

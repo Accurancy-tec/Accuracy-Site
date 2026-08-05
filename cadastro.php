@@ -128,11 +128,15 @@
 
                 <div class="field">
 
-                    <label>Confirmar Senha</label>
+                    <label>telefone</label>
 
                     <input
-                        type="password"
-                        placeholder="Repita a senha">
+                        type="number"
+                        placeholder="Telefone"
+                        name="telefoneCadastro">
+
+                        <label for="">CPF</label>
+                        <input type="number" name="cpfCadastro">
 
                 </div>
 
@@ -179,18 +183,20 @@
 </body>
 </html>
 <?php
-require_once ("conexao.php");
+require_once 'configs/conexao.php';
 
 if($_SERVER["REQUEST_METHOD"]== "POST"){
      
     $nome = $_POST["nomeCadastro"];
     $email = $_POST["emailCadastro"];
     $senha = $_POST["senhaCadastro"];
+    $cpf = $_POST["cpfCadastro"];
+    $telefone = $_POST["telefoneCadastro"];
     
     try{
         // primeiro verificar se o email ja existe
 
-        $verificar = "SELECT * FROM tb_usuario WHERE email_usuario = ? ";
+        $verificar = "SELECT * FROM usuarios_info WHERE email_usuario = ? ";
 
         $stmt = $conexao->prepare($verificar);
         $stmt->bindParam(1,$email);
@@ -201,15 +207,17 @@ if($_SERVER["REQUEST_METHOD"]== "POST"){
             
         } else{
             // se o email nao existir no banco cadastra o usuario
-            $sql = "INSERT INTO tb_usuario
-            (email_usuario, senha_usuario, nome_usuario)
-            VALUES(?, ?, ?)";
+            $sql = "INSERT INTO usuarios_info
+            (email_usuario, senha_usuario, nome_usuario, telefone_usuario, cpf_usuario)
+            VALUES(?, ?, ?, ?, ?)";
 
             $stmt = $conexao->prepare($sql);
 
             $stmt->bindParam(1,$email);
             $stmt->bindParam(2,$senha);
             $stmt->bindParam(3,$nome);
+            $stmt->bindParam(4,$telefone);
+            $stmt->bindParam(5,$cpf);
             if($stmt->execute()){
                 
 

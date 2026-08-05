@@ -1,11 +1,11 @@
-
 <?php
-include('conexao.php');
+include('configs/conexao.php');
 
 ?>
 
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,155 +19,162 @@ include('conexao.php');
 
 <body>
 
-<div class="container">
+    <div class="container">
 
-    <aside class="left">
+        <aside class="left">
 
-        <div class="logo">
-            <div class="logo-box"></div>
-            <h2>Accuracy</h2>
-        </div>
-
-        <div class="hero">
-            <h1>
-                Invista com
-                <br>
-                inteligência
-                <br>
-                real
-            </h1>
-
-            <p>
-                Acompanhe sua carteira,
-                descubra oportunidades e
-                tome decisões baseadas
-                em dados — tudo em um só lugar.
-            </p>
-        </div>
-
-        <div class="cards">
-
-            <div class="info-card">
-                <span>Rendimento médio mensal</span>
-                <h3>+2.4% ao mês</h3>
+            <div class="logo">
+                <div class="logo-box"></div>
+                <h2>Accuracy</h2>
             </div>
 
-            <div class="info-card">
-                <span>Ativos monitorados</span>
-                <h3>BTC · USD · PETR4 · IBOV +38</h3>
+            <div class="hero">
+                <h1>
+                    Invista com
+                    <br>
+                    inteligência
+                    <br>
+                    real
+                </h1>
+
+                <p>
+                    Acompanhe sua carteira,
+                    descubra oportunidades e
+                    tome decisões baseadas
+                    em dados — tudo em um só lugar.
+                </p>
             </div>
 
-            <div class="info-card">
-                <span>Usuários ativos</span>
-                <h3>+14.000 investidores</h3>
-            </div>
+            <div class="cards">
 
-        </div>
+                <div class="info-card">
+                    <span>Rendimento médio mensal</span>
+                    <h3>+2.4% ao mês</h3>
+                </div>
 
-    </aside>
+                <div class="info-card">
+                    <span>Ativos monitorados</span>
+                    <h3>BTC · USD · PETR4 · IBOV +38</h3>
+                </div>
 
-    <main class="right">
-
-        
-
-        <div class="login">
-
-            <h2>Bem-vindo de volta</h2>
-
-            <p>Acesse sua conta para ver sua carteira</p>
-
-            <label>E-mail</label>
-            <input type="email" placeholder="seu@email.com">
-
-            <label>Senha</label>
-            <input type="password" placeholder="••••••••">
-
-            <a href="#">Esqueci minha senha</a>
-
-            <a href="dashboard.html"><button class="login-btn">
-                Entrar na conta
-            </button>
-            </a>
-
-            <div class="divider">
-                <span>ou continue com</span>
-            </div>
-
-            <div class="social">
-
-                <button>Google</button>
-                <button>GitHub</button>
-                <button>LinkedIn</button>
+                <div class="info-card">
+                    <span>Usuários ativos</span>
+                    <h3>+14.000 investidores</h3>
+                </div>
 
             </div>
 
-            <div class="register">
-                Não tem conta?
-                <a href="cadastro.html">Cadastre-se grátis</a>
-            </div>
+        </aside>
 
-        </div>
+        <main class="right">
 
-    </main>
 
-</div>
+            <form action="login.php" method="POST" class="usuario">
+                <div class="login">
+
+                    <h2>Bem-vindo de volta</h2>
+
+                    <p>Acesse sua conta para ver sua carteira</p>
+
+                    <label>E-mail</label>
+                    <input type="email" placeholder="seu@email.com" name="email">
+
+                    <label>Senha</label>
+                    <input type="password" placeholder="••••••••" name="senha">
+
+                    <a href="#">Esqueci minha senha</a>
+
+                    <button class="login-btn" name="btnLogin" type="submit">
+                        Entrar na conta
+                    </button>
+
+
+                    <div class="divider">
+                        <span>ou continue com</span>
+                    </div>
+
+                    <div class="social">
+
+                        <button>Google</button>
+                        <button>GitHub</button>
+                        <button>LinkedIn</button>
+
+                    </div>
+
+                    <div class="register">
+                        Não tem conta?
+                        <a href="cadastro.html">Cadastre-se grátis</a>
+                    </div>
+
+                </div>
+            </form>
+
+        </main>
+
+    </div>
 
 </body>
+
 </html>
 <?php
 session_start();
 
 
 
-class usuario{
-    
-    public $nome_usuario;
+
+class usuario
+{
+
+
     public $email_usuario;
     public $senha_usuario;
 
-    
-    public function logar(){
+
+
+    public function logar()
+    {
         global $conexao;
-       
-        
-
-        try{
-            $sql = "SELECT id_usuario, nome_usuario, email_usuario FROM tb_usuario WHERE email_usuario = ? AND senha_usuario = ?";
-
- $stmt = $conexao->prepare($sql);
- $stmt->bindParam(1, $this->email_usuario);
- $stmt->bindParam(2,$this->senha_usuario);
- if($stmt->execute()){
 
 
 
 
- if($stmt->rowCount() > 0){
-   $dados = $stmt->fetch(PDO::FETCH_ASSOC);
-   $_SESSION["id"] = $dados["id_usuario"];
-   $_SESSION["nome"]= $dados["nome_usuario"];
-   $_SESSION["email"]=$dados["email_usuario"];
 
-   header("Location: ");
-   exit;
+        try {
+            $sql = "SELECT email_usuario, senha_usuarios FROM usuarios_info WHERE email_usuario = ? AND senha_usuario = ?";
+
+            $stmt = $conexao->prepare($sql);
+            $stmt->bindParam(1, $this->email_usuario);
+            $stmt->bindParam(2, $this->senha_usuario);
+            if ($stmt->execute()) {
 
 
+                $dados = $stmt->fetch(PDO::FETCH_ASSOC);
 
- }else{
-    echo "Email ou senha invalidos";
- } }
+                if ($dados) {
+
+                    $_SESSION["senha"] = $dados["senha_usuario"];
+                    $_SESSION["email"] = $dados["email_usuario"];
+
+
+                    header('dashboard.php');
+                    echo "ajsoidjasioj";
+
+                    
+                } else {
+                    echo "Email ou senha invalidos";
+                }
+            }
+        } catch (PDOException $erro) {
         }
-
- catch(PDOException $erro){
- }
     }
 }
-if (isset($_POST['emailCadastro'], $_POST['senhaCadastro'])) {
+if (isset($_POST['email'])  && isset($_POST['senha'])) {
 
     $usuario = new usuario();
-    $usuario->email_usuario = $_POST['emailCadastro'];
-    $usuario->senha_usuario = $_POST['senhaCadastro'];
+    $usuario->email_usuario = $_POST['email'];
+    $usuario->senha_usuario = $_POST['senha'];
     $usuario->logar();
 
+    echo "Login feito";
 }
 ?>

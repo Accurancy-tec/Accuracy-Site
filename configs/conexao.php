@@ -8,7 +8,7 @@ try {
            ";port=" . DB_PORT .
            ";dbname=" . DB_NAME;
 
-    $conexao = new PDO($dsn, DB_USER, DB_PASSWORD);
+    $conexao= new PDO($dsn, DB_USER, DB_PASSWORD);
 
     $conexao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION
     );

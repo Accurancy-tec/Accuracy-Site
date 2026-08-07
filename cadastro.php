@@ -103,12 +103,12 @@
 
             <div class="field">
                 <label>Nome Completo</label>
-                <input type="text" name="nomeCadastro" placeholder="João da Silva">
+                <input type="text" name="nomeCadastro" placeholder="João da Silva" id="nome">
             </div>
 
             <div class="field">
                 <label>E-mail</label>
-                <input type="email" name="emailCadastro" placeholder="seu@email.com">
+                <input type="email" name="emailCadastro" placeholder="seu@email.com" id="email">
 
             </div>
 
@@ -122,7 +122,7 @@
 
                         type="password"
                         placeholder="Mín. 8 caracteres"
-                        name="senhaCadastro">
+                        name="senhaCadastro" id="senha">
 
                 </div>
 
@@ -136,7 +136,7 @@
                         name="telefoneCadastro">
 
                         <label for="">CPF</label>
-                        <input type="number" name="cpfCadastro">
+                        <input type="number" name="cpfCadastro" placeholder="CPF" id="cpf">
 
                 </div>
 
@@ -152,7 +152,7 @@
 
                     <a href="#">Termos de Uso</a>
 
-                    e a
+                    
 
                     <a href="#">Política de Privacidade</a>
 

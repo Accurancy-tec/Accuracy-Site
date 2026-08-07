@@ -69,7 +69,7 @@ include('configs/conexao.php');
         <main class="right">
 
 
-            <form action="login.php" method="POST" class="usuario">
+            <form   id="formLogin">
                 <div class="login">
 
                     <h2>Bem-vindo de volta</h2>
@@ -77,10 +77,10 @@ include('configs/conexao.php');
                     <p>Acesse sua conta para ver sua carteira</p>
 
                     <label>E-mail</label>
-                    <input type="email" placeholder="seu@email.com" name="email">
+                    <input type="email" placeholder="seu@email.com" name="email" id="email">
 
                     <label>Senha</label>
-                    <input type="password" placeholder="••••••••" name="senha">
+                    <input type="password" placeholder="••••••••" name="senha" id="senha">
 
                     <a href="#">Esqueci minha senha</a>
 
@@ -113,68 +113,108 @@ include('configs/conexao.php');
 
     </div>
 
+<script src="js/usuario.js"></script>
 </body>
 
 </html>
 <?php
+
 session_start();
-
-
 
 
 class usuario
 {
-
-
     public $email_usuario;
     public $senha_usuario;
-
-
 
     public function logar()
     {
         global $conexao;
 
-
-
-
-
         try {
-            $sql = "SELECT email_usuario, senha_usuarios FROM usuarios_info WHERE email_usuario = ? AND senha_usuario = ?";
 
+            // Procura o usuário apenas pelo e-mail
+            $sql = "SELECT id_usuario,
+                           nome_usuario,
+                           email_usuario,
+                           senha_usuario
+                    FROM usuarios_info
+                    WHERE email_usuario = ?";
+
+            // Prepara a consulta
             $stmt = $conexao->prepare($sql);
+
+            // Substitui o ? pelo e-mail
             $stmt->bindParam(1, $this->email_usuario);
-            $stmt->bindParam(2, $this->senha_usuario);
-            if ($stmt->execute()) {
 
+            // Executa
+            $stmt->execute();
 
-                $dados = $stmt->fetch(PDO::FETCH_ASSOC);
+            // Obtém o usuário
+            $dados = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                if ($dados) {
+            // Verifica se encontrou
+            if ($dados) {
+               
 
-                    $_SESSION["senha"] = $dados["senha_usuario"];
+                // Compara a senha
+                if ($this->senha_usuario == $dados["senha_usuario"]) {
+
+                    // Guarda as informações na sessão
+                    $_SESSION["id"] = $dados["id_usuario"];
+                    $_SESSION["nome"] = $dados["nome_usuario"];
                     $_SESSION["email"] = $dados["email_usuario"];
 
+                    // Retorna sucesso
+                    echo json_encode([
+                        "success" => true
+                    ]);
+                    exit;
 
-                    header('dashboard.php');
-                    echo "ajsoidjasioj";
-
-                    
                 } else {
-                    echo "Email ou senha invalidos";
+
+                    // Senha incorreta
+                    echo json_encode([
+                        "success" => false,
+                        "message" => "Senha incorreta."
+                    ]);
+                    exit;
+
                 }
+
+            } else {
+
+                // Usuário não encontrado
+                echo json_encode([
+                    "success" => false,
+                    "message" => "Usuário não encontrado."
+                ]);
+                exit;
+
             }
+
         } catch (PDOException $erro) {
+
+            // Erro no banco
+            echo json_encode([
+                "success" => false,
+                "message" => $erro->getMessage()
+            ]);
+            exit;
+
         }
     }
 }
-if (isset($_POST['email'])  && isset($_POST['senha'])) {
+
+// Verifica se a requisição foi enviada via POST
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $usuario = new usuario();
-    $usuario->email_usuario = $_POST['email'];
-    $usuario->senha_usuario = $_POST['senha'];
-    $usuario->logar();
 
-    echo "Login feito";
+    $usuario->email_usuario = $_POST["email"];
+    $usuario->senha_usuario = $_POST["senha"];
+
+    $usuario->logar();
 }
+
 ?>

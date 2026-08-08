@@ -18,19 +18,20 @@ formulario.addEventListener("submit", function (event) {
         .then(resposta => resposta.json())
 
         .then(resultado => {
-            if (resultado.sucess) {
+            if (resultado.success) {
 
             
             window.location.href = "dashboard.php";
             }
             else {
-                alert("Resultado.message");
+                alert(resultado.message);
             }
 
         })
 
         .catch(erro => {
             console.error("Erro na requisição:", erro);
+            alert("erro ao fazer login");
         });
     })
 

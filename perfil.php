@@ -1,6 +1,10 @@
 <?php
+session_start();
 include('configs/conexao.php');
-
+if(!isset($_SESSION["nome"])) {
+    header("Location: login.php");
+    exit;
+}
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -36,10 +40,10 @@ include('configs/conexao.php');
 
             <nav class="menu">
 
-                <a href="dashboard.html">Dashboard</a>
-                <a href="carteira.html">Carteira</a>
-                <a href="historico.html">Histórico</a>
-                <a href="aportes.html">Aportes</a>
+                <a href="dashboard.php">Dashboard</a>
+                <a href="carteira.php">Carteira</a>
+                <a href="historico.php">Histórico</a>
+                <a href="aportes.php">Aportes</a>
                 <a>Relatórios</a>
                 <a class="active">Perfil</a>
 
@@ -52,7 +56,7 @@ include('configs/conexao.php');
             <div class="avatar">N</div>
 
             <div>
-                <strong>Nome da pessoa</strong>
+                <strong><?php echo htmlspecialchars($_SESSION["nome"]); ?></strong>
                 <p>Perfil do usuário</p>
             </div>
 

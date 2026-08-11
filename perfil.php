@@ -2,9 +2,10 @@
 session_start();
 include('configs/conexao.php');
 if(!isset($_SESSION["nome"])) {
-    header("Location: login.php");
-    exit;
-}
+    header("Location: login.php");}
+    
+
+    
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -86,8 +87,8 @@ if(!isset($_SESSION["nome"])) {
                 <div class="big-avatar">N</div>
 
                 <div>
-                    <h2>Nome da pessoa</h2>
-                    <p class="email">usuario@email.com</p>
+                    <h2><?php echo($_SESSION["nome"]); ?></h2>
+                    <p class="email"><?php echo($_SESSION["email"]); ?></p>
                 </div>
 
             </div>
@@ -96,12 +97,12 @@ if(!isset($_SESSION["nome"])) {
 
                 <div class="field">
                     <label>Nome completo</label>
-                    <input type="text"
+                    <input type="text" value="<?php echo($_SESSION["nome"]); ?>">
                 </div>
 
                 <div class="field">
                     <label>Email</label>
-                    <input type="email" value="usuario@email.com">
+                    <input type="email" value="<?php echo($_SESSION["email"]); ?>">
                 </div>
 
                 <div class="field">
@@ -116,7 +117,7 @@ if(!isset($_SESSION["nome"])) {
 
             </div>
 
-            <button class="btn">Salvar alterações</button>
+            <button class="btn" type="submit">Salvar alterações</button>
 
         </section>
 

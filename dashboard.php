@@ -61,7 +61,7 @@ if(!isset($_SESSION["nome"])) {
             </a>
 
             <div>
-                <a href="perfil.php"><strong><?php echo htmlspecialchars($_SESSION["nome"]); ?></strong></a>
+                <a href="perfil.php"><strong><?php echo($_SESSION["nome"]); ?></strong></a>
                 <p>Perfil do usuario</p>
             </div>
 

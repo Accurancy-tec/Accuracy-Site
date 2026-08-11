@@ -1,4 +1,4 @@
-console.log("JavaScript carregado!");
+
 const formulario = document.getElementById("formLogin");
 
 formulario.addEventListener("submit", function (event) {

@@ -1,12 +1,22 @@
 <?php
 session_start();
 include('configs/conexao.php');
+include('classes/usuario.class.php');
+
+
+// Verifica se a requisição foi enviada via POST
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+    $usuario = new usuario();
+
+    $usuario->email_usuario = $_POST["emailLogin"];
+    $usuario->senha_usuario = $_POST["senhaLogin"];
+
+    $usuario->logar();
+}
+
+
 ?>
-
-
-
-
-
 
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -74,7 +84,7 @@ include('configs/conexao.php');
         <main class="right">
 
 
-            <form   id="formLogin">
+            <form id="formLogin">
                 <div class="login">
 
                     <h2>Bem-vindo de volta</h2>
@@ -118,7 +128,7 @@ include('configs/conexao.php');
 
     </div>
 
-<script src="js/login.js"></script>
+    <script src="js/login.js"></script>
 </body>
 
 </html>

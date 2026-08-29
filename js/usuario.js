@@ -35,6 +35,39 @@ formulario.addEventListener("submit", function (event) {
         });
     })
 
+    const formAlterar = document.getElementById("formAlterar");
+
+    formAlterar.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        const dados = new FormData(formAlterar);
+
+        fetch("perfil.php", {
+            method: "POST",
+            body: dados
+        })
+
+        .then(resposta => resposta.json())
+
+        .then(resultado => {
+            if (resultado.success) {
+                alert("Perfil atualizado com sucesso!");
+
+            }
+            else {
+                alert(resultado.message);
+            }
+        })
+
+        .catch(erro => {
+            console.error("Erro na requisição:", erro);
+            alert("Erro ao atualizar perfil");
+        });
+    });
+
+
+
+
 
 
 

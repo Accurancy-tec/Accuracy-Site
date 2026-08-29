@@ -1,5 +1,20 @@
 <?php
+session_start();
 include('configs/conexao.php');
+include('classes/usuario.class.php');
+
+
+// Verifica se a requisição foi enviada via POST
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+    $usuario = new usuario();
+
+    $usuario->email_usuario = $_POST["emailLogin"];
+    $usuario->senha_usuario = $_POST["senhaLogin"];
+
+    $usuario->logar();
+}
+
 
 ?>
 
@@ -69,7 +84,7 @@ include('configs/conexao.php');
         <main class="right">
 
 
-            <form action="login.php" method="POST" class="usuario">
+            <form id="formLogin">
                 <div class="login">
 
                     <h2>Bem-vindo de volta</h2>
@@ -77,10 +92,10 @@ include('configs/conexao.php');
                     <p>Acesse sua conta para ver sua carteira</p>
 
                     <label>E-mail</label>
-                    <input type="email" placeholder="seu@email.com" name="email">
+                    <input type="email" placeholder="seu@email.com" name="emailLogin" id="email">
 
                     <label>Senha</label>
-                    <input type="password" placeholder="••••••••" name="senha">
+                    <input type="password" placeholder="••••••••" name="senhaLogin" id="senha">
 
                     <a href="#">Esqueci minha senha</a>
 
@@ -103,7 +118,7 @@ include('configs/conexao.php');
 
                     <div class="register">
                         Não tem conta?
-                        <a href="cadastro.html">Cadastre-se grátis</a>
+                        <a href="cadastro.php">Cadastre-se grátis</a>
                     </div>
 
                 </div>
@@ -113,68 +128,7 @@ include('configs/conexao.php');
 
     </div>
 
+    <script src="js/login.js"></script>
 </body>
 
 </html>
-<?php
-session_start();
-
-
-
-
-class usuario
-{
-
-
-    public $email_usuario;
-    public $senha_usuario;
-
-
-
-    public function logar()
-    {
-        global $conexao;
-
-
-
-
-
-        try {
-            $sql = "SELECT email_usuario, senha_usuarios FROM usuarios_info WHERE email_usuario = ? AND senha_usuario = ?";
-
-            $stmt = $conexao->prepare($sql);
-            $stmt->bindParam(1, $this->email_usuario);
-            $stmt->bindParam(2, $this->senha_usuario);
-            if ($stmt->execute()) {
-
-
-                $dados = $stmt->fetch(PDO::FETCH_ASSOC);
-
-                if ($dados) {
-
-                    $_SESSION["senha"] = $dados["senha_usuario"];
-                    $_SESSION["email"] = $dados["email_usuario"];
-
-
-                    header('dashboard.php');
-                    echo "ajsoidjasioj";
-
-                    
-                } else {
-                    echo "Email ou senha invalidos";
-                }
-            }
-        } catch (PDOException $erro) {
-        }
-    }
-}
-if (isset($_POST['email'])  && isset($_POST['senha'])) {
-
-    $usuario = new usuario();
-    $usuario->email_usuario = $_POST['email'];
-    $usuario->senha_usuario = $_POST['senha'];
-    $usuario->logar();
-
-    echo "Login feito";
-}
-?>

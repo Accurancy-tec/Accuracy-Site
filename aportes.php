@@ -1,3 +1,11 @@
+<?php
+session_start();
+include('configs/conexao.php');
+if(!isset($_SESSION["nome"])) {
+    header("Location: login.php");
+    exit;
+}
+?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -30,24 +38,24 @@
             <div class="divider"></div>
 
             <nav class="menu">
-                <a href="dashboard.html">Dashboard</a>
-                <a href="carteira.html">Carteira</a>
-                <a href="historico.html">Histórico</a>
+                <a href="dashboard.php">Dashboard</a>
+                <a href="carteira.php">Carteira</a>
+                <a href="historico.php">Histórico</a>
                 <a class="active">Aportes</a>
                 <a>Relatórios</a>
-                <a href="perfil.html">Perfil</a>
+                <a href="perfil.php">Perfil</a>
             </nav>
 
         </div>
 
         <div class="user">
 
-            <a href="perfil.html">
+            <a href="perfil.php">
                 <div class="avatar">N</div>
             </a>
 
             <div>
-                <strong>Nome da pessoa</strong>
+                <strong><?php echo htmlspecialchars($_SESSION["nome"]); ?></strong>
                 <p>Perfil do usuário</p>
             </div>
 
@@ -72,7 +80,7 @@
         <span class="notification-dot"></span>
     </button>
 
-    <a href="perfil.html">
+    <a href="perfil.php">
         <div class="avatar small">N</div>
     </a>
 

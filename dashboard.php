@@ -1,6 +1,7 @@
 <?php
 session_start();
 include('configs/conexao.php');
+
 if(!isset($_SESSION["nome"])) {
     header("Location: login.php");
     exit;
@@ -143,9 +144,11 @@ if(!isset($_SESSION["nome"])) {
                 <span class="green">▲ +2,1% mês</span>
             </div>
 
-            <div class="card">
-                <h4>Cripto</h4>
-                <p>R$ 5.192</p>
+            <div class="card" id="dolar">
+                <h4>PETR4</h4>
+
+                <span id="precoPetr4">carregando...</span>
+                
                 <span class="green">▲ +4,7% mês</span>
             </div>
 
@@ -171,6 +174,7 @@ if(!isset($_SESSION["nome"])) {
     </main>
 
 </div>
+<script src="js/dashboard.js"></script>
 
 </body>
 </html>

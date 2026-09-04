@@ -1,6 +1,4 @@
-
 <?php
-session_start();
 
 class usuario
 {
@@ -27,20 +25,16 @@ class usuario
 
             // Substitui o ? pelo e-mail
             $stmt->bindParam(1, $this->email_usuario);
-
             // Executa
             $stmt->execute();
-
             // Obtém o usuário
             $dados = $stmt->fetch(PDO::FETCH_ASSOC);
 
             // Verifica se encontrou
             if ($dados) {
-               
 
                 // Compara a senha
                 if ($this->senha_usuario == $dados["senha_usuario"]) {
-
                     // Guarda as informações na sessão
                     $_SESSION["id"] = $dados["id_usuario"];
                     $_SESSION["nome"] = $dados["nome_usuario"];
@@ -51,38 +45,29 @@ class usuario
                         "success" => true
                     ]);
                     exit;
-
                 } else {
-
                     // Senha incorreta
                     echo json_encode([
                         "success" => false,
                         "message" => "Senha incorreta."
                     ]);
                     exit;
-
                 }
-
             } else {
-
                 // Usuário não encontrado
                 echo json_encode([
                     "success" => false,
                     "message" => "Usuário não encontrado."
                 ]);
                 exit;
-
             }
-
         } catch (PDOException $erro) {
-
             // Erro no banco
             echo json_encode([
                 "success" => false,
                 "message" => $erro->getMessage()
             ]);
             exit;
-
         }
     }
     public function alterarDados()
@@ -90,37 +75,70 @@ class usuario
         global $conexao;
 
         try {
-            $sql = "UPDATE usuarios_info SET nome_usuario = :nome, email_usuario = :email, senha_usuario = :senha WHERE id_usuario = :id";
+
+            $sql = "UPDATE usuarios_info
+                SET nome_usuario = :nome,
+                    email_usuario = :email
+                WHERE id_usuario = :id";
             $stmt = $conexao->prepare($sql);
-            $stmt->bindParam(':nome', $this->nome_usuario);
-            $stmt->bindParam(':email', $this->email_usuario);
-            $stmt->bindParam(':senha', $this->senha_usuario);
-            $stmt->bindParam(':id', $_SESSION["id"]);
+
+            $stmt->bindParam(":nome", $this->nome_usuario);
+
+
+            $stmt->bindParam(":email", $this->email_usuario);
+
+            $stmt->bindParam(":id", $_SESSION["id"]);
+
             $stmt->execute();
 
+            if ($stmt->rowCount() > 0) {
+
+                $_SESSION["nome"] = $this->nome_usuario;
+                $_SESSION["email"] = $this->email_usuario;
+            } else {
+
+                echo json_encode([
+                    "success" => false,
+                    "message" => "Nenhum dado foi alterado."
+                ]);
+            }
         } catch (PDOException $e) {
-            echo "Erro ao alterar dados: " . $e->getMessage();
+
+            echo json_encode([
+                "success" => false,
+                "message" => "Erro ao alterar dados: " . $e->getMessage()
+            ]);
         }
     }
 
+    public function excluirPerfil()
+    {
+        global $conexao;
 
+        try {
+
+            $sql = "DELETE FROM usuarios_info WHERE id_usuario = :id";
+            $stmt = $conexao->prepare($sql);
+            $stmt->bindParam(":id", $_SESSION["id"]);
+            $stmt->execute();
+
+            if ($stmt->rowCount() > 0) {
+                session_destroy();
+                echo json_encode([
+                    "success" => true,
+                    "message" => "Perfil excluído com sucesso."
+                ]);
+            } else {
+                echo json_encode([
+                    "success" => false,
+                    "message" => "Nenhum perfil foi excluído."
+                ]);
+            }
+        } catch (PDOException $e) {
+            echo json_encode([
+                "success" => false,
+                "message" => "Erro ao excluir perfil: " . $e->getMessage()
+            ]);
+        }
+    }
 }
-
-// Verifica se a requisição foi enviada via POST
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
-    $usuario = new usuario();
-
-    $usuario->email_usuario = $_POST["emailLogin"];
-    $usuario->senha_usuario = $_POST["senhaLogin"];
-
-    $usuario->logar();
-}
-
-
-
-    
-
-    
-
-?>

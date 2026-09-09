@@ -1,12 +1,3 @@
-
-<?php
-session_start();
-include('configs/conexao.php');
-if(!isset($_SESSION["nome"])) {
-    header("Location: login.php");
-    exit;
-}
-?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -158,3 +149,13 @@ if(!isset($_SESSION["nome"])) {
 
 </body>
 </html>
+<?php
+session_start();
+include('configs/conexao.php');
+if(!isset($_SESSION["nome"])) {
+    header("Location: login.php");
+    exit;
+}
+
+
+?>

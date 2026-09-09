@@ -183,61 +183,51 @@
 </body>
 </html>
 <?php
+
+session_start();
 require_once 'configs/conexao.php';
+require_once 'classes/usuario.class.php';
 
-if($_SERVER["REQUEST_METHOD"]== "POST"){
+if($_SERVER["REQUEST_METHOD"] == "POST"){
+    $usuario = new usuario();
+
+    //pega os dados eniados pelo formulario
+
+    $usuario->nome_usuario = $_POST["nomeCadastro"];
+    $usuario->email_usuario = $_POST["emailCadastro"];
+    $usuario->senha_usuario = $_POST["senhaCadastro"];
+
+    //faz o cadastro
+    $codigo = $usuario->cadastrar();
      
-    $nome = $_POST["nomeCadastro"];
-    $email = $_POST["emailCadastro"];
-    $senha = $_POST["senhaCadastro"];
-    $cpf = $_POST["cpfCadastro"];
-    $telefone = $_POST["telefoneCadastro"];
-    
-    try{
-        // primeiro verificar se o email ja existe
+    if($codigo !== false){
+        //guadar o id do usuario
 
-        $verificar = "SELECT * FROM usuarios_info WHERE email_usuario = ? ";
+        $sql = "SELECT id_usuario FROM usuarios_info WHERE email_usuario = ?";
 
-        $stmt = $conexao->prepare($verificar);
-        $stmt->bindParam(1,$email);
-        $stmt->execute();
+    $stmt = $conexao->prepare($sql);
 
-        if($stmt->rowCount() > 0){
-            
-            
-        } else{
-            // se o email nao existir no banco cadastra o usuario
-            $sql = "INSERT INTO usuarios_info
-            (email_usuario, senha_usuario, nome_usuario, telefone_usuario, cpf_usuario)
-            VALUES(?, ?, ?, ?, ?)";
+    $stmt->bindParam(1,$usuario->email_usuario);
 
-            $stmt = $conexao->prepare($sql);
+    $stmt->execute();
 
-            $stmt->bindParam(1,$email);
-            $stmt->bindParam(2,$senha);
-            $stmt->bindParam(3,$nome);
-            $stmt->bindParam(4,$telefone);
-            $stmt->bindParam(5,$cpf);
-            if($stmt->execute()){
-                
+    $dados = $stmt->fetch(PDO:: FETCH_ASSOC);
+    //GUARDA O ID NA SESSÂO
 
-                header("Location: login.php");
-                exit;
-            }
-        
+    $_SESSION["id_verificacao"] = $dados["id_usuario"];
 
-        }
-    }
-      catch(PDOException $erro){
+    //manda o usuario para pagina para verificar o email
 
-        echo "Erro: ".$erro->getMessage();
+    header("Location: verificar_email.php");
+    exit;
 
     }
+
 }
-
-
-
 ?>
+
+
+
 
 
 

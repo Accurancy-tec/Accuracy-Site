@@ -1,65 +1,56 @@
 <?php
-use PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
 
-//carrega o PHPMailer instalado pelo composer
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
 require_once __DIR__ . "/../vendor/autoload.php";
 
-function enviarCodigo($email, $codigo){
+function enviarCodigo($email, $codigo)
+{
     $mail = new PHPMailer(true);
 
-    try{
-        //Utiliza SMTP
+    try {
+
         $mail->isSMTP();
 
-        //Servidor do gmail
         $mail->Host = "smtp.gmail.com";
-
-        //ativa a autenticacao
         $mail->SMTPAuth = true;
 
-        //email que irá enviar
-        $mail->Username = "accuracytcc@gmail.com";
-        $mail->Password = "kkie mzch rlpt qozz";
+        $mail->Username = "tccaccuracy@gmail.com";
 
-        //segurança
+        // COLOQUE SUA NOVA SENHA DE APP AQUI
+        $mail->Password = "admv flxn ibxm mvfd";
+
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port = 587;
 
-        //PORTA GMAIL
-        $mail->PORT = 587;
-
-        //remetente
-        $mail->setFrom("tccaccuracy@gmail.com", "Accuracy");
-
-        //destinatario
+        $mail->setFrom(
+            "tccaccuracy@gmail.com",
+            "Accuracy"
+        );
 
         $mail->addAddress($email);
 
-        //define que o email terá html
         $mail->isHTML(true);
 
-        //assunto
         $mail->Subject = "Verificacao de email - Accuracy";
 
-        //corpo do email
+        $mail->Body = "
+            <h2>Verificação de e-mail</h2>
+            <p>Olá!</p>
+            <p>Seu código de verificação é:</p>
+            <h1>$codigo</h1>
+            <p>Esse código é válido por 10 minutos.</p>
+        ";
 
-        $mail->Bofy = 
-        "<h2>Verificaçâo de email</h2>
-        <p>Olá!</p>
-        <p>Seu código para verificaçâo de email: </p>
-        <h1>$codigo</h1>";
-
-        //envia o email
         $mail->send();
+
         return true;
 
-        
+    } catch (Exception $erro) {
 
+        echo "Erro do PHPMailer: " . $mail->ErrorInfo;
 
-    }
-    catch(PDOException $erro){
         return false;
     }
 }
-?>

@@ -1,3 +1,77 @@
+<?php
+
+    session_start();
+
+require_once 'configs/conexao.php';
+require_once 'configs/email.php';
+include_once 'classes/usuario.class.php';
+$erroCadastro = "";
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+    // Cria o objeto usuário
+    $usuario = new usuario();
+
+    // Pega os dados enviados pelo formulário
+    $usuario->nome_usuario = $_POST["nomeCadastro"];
+    $usuario->email_usuario = $_POST["emailCadastro"];
+    $usuario->senha_usuario = $_POST["senhaCadastro"];
+    $usuario->cpf_usuario = $_POST["cpfCadastro"];
+    $usuario->telefone_usuario = $_POST["telefoneCadastro"];
+
+    // Faz o cadastro
+    $codigo = $usuario->cadastrar();
+
+    // Verifica se o cadastro deu certo
+    if ($codigo !== false) {
+
+        // Procura o ID do usuário recém-cadastrado
+        $sql = "SELECT id_usuario
+                FROM usuarios_info
+                WHERE email_usuario = ?";
+
+        $stmt = $conexao->prepare($sql);
+
+        $stmt->bindParam(1, $usuario->email_usuario);
+
+        $stmt->execute();
+
+        $dados = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // Verifica se encontrou o usuário
+        if ($dados) {
+
+            // Guarda o ID temporariamente na sessão
+            $_SESSION["id_verificacao"] = $dados["id_usuario"];
+
+            // Envia o código por e-mail
+            $enviado = enviarCodigo(
+                $usuario->email_usuario,
+                $codigo
+            );
+
+            // Verifica se o e-mail foi enviado
+            if ($enviado) {
+
+                header("Location: verificar_email.php");
+                exit;
+
+            } else {
+
+                $erroCadastro = "Erro ao enviar e-mail.";
+            }
+
+        } else {
+
+            $erroCadastro = "Usuário não encontrado.";
+        }
+
+    } else {
+
+        $erroCadastro = "Erro ao cadastrar o usuário.";
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -101,6 +175,10 @@
                 Leva menos de 2 minutos para começar
             </span>
 
+            <?php if (!empty($erroCadastro)): ?>
+                <p class="erro-cadastro"><?= htmlspecialchars($erroCadastro) ?></p>
+            <?php endif; ?>
+
             <div class="field">
                 <label>Nome Completo</label>
                 <input type="text" name="nomeCadastro" placeholder="João da Silva" id="nome">
@@ -135,7 +213,7 @@
                         placeholder="Telefone"
                         name="telefoneCadastro">
 
-                        <label for="">CPF</label>
+                        <label for="cpf">CPF</label>
                         <input type="number" name="cpfCadastro" placeholder="CPF" id="cpf">
 
                 </div>
@@ -182,74 +260,3 @@
 
 </body>
 </html>
-<?php
-
-session_start();
-require_once 'configs/conexao.php';
-require_once 'classes/usuario.class.php';
-
-if($_SERVER["REQUEST_METHOD"] == "POST"){
-    $usuario = new usuario();
-
-    //pega os dados eniados pelo formulario
-
-    $usuario->nome_usuario = $_POST["nomeCadastro"];
-    $usuario->email_usuario = $_POST["emailCadastro"];
-    $usuario->senha_usuario = $_POST["senhaCadastro"];
-
-    //faz o cadastro
-    $codigo = $usuario->cadastrar();
-     
-    if($codigo !== false){
-        //guadar o id do usuario
-
-        $sql = "SELECT id_usuario FROM usuarios_info WHERE email_usuario = ?";
-
-    $stmt = $conexao->prepare($sql);
-
-    $stmt->bindParam(1,$usuario->email_usuario);
-
-    $stmt->execute();
-
-    $dados = $stmt->fetch(PDO:: FETCH_ASSOC);
-    //GUARDA O ID NA SESSÂO
-
-    $_SESSION["id_verificacao"] = $dados["id_usuario"];
-
-    //manda o usuario para pagina para verificar o email
-
-    header("Location: verificar_email.php");
-    exit;
-
-    }
-
-}
-?>
-
-
-
-
-
-
-
-     
- 
-         
-    
-
-    
-        
-    
-    
-
-
-  
-             
-
-
-        
-    
-
-  
-
-

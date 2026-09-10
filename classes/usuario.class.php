@@ -1,10 +1,16 @@
 <?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 
 class usuario
 {
     public $nome_usuario;
     public $email_usuario;
     public $senha_usuario;
+    public $cpf_usuario;
+    public $telefone_usuario;
 
     public function logar()
     {
@@ -142,80 +148,106 @@ class usuario
         }
     }
 
-    public function cadastrar(){
-        global $conexao;
+   public function cadastrar(){
+    global $conexao;
 
-        try {
-            //Gera um código de 6 digitos
-            $codigo = random_int(100000, 999999);
+    try {
+        //Gera um código de 6 digitos
+        $codigo = random_int(100000, 999999);
 
-            $expira = date("Y-m-d H:i:s", time()+ 600);
+        $expira = date("Y-m-d H:i:s", time()+ 600);
 
-            //cria o SQL
-            $sql = "INSERT INTO usuarios_info(nome_usuario, email_usuario, senha_usuario, codigo_verificacao, email_verificado, codigo_expira) VALUES (
-            ?, ?, ?, ? false, ?)";
+        //cria o SQL
+        $sql = "INSERT INTO usuarios_info(nome_usuario, email_usuario, senha_usuario, cpf_usuario, telefone_usuario, codigo_verificacao, email_verificado, codigo_expira) VALUES (
+        ?, ?, ?, ?, ?, ?, false, ?)";
 
-            //prepara o comado
-            $stmt = $conexao->prepare($sql);
+        //prepara o comado
+        $stmt = $conexao->prepare($sql);
 
-            //passa os valores
+        //passa os valores
 
-            $stmt->bindParam(1,$this->nome_usuario);
-            $stmt->bindParam(2,$this->email_usuario);
-            $stmt->bindParam(3,$this->senha_usuario);
-            $stmt->bindParam(4,$this->$codigo);
-            $stmt->bindParam(5,$this->$expira);
+        $stmt->bindParam(1,$this->nome_usuario);
+        $stmt->bindParam(2,$this->email_usuario);
+        $stmt->bindParam(3,$this->senha_usuario);
+        $stmt->bindParam(4,$this->cpf_usuario);
+        $stmt->bindParam(5,$this->telefone_usuario);
+        $stmt->bindParam(6,$codigo);
+        $stmt->bindParam(7,$expira);
 
-            $stmt->execute();
+        $stmt->execute();
 
-            //retorna o codigo para o cadastro.php
-            return $codigo;
-
-        }
-
-        catch(PDOException $erro){
-            echo "Erro ao cadastrar:" . $erro->getMessage();
-            return false;
-
-        }
+        //retorna o codigo para o cadastro.php
+        return $codigo;
 
     }
 
-    public function verificarEmail($codigo){
-        global $conexao;
-
-        try{
-            //Procura o usuario pelo ID e pelo codigo
-            // verifica se o codigo esta expirado
-            $sql = "SELECT id_usuario FROM usuarios_info WHERE id_usuario = ? AND codigo_verificacao = ?
-            AND codigo_expira > NOW() AND email_verificado =  false";
-
-            $stmt = $conexao->prepare($sql);
-
-            $stmt->bindParam(1,$_SESSION["id_verificacao"]);
-
-            $stmt->bindParam(2,$codigo);
-
-            $stmt->execute();
-
-            $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            if($usuario){
-                $sql = "UPDATE usuarios_info SET email_verificacao = true, codigo_verificacao = NULL, codigo_epira = NULL WHERE id_usuario = ?";
-
-                $stmt->bindParam(1,$_SESSION["idi_verificacao"]);
-
-                $stmt->execute();
-                return true;
-
-
-            }
-            return false;
-        }
-        catch (PDOException $erro){
-            echo "Erro ao verificar email:" . $erro->getMessage();
-            return false;
-        }
+    catch(PDOException $erro){
+        echo "Erro ao cadastrar:" . $erro->getMessage();
+        return false;
 
     }
+
+}
+
+    public function verificarEmail($codigo)
+{
+    global $conexao;
+
+    try {
+
+        // Procura o usuário pelo ID e pelo código
+        // Também verifica se o código ainda não expirou
+        $sql = "SELECT id_usuario
+                FROM usuarios_info
+                WHERE id_usuario = ?
+                AND codigo_verificacao = ?
+                AND codigo_expira > NOW()
+                AND email_verificado = false";
+
+        // Prepara o comando
+        $stmt = $conexao->prepare($sql);
+
+        // Passa o ID do usuário
+        $stmt->bindParam(1, $_SESSION["id_verificacao"]);
+
+        // Passa o código digitado
+        $stmt->bindParam(2, $codigo);
+
+        // Executa
+        $stmt->execute();
+
+        // Verifica se encontrou o usuário
+        $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($usuario) {
+
+            // Código correto, então confirma o e-mail
+            $sql = "UPDATE usuarios_info
+                    SET email_verificado = true,
+                        codigo_verificacao = NULL,
+                        codigo_expira = NULL
+                    WHERE id_usuario = ?";
+
+            // Prepara o UPDATE
+            $stmt = $conexao->prepare($sql);
+
+            // Passa o ID do usuário
+            $stmt->bindParam(1, $_SESSION["id_verificacao"]);
+
+            // Executa
+            $stmt->execute();
+
+            return true;
+        }
+
+        // Código incorreto ou expirado
+        return false;
+
+    } catch (PDOException $erro) {
+
+        echo "Erro ao verificar email: " . $erro->getMessage();
+
+        return false;
+    }
+}
 }

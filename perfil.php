@@ -1,4 +1,5 @@
 <?php
+
 session_start();
 include('configs/conexao.php');
 include('classes/usuario.class.php');
@@ -14,8 +15,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
    
 }
 
-
 ?>
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -27,117 +28,581 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <title>Perfil - Accuracy</title>
 
     <link rel="stylesheet" href="css/perfil.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
 </head>
 
 <body>
 
-    <div class="app">
+<div class="app">
 
-        <!-- SIDEBAR -->
-        <aside class="sidebar">
+    <!-- =========================
+         NAVBAR
+    ========================== -->
 
-            <div class="top">
+    <aside class="sidebar">
 
-                <div class="logo">
-                    <div class="logo-box"></div>
-                    <span>Accuracy</span>
+        <div class="top">
+
+            <!-- LOGO -->
+
+            <a href="dashboard.html" class="logo">
+
+                <div class="logo-box">
+                    <i class="bi bi-graph-up"></i>
                 </div>
 
-                <div class="divider"></div>
+                <span>Accuracy</span>
 
-                <nav class="menu">
+            </a>
 
-                    <a href="dashboard.php">Dashboard</a>
-                    <a href="carteira.php">Carteira</a>
-                    <a href="historico.php">Histórico</a>
-                    <a href="aportes.php">Aportes</a>
-                    <a>Relatórios</a>
-                    <a class="active">Perfil</a>
+            <div class="divider"></div>
 
-                </nav>
+            <!-- MENU -->
+
+            <nav class="menu">
+
+                <a href="dashboard.php">
+                    <i class="bi bi-grid"></i>
+                    <span>Dashboard</span>
+                </a>
+
+                <a href="carteira.php">
+                    <i class="bi bi-wallet2"></i>
+                    <span>Carteira</span>
+                </a>
+
+                <a href="historico.php">
+                    <i class="bi bi-clock-history"></i>
+                    <span>Histórico</span>
+                </a>
+
+                <a href="aportes.php">
+                    <i class="bi bi-cash-stack"></i>
+                    <span>Aportes</span>
+                </a>
+
+                <a href="#">
+                    <i class="bi bi-bar-chart"></i>
+                    <span>Relatórios</span>
+                </a>
+
+                <a href="Cursos.php">
+                    <i class="bi bi-mortarboard"></i>
+                    <span>Cursos</span>
+                </a>
+
+                <a href="perfil.php" class="active">
+                    <i class="bi bi-person"></i>
+                    <span>Perfil</span>
+                </a>
+
+            </nav>
+
+        </div>
+
+
+        <!-- =========================
+             ÁREA DO USUÁRIO
+        ========================== -->
+
+        <div class="user-area">
+
+
+            <!-- NOTIFICAÇÕES -->
+
+            <div class="icons">
+
+                <div class="notification-container">
+
+                    <button
+                        class="notification-btn"
+                        type="button"
+                        aria-label="Notificações"
+                        id="notificationBtn"
+                    >
+
+                        <i class="bi bi-bell"></i>
+
+                        <span
+                            class="notification-dot"
+                            id="notificationDot"
+                        ></span>
+
+                    </button>
+
+
+                    <!-- =========================
+                         PAINEL DE NOTIFICAÇÕES
+                    ========================== -->
+
+                    <div
+                        class="notification-panel"
+                        id="notificationPanel"
+                    >
+
+                        <!-- CABEÇALHO -->
+
+                        <div class="notification-header">
+
+                            <h3>Notificações</h3>
+
+                            <button
+                                type="button"
+                                id="markRead"
+                            >
+                                Marcar como lidas
+                            </button>
+
+                        </div>
+
+
+                        <!-- LISTA -->
+
+                        <div class="notification-list">
+
+                            <div class="empty-notifications">
+                                <i class="bi bi-bell-slash"></i>
+                                <strong>Nenhuma notificação</strong>
+                                <p>Você não possui novas notificações.</p>
+                            </div>
+
+                        </div>
+
+
+                        <!-- RODAPÉ -->
+
+                        <div class="notification-footer">
+
+                            <a href="historico.php">
+                                Ver todas as notificações
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
 
             </div>
+
+
+            <!-- USUÁRIO -->
 
             <div class="user">
 
-                <div class="avatar">N</div>
+                <a href="perfil.php">
 
-                <div>
-                    <strong><?php echo htmlspecialchars($_SESSION["nome"]); ?></strong>
+                    <div class="avatar">
+                        N
+                    </div>
+
+                </a>
+
+                <div class="user-info">
+
+                    <a href="perfil.php">
+                        <strong>Nome da pessoa</strong>
+                    </a>
+
                     <p>Perfil do usuário</p>
+
                 </div>
 
             </div>
 
-        </aside>
+        </div>
 
-        <!-- MAIN -->
-        <main class="main">
+    </aside>
 
-            <header class="topbar">
 
-                <div>
-                    <h1>Meu Perfil</h1>
-                    <p>Gerencie suas informações pessoais</p>
+    <!-- =========================
+         MAIN
+    ========================== -->
 
+    <main class="main">
+
+
+        <!-- TOPBAR -->
+
+        <header class="topbar">
+
+            <div>
+
+                <h1>Perfil</h1>
+
+                <p>
+                    Gerencie suas informações e preferências
+                </p>
+
+            </div>
+
+        </header>
+
+
+
+        <!-- =========================
+             CONTEÚDO DO PERFIL
+        ========================== -->
+
+        <section class="profile-layout">
+
+
+            <!-- =========================
+                 CARD PERFIL
+            ========================== -->
+
+            <div class="profile-card">
+
+                <div class="profile-avatar-wrapper">
+
+                    <div class="big-avatar">
+                        N
+                    </div>
+
+                    <button class="camera-btn">
+                        <i class="bi bi-camera"></i>
+                    </button>
 
                 </div>
 
-            </header>
 
-            <!-- PROFILE CARD -->
-            <section class="profile-card">
+                <h2>Nome da pessoa</h2>
 
-                <div class="profile-header">
+                <p class="profile-email">
+                    usuario@email.com
+                </p>
 
-                    <div class="big-avatar">N</div>
 
-                    <div>
-                        <h2><?php echo ($_SESSION["nome"]); ?></h2>
-                        <p class="email"><?php echo ($_SESSION["email"]); ?></p>
+                <button class="edit-btn">
+
+                    <i class="bi bi-pencil"></i>
+
+                    Editar perfil
+
+                </button>
+
+            </div>
+
+
+
+            <!-- =========================
+                 MINHA CONTA
+            ========================== -->
+
+            <div class="info-card">
+
+                <div class="card-title">
+
+                    <h3>Minha conta</h3>
+
+                </div>
+
+
+                <div class="info-row">
+
+                    <div class="info-icon">
+                        <i class="bi bi-person"></i>
+                    </div>
+
+                    <div class="info-content">
+
+                        <span>Nome</span>
+
+                        <p>Nome da pessoa</p>
+
+                    </div>
+
+                    <i class="bi bi-chevron-right arrow"></i>
+
+                </div>
+
+
+                <div class="info-row">
+
+                    <div class="info-icon">
+                        <i class="bi bi-envelope"></i>
+                    </div>
+
+                    <div class="info-content">
+
+                        <span>E-mail</span>
+
+                        <p>usuario@email.com</p>
+
+                    </div>
+
+                    <i class="bi bi-chevron-right arrow"></i>
+
+                </div>
+
+
+                <div class="info-row">
+
+                    <div class="info-icon">
+                        <i class="bi bi-telephone"></i>
+                    </div>
+
+                    <div class="info-content">
+
+                        <span>Telefone</span>
+
+                        <p>(11) 98765-4321</p>
+
+                    </div>
+
+                    <i class="bi bi-chevron-right arrow"></i>
+
+                </div>
+
+
+                <div class="info-row">
+
+                    <div class="info-icon">
+                        <i class="bi bi-card-text"></i>
+                    </div>
+
+                    <div class="info-content">
+
+                        <span>CPF</span>
+
+                        <p>123.456.789-01</p>
+
+                    </div>
+
+                    <i class="bi bi-lock lock"></i>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =========================
+                 PREFERÊNCIAS
+            ========================== -->
+
+            <div class="info-card">
+
+                <div class="card-title">
+
+                    <h3>Preferências</h3>
+
+                </div>
+
+
+                <div class="info-row">
+
+                    <div class="info-icon">
+
+                        <i class="bi bi-bell"></i>
+
+                    </div>
+
+                    <div class="info-content">
+
+                        <span>Notificações</span>
+
+                        <p>Gerencie suas notificações</p>
+
+                    </div>
+
+                    <i class="bi bi-chevron-right arrow"></i>
+
+                </div>
+
+
+                <div class="info-row">
+
+                    <div class="info-icon">
+
+                        <i class="bi bi-palette"></i>
+
+                    </div>
+
+                    <div class="info-content">
+
+                        <span>Aparência</span>
+
+                        <p>Tema escuro</p>
+
+                    </div>
+
+                    <i class="bi bi-chevron-right arrow"></i>
+
+                </div>
+
+
+                <div class="info-row">
+
+                    <div class="info-icon">
+
+                        <i class="bi bi-shield-check"></i>
+
+                    </div>
+
+                    <div class="info-content">
+
+                        <span>Segurança</span>
+
+                        <p>Login e autenticação</p>
+
+                    </div>
+
+                    <i class="bi bi-chevron-right arrow"></i>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =========================
+                 SEGURANÇA
+            ========================== -->
+
+            <div class="security-card">
+
+                <h3>Conta e segurança</h3>
+
+
+                <div class="security-content">
+
+
+                    <div class="security-item">
+
+                        <div class="security-icon">
+
+                            <i class="bi bi-lock"></i>
+
+                        </div>
+
+                        <div>
+
+                            <strong>Alterar senha</strong>
+
+                            <p>
+                                Atualize sua senha de acesso
+                            </p>
+
+                        </div>
+
+                        <i class="bi bi-chevron-right arrow"></i>
+
+                    </div>
+
+
+                    <div class="security-divider"></div>
+
+
+                    <div class="security-item logout">
+
+                        <div class="logout-icon">
+
+                            <i class="bi bi-box-arrow-right"></i>
+
+                        </div>
+
+                        <div>
+
+                            <strong>Sair da conta</strong>
+
+                            <p>
+                                Encerrar sessão em todos os dispositivos
+                            </p>
+
+                        </div>
+
+                        <i class="bi bi-chevron-right arrow"></i>
+
                     </div>
 
                 </div>
-                <form id="formAlterar" method="POST" action="perfil.php">
+
+            </div>
 
 
-                    <div class="profile-grid">
+        </section>
 
-                        <div class="field">
-                            <label>Nome completo</label>
-                            <input type="text" value="<?php echo ($_SESSION["nome"]); ?>" id="nome" name="nome">
-                        </div>
+    </main>
 
-                        <div class="field">
-                            <label>Email</label>
-                            <input type="email" value="<?php echo ($_SESSION["email"]); ?>" id="email" name="email">
-                        </div>
-
-                        <div class="field">
-                            <label>Senha</label>
-                            <input type="password" value="********">
-                        </div>
-
-                        <div class="field">
-                            <label>Data de criação</label>
-                            <input type="text" value="18/06/2026" disabled>
-                        </div>
-
-                    </div>
-
-                    <button class="btn" type="submit" name="formAlterar">Salvar alterações</button>
-                </form>
+</div>
 
 
-            </section>
+<!-- =========================
+     JAVASCRIPT
+========================= -->
 
-        </main>
+<script>
 
-    </div>
+    const notificationBtn =
+        document.getElementById("notificationBtn");
+
+    const notificationPanel =
+        document.getElementById("notificationPanel");
+
+    const notificationDot =
+        document.getElementById("notificationDot");
+
+    const markRead =
+        document.getElementById("markRead");
+
+
+    notificationBtn.addEventListener("click", function(event) {
+
+        event.stopPropagation();
+
+        notificationPanel.classList.toggle("show");
+
+    });
+
+
+    notificationPanel.addEventListener("click", function(event) {
+
+        event.stopPropagation();
+
+    });
+
+
+    document.addEventListener("click", function() {
+
+        notificationPanel.classList.remove("show");
+
+    });
+
+
+    markRead.addEventListener("click", function() {
+
+        const unreadItems =
+            document.querySelectorAll(
+                ".notification-item.unread"
+            );
+
+        unreadItems.forEach(function(item) {
+
+            item.classList.remove("unread");
+
+            const unreadDot =
+                item.querySelector(".unread-dot");
+
+            if (unreadDot) {
+
+                unreadDot.remove();
+
+            }
+
+        });
+
+        notificationDot.style.display = "none";
+
+    });
+
+</script>
 
 </body>
-
 </html>

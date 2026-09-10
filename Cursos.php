@@ -30,7 +30,7 @@
 
             <!-- LOGO -->
 
-            <a href="dashboard.html" class="logo">
+            <a href="dashboard.php" class="logo">
 
                 <div class="logo-box">
                     <i class="bi bi-graph-up"></i>
@@ -50,22 +50,22 @@
 
             <nav class="menu">
 
-                <a href="dashboard.html">
+                <a href="dashboard.php">
                     <i class="bi bi-grid"></i>
                     <span>Dashboard</span>
                 </a>
 
-                <a href="carteira.html">
+                <a href="carteira.php">
                     <i class="bi bi-wallet2"></i>
                     <span>Carteira</span>
                 </a>
 
-                <a href="historico.html">
+                <a href="historico.php">
                     <i class="bi bi-clock-history"></i>
                     <span>Histórico</span>
                 </a>
 
-                <a href="aportes.html">
+                <a href="aportes.php">
                     <i class="bi bi-plus-circle"></i>
                     <span>Aportes</span>
                 </a>
@@ -75,12 +75,12 @@
                     <span>Relatórios</span>
                 </a>
 
-                <a href="cursos.html" class="active">
+                <a href="cursos.php" class="active">
                     <i class="bi bi-mortarboard"></i>
                     <span>Cursos</span>
                 </a>
 
-                <a href="perfil.html">
+                <a href="perfil.php">
                     <i class="bi bi-person"></i>
                     <span>Perfil</span>
                 </a>
@@ -162,7 +162,7 @@
 
                         <div class="notification-footer">
 
-                            <a href="historico.html">
+                            <a href="historico.php">
                                 Ver todas as notificações
                             </a>
 
@@ -181,7 +181,7 @@
 
             <div class="user">
 
-                <a href="perfil.html">
+                <a href="perfil.php">
 
                     <div class="avatar">
                         N
@@ -191,7 +191,7 @@
 
                 <div class="user-info">
 
-                    <a href="perfil.html">
+                    <a href="perfil.php">
 
                         <strong>
                             Nome da pessoa
@@ -912,7 +912,7 @@
 
 </script>
 
-<script src="js/cursos.js"></script>
+
 
 </body>
 </html>

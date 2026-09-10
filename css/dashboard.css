@@ -1174,5 +1174,106 @@ button {
 
         width: auto;
     }
+    /* TESTE - NOTIFICAÇÃO */
+
+.notification-container {
+    position: relative !important;
+}
+
+.notification-panel {
+    position: absolute !important;
+    top: calc(100% + 12px) !important;
+    right: 0 !important;
+    width: 360px !important;
+
+    background: #0e1f3d !important;
+    border: 1px solid #2a3f66 !important;
+    border-radius: 12px !important;
+
+    box-shadow: 0 15px 40px rgba(0, 0, 0, .35) !important;
+
+    overflow: hidden !important;
+
+    opacity: 0 !important;
+    visibility: hidden !important;
+
+    transform: translateY(-8px) !important;
+
+    z-index: 9999 !important;
+}
+
+.notification-panel.show {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translateY(0) !important;
+}
+
+.notification-header {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+
+    padding: 16px !important;
+
+    border-bottom: 1px solid #223b67 !important;
+}
+
+.notification-header h3 {
+    color: white !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+}
+
+.notification-header button {
+    background: none !important;
+    border: none !important;
+
+    color: #6ea8ff !important;
+
+    font-size: 10px !important;
+    cursor: pointer !important;
+}
+
+.empty-notifications {
+    min-height: 170px !important;
+    padding: 30px 20px !important;
+
+    display: flex !important;
+    flex-direction: column !important;
+
+    align-items: center !important;
+    justify-content: center !important;
+
+    text-align: center !important;
+    gap: 7px !important;
+}
+
+.empty-notifications i {
+    font-size: 25px !important;
+    color: #526b91 !important;
+}
+
+.empty-notifications strong {
+    color: #dce6f8 !important;
+    font-size: 12px !important;
+}
+
+.empty-notifications p {
+    color: #6f86aa !important;
+    font-size: 10px !important;
+}
+
+.notification-footer {
+    padding: 12px 16px !important;
+
+    text-align: center !important;
+
+    border-top: 1px solid #223b67 !important;
+}
+
+.notification-footer a {
+    color: #6ea8ff !important;
+    font-size: 10px !important;
+}
 
 }

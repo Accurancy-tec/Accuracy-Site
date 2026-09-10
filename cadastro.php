@@ -248,7 +248,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                 Já tem conta?
 
-                <a href="login.html">Entrar</a>
+                <a href="login.php">Entrar</a>
 
             </p>
 

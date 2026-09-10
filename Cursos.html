@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Cursos - Accuracy</title>
+
+    <link rel="stylesheet" href="css/cursos.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- =========================
+         NAVBAR SUPERIOR
+    ========================== -->
+
+    <aside class="sidebar">
+
+        <div class="top">
+
+            <!-- LOGO -->
+
+            <a href="dashboard.html" class="logo">
+
+                <div class="logo-box">
+                    <i class="bi bi-graph-up"></i>
+                </div>
+
+                <span>Accuracy</span>
+
+            </a>
+
+
+            <!-- DIVISOR -->
+
+            <div class="divider"></div>
+
+
+            <!-- MENU -->
+
+            <nav class="menu">
+
+                <a href="dashboard.html">
+                    <i class="bi bi-grid"></i>
+                    <span>Dashboard</span>
+                </a>
+
+                <a href="carteira.html">
+                    <i class="bi bi-wallet2"></i>
+                    <span>Carteira</span>
+                </a>
+
+                <a href="historico.html">
+                    <i class="bi bi-clock-history"></i>
+                    <span>Histórico</span>
+                </a>
+
+                <a href="aportes.html">
+                    <i class="bi bi-plus-circle"></i>
+                    <span>Aportes</span>
+                </a>
+
+                <a href="#">
+                    <i class="bi bi-bar-chart"></i>
+                    <span>Relatórios</span>
+                </a>
+
+                <a href="cursos.html" class="active">
+                    <i class="bi bi-mortarboard"></i>
+                    <span>Cursos</span>
+                </a>
+
+                <a href="perfil.html">
+                    <i class="bi bi-person"></i>
+                    <span>Perfil</span>
+                </a>
+
+            </nav>
+
+        </div>
+
+
+        <!-- =========================
+             ÁREA DO USUÁRIO
+        ========================== -->
+
+        <div class="user-area">
+
+
+            <!-- NOTIFICAÇÕES -->
+
+            <div class="icons">
+
+                <div class="notification-container">
+
+                    <button
+                        class="notification-btn"
+                        type="button"
+                        aria-label="Notificações"
+                        id="notificationBtn"
+                    >
+
+                        <i class="bi bi-bell"></i>
+
+                        <span
+                            class="notification-dot"
+                            id="notificationDot"
+                        ></span>
+
+                    </button>
+
+
+                    <!-- =========================
+                         PAINEL DE NOTIFICAÇÕES
+                    ========================== -->
+
+                    <div
+                        class="notification-panel"
+                        id="notificationPanel"
+                    >
+
+                        <!-- CABEÇALHO -->
+
+                        <div class="notification-header">
+
+                            <h3>Notificações</h3>
+
+                            <button
+                                type="button"
+                                id="markRead"
+                            >
+                                Marcar como lidas
+                            </button>
+
+                        </div>
+
+
+                        <!-- LISTA -->
+
+                        <div class="notification-list">
+
+                            <div class="empty-notifications">
+                                <i class="bi bi-bell-slash"></i>
+                                <strong>Nenhuma notificação</strong>
+                                <p>Você não possui novas notificações.</p>
+                            </div>
+
+                        </div>
+
+
+                        <!-- RODAPÉ -->
+
+                        <div class="notification-footer">
+
+                            <a href="historico.html">
+                                Ver todas as notificações
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =========================
+                 USUÁRIO
+            ========================== -->
+
+            <div class="user">
+
+                <a href="perfil.html">
+
+                    <div class="avatar">
+                        N
+                    </div>
+
+                </a>
+
+                <div class="user-info">
+
+                    <a href="perfil.html">
+
+                        <strong>
+                            Nome da pessoa
+                        </strong>
+
+                    </a>
+
+                    <p>
+                        Perfil do usuário
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </aside>
+
+
+    <!-- =========================
+         MAIN
+    ========================== -->
+
+    <main class="main">
+
+        <!-- TÍTULO -->
+
+        <header class="page-header">
+
+            <div>
+                <h1>Cursos</h1>
+                <p>Aprenda a investir e evolua seus conhecimentos.</p>
+            </div>
+
+        </header>
+
+
+        <!-- =========================
+             BANNER + CONTINUAR
+        ========================== -->
+
+        <section class="hero-grid">
+
+            <!-- BANNER -->
+
+            <div class="learning-banner">
+
+                <div class="banner-content">
+
+                    <span class="banner-tag">
+                        APRENDIZADO
+                    </span>
+
+                    <h2>
+                        Aprenda a <span>investir</span>
+                    </h2>
+
+                    <p>
+                        Conhecimento é um dos melhores
+                        investimentos que você pode fazer.
+                    </p>
+
+                    <button class="primary-btn">
+                        Explorar conteúdos
+                    </button>
+
+                </div>
+
+
+                <div class="banner-illustration">
+
+                    <div class="book book-1"></div>
+                    <div class="book book-2"></div>
+                    <div class="book book-3"></div>
+
+                    <div class="graduate">
+                        <i class="bi bi-mortarboard-fill"></i>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- CONTINUAR APRENDENDO -->
+
+            <div class="continue-card">
+
+                <div class="section-title">
+
+                    <div>
+                        <span>CONTINUE APRENDENDO</span>
+
+                        <h3>
+                            Como funciona a Bolsa de Valores
+                        </h3>
+                    </div>
+
+                    <span class="course-progress-text">
+                        75%
+                    </span>
+
+                </div>
+
+
+                <div class="continue-content">
+
+                    <div class="course-thumb large-thumb">
+
+                        <i class="bi bi-graph-up-arrow"></i>
+
+                        <button class="play-button">
+                            <i class="bi bi-play-fill"></i>
+                        </button>
+
+                    </div>
+
+
+                    <div class="continue-info">
+
+                        <p>
+                            Continue de onde você parou
+                        </p>
+
+                        <div class="progress-bar">
+
+                            <div
+                                class="progress"
+                                style="width: 75%">
+                            </div>
+
+                        </div>
+
+                        <small>
+                            12 minutos restantes
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+                <button class="continue-btn">
+                    <i class="bi bi-play-fill"></i>
+                    Continuar
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             FILTROS
+        ========================== -->
+
+        <section class="filter-section">
+
+            <div>
+
+                <h2>Conteúdos para você</h2>
+
+                <p>
+                    Escolha uma categoria para começar.
+                </p>
+
+            </div>
+
+
+            <div class="filters">
+
+                <button class="filter active" data-category="all">
+                    Todos
+                </button>
+
+                <button class="filter" data-category="iniciante">
+                    Iniciante
+                </button>
+
+                <button class="filter" data-category="renda">
+                    Renda Fixa
+                </button>
+
+                <button class="filter" data-category="fiis">
+                    FIIs
+                </button>
+
+                <button class="filter" data-category="acoes">
+                    Ações
+                </button>
+
+                <button class="filter" data-category="cripto">
+                    Cripto
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             RECOMENDADOS
+        ========================== -->
+
+        <section class="recommended">
+
+            <div class="section-header">
+
+                <div>
+                    <h2>Recomendados para você</h2>
+
+                    <p>
+                        Conteúdos selecionados com base
+                        no seu nível.
+                    </p>
+                </div>
+
+                <a href="#">
+                    Ver todos
+                    <i class="bi bi-arrow-right"></i>
+                </a>
+
+            </div>
+
+
+            <div class="courses-grid">
+
+
+                <!-- CURSO 1 -->
+
+                <article
+                    class="course-card"
+                    data-category="iniciante"
+                >
+
+                    <div class="course-thumb beginner-thumb">
+
+                        <i class="bi bi-piggy-bank-fill"></i>
+
+                        <button class="play-button">
+                            <i class="bi bi-play-fill"></i>
+                        </button>
+
+                    </div>
+
+
+                    <div class="course-body">
+
+                        <div class="course-top">
+
+                            <span class="level beginner">
+                                Iniciante
+                            </span>
+
+                            <i class="bi bi-bookmark"></i>
+
+                        </div>
+
+                        <h3>
+                            Como começar a investir
+                        </h3>
+
+                        <p>
+                            Aprenda os primeiros passos
+                            para organizar sua vida financeira.
+                        </p>
+
+                        <div class="course-meta">
+
+                            <span>
+                                <i class="bi bi-clock"></i>
+                                12 min
+                            </span>
+
+                            <span>
+                                5 aulas
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- CURSO 2 -->
+
+                <article
+                    class="course-card"
+                    data-category="fiis"
+                >
+
+                    <div class="course-thumb fii-thumb">
+
+                        <i class="bi bi-buildings-fill"></i>
+
+                        <button class="play-button">
+                            <i class="bi bi-play-fill"></i>
+                        </button>
+
+                    </div>
+
+
+                    <div class="course-body">
+
+                        <div class="course-top">
+
+                            <span class="level intermediate">
+                                Intermediário
+                            </span>
+
+                            <i class="bi bi-bookmark"></i>
+
+                        </div>
+
+                        <h3>
+                            O que são Fundos Imobiliários
+                        </h3>
+
+                        <p>
+                            Entenda como funcionam os FIIs
+                            e a geração de renda.
+                        </p>
+
+                        <div class="course-meta">
+
+                            <span>
+                                <i class="bi bi-clock"></i>
+                                18 min
+                            </span>
+
+                            <span>
+                                7 aulas
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- CURSO 3 -->
+
+                <article
+                    class="course-card"
+                    data-category="acoes"
+                >
+
+                    <div class="course-thumb stock-thumb">
+
+                        <i class="bi bi-bar-chart-fill"></i>
+
+                        <button class="play-button">
+                            <i class="bi bi-play-fill"></i>
+                        </button>
+
+                    </div>
+
+
+                    <div class="course-body">
+
+                        <div class="course-top">
+
+                            <span class="level beginner">
+                                Iniciante
+                            </span>
+
+                            <i class="bi bi-bookmark"></i>
+
+                        </div>
+
+                        <h3>
+                            Ações: o que são e como investir
+                        </h3>
+
+                        <p>
+                            Conheça os conceitos essenciais
+                            do mercado de ações.
+                        </p>
+
+                        <div class="course-meta">
+
+                            <span>
+                                <i class="bi bi-clock"></i>
+                                15 min
+                            </span>
+
+                            <span>
+                                6 aulas
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- CURSO 4 -->
+
+                <article
+                    class="course-card"
+                    data-category="cripto"
+                >
+
+                    <div class="course-thumb crypto-thumb">
+
+                        <i class="bi bi-currency-bitcoin"></i>
+
+                        <button class="play-button">
+                            <i class="bi bi-play-fill"></i>
+                        </button>
+
+                    </div>
+
+
+                    <div class="course-body">
+
+                        <div class="course-top">
+
+                            <span class="level intermediate">
+                                Intermediário
+                            </span>
+
+                            <i class="bi bi-bookmark"></i>
+
+                        </div>
+
+                        <h3>
+                            Entendendo Bitcoin e Criptomoedas
+                        </h3>
+
+                        <p>
+                            Veja como funcionam os principais
+                            ativos digitais.
+                        </p>
+
+                        <div class="course-meta">
+
+                            <span>
+                                <i class="bi bi-clock"></i>
+                                20 min
+                            </span>
+
+                            <span>
+                                8 aulas
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             PARTE INFERIOR
+        ========================== -->
+
+        <section class="bottom-grid">
+
+            <!-- TRILHAS -->
+
+            <div class="learning-paths">
+
+                <div class="section-header">
+
+                    <div>
+                        <h2>Trilhas de aprendizado</h2>
+
+                        <p>
+                            Continue evoluindo passo a passo.
+                        </p>
+                    </div>
+
+                    <a href="#">
+                        Ver todas
+                    </a>
+
+                </div>
+
+
+                <div class="paths-grid">
+
+
+                    <div class="path-card">
+
+                        <div class="path-icon">
+                            <i class="bi bi-rocket-takeoff-fill"></i>
+                        </div>
+
+                        <div class="path-info">
+
+                            <strong>
+                                Começando a investir
+                            </strong>
+
+                            <div class="path-progress">
+
+                                <div
+                                    class="progress"
+                                    style="width: 62%">
+                                </div>
+
+                            </div>
+
+                            <small>
+                                5/8 aulas
+                            </small>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="path-card">
+
+                        <div class="path-icon">
+                            <i class="bi bi-graph-up"></i>
+                        </div>
+
+                        <div class="path-info">
+
+                            <strong>
+                                Investidor intermediário
+                            </strong>
+
+                            <div class="path-progress">
+
+                                <div
+                                    class="progress"
+                                    style="width: 43%">
+                                </div>
+
+                            </div>
+
+                            <small>
+                                3/7 aulas
+                            </small>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="path-card">
+
+                        <div class="path-icon">
+                            <i class="bi bi-shield-check"></i>
+                        </div>
+
+                        <div class="path-info">
+
+                            <strong>
+                                Renda fixa na prática
+                            </strong>
+
+                            <div class="path-progress">
+
+                                <div
+                                    class="progress"
+                                    style="width: 33%">
+                                </div>
+
+                            </div>
+
+                            <small>
+                                2/6 aulas
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- PROGRESSO -->
+
+            <div class="progress-card">
+
+                <div class="circle-progress">
+                    <span>78%</span>
+                </div>
+
+
+                <div>
+
+                    <span class="small-title">
+                        SEU PROGRESSO GERAL
+                    </span>
+
+                    <h3>
+                        Continue evoluindo
+                    </h3>
+
+                    <p>
+                        12 aulas concluídas
+                    </p>
+
+                    <small>
+                        Continue assim! Você está indo muito bem.
+                    </small>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<!-- =========================
+     JAVASCRIPT
+========================= -->
+
+<script>
+
+    /* =========================
+       ELEMENTOS
+    ========================== */
+
+    const notificationBtn =
+        document.getElementById("notificationBtn");
+
+    const notificationPanel =
+        document.getElementById("notificationPanel");
+
+    const notificationDot =
+        document.getElementById("notificationDot");
+
+    const markRead =
+        document.getElementById("markRead");
+
+
+    /* =========================
+       ABRIR / FECHAR PAINEL
+    ========================== */
+
+    notificationBtn.addEventListener("click", function(event) {
+
+        event.stopPropagation();
+
+        notificationPanel.classList.toggle("show");
+
+    });
+
+
+    /* =========================
+       NÃO FECHAR AO CLICAR
+       DENTRO DO PAINEL
+    ========================== */
+
+    notificationPanel.addEventListener("click", function(event) {
+
+        event.stopPropagation();
+
+    });
+
+
+    /* =========================
+       FECHAR AO CLICAR FORA
+    ========================== */
+
+    document.addEventListener("click", function() {
+
+        notificationPanel.classList.remove("show");
+
+    });
+
+
+    /* =========================
+       MARCAR COMO LIDAS
+    ========================== */
+
+    markRead.addEventListener("click", function() {
+
+        const unreadItems =
+            document.querySelectorAll(
+                ".notification-item.unread"
+            );
+
+
+        unreadItems.forEach(function(item) {
+
+            item.classList.remove("unread");
+
+
+            const unreadDot =
+                item.querySelector(".unread-dot");
+
+
+            if (unreadDot) {
+
+                unreadDot.remove();
+
+            }
+
+        });
+
+
+        /* Remove a bolinha verde do sino */
+
+        notificationDot.style.display = "none";
+
+    });
+
+</script>
+
+<script src="js/cursos.js"></script>
+
+</body>
+</html>

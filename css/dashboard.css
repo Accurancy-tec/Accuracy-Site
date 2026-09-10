@@ -1,3 +1,7 @@
+/* =========================
+   RESET
+========================= */
+
 * {
     margin: 0;
     padding: 0;
@@ -10,7 +14,19 @@ body {
     color: white;
 }
 
-/* APP */
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+button {
+    font-family: inherit;
+}
+
+
+/* =========================
+   APP
+========================= */
 
 .app {
     display: flex;
@@ -20,7 +36,7 @@ body {
 
 
 /* =========================
-   SIDEBAR / NAVBAR
+   NAVBAR SUPERIOR
 ========================= */
 
 .sidebar {
@@ -32,7 +48,6 @@ body {
     padding: 0 30px;
 
     display: flex;
-    flex-direction: row;
     align-items: center;
     justify-content: space-between;
 
@@ -40,28 +55,38 @@ body {
 
     position: sticky;
     top: 0;
+
     z-index: 100;
 }
 
 
-/* TOPO SIDEBAR */
+/* =========================
+   TOPO
+========================= */
 
 .top {
     display: flex;
-    flex-direction: row;
     align-items: center;
+
     gap: 30px;
+
+    min-width: 0;
 }
 
 
-/* LOGO */
+/* =========================
+   LOGO
+========================= */
 
 .logo {
     display: flex;
     align-items: center;
+
     gap: 10px;
 
+    font-size: 16px;
     font-weight: 700;
+
     white-space: nowrap;
 }
 
@@ -70,43 +95,63 @@ body {
     height: 30px;
 
     background: #3b82f6;
+
     border-radius: 8px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo-box i {
+    font-size: 16px;
 }
 
 
-/* DIVISOR */
+/* =========================
+   DIVISOR
+========================= */
 
 .divider {
     width: 1px;
     height: 32px;
 
     background: #2a3f66;
-
-    margin: 0;
 }
 
 
-/* MENU */
+/* =========================
+   MENU
+========================= */
 
 .menu {
     display: flex;
-    flex-direction: row;
     align-items: center;
+
     gap: 5px;
 }
 
 .menu a {
-    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    padding: 10px 13px;
 
     border-radius: 8px;
 
     color: #9bb0d1;
 
-    cursor: pointer;
-
-    transition: .2s;
+    font-size: 14px;
 
     white-space: nowrap;
+
+    transition: .2s;
+}
+
+.menu a i {
+    font-size: 15px;
 }
 
 .menu a:hover {
@@ -120,31 +165,485 @@ body {
 }
 
 
-/* LINKS */
+/* =========================
+   ÁREA DO USUÁRIO
+========================= */
 
-a {
-    text-decoration: none;
-    color: inherit;
+.user-area {
+    display: flex;
+    align-items: center;
+
+    gap: 15px;
+
+    flex-shrink: 0;
 }
 
 
-/* USER */
+/* =========================
+   ÍCONES
+========================= */
+
+.icons {
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+}
+
+
+/* =========================
+   CONTAINER DA NOTIFICAÇÃO
+========================= */
+
+.notification-container {
+    position: relative;
+}
+
+
+/* =========================
+   BOTÃO DO SINO
+========================= */
+
+.notification-btn {
+    position: relative;
+
+    width: 38px;
+    height: 38px;
+
+    border: 1px solid #2a3f66;
+
+    border-radius: 10px;
+
+    background: #0f223f;
+
+    color: #9bb0d1;
+
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    transition: .2s;
+}
+
+.notification-btn:hover {
+    background: #1c3563;
+
+    color: white;
+
+    border-color: #3b82f6;
+}
+
+.notification-btn i {
+    font-size: 16px;
+}
+
+
+/* =========================
+   BOLINHA DO SINO
+========================= */
+
+.notification-dot {
+    position: absolute;
+
+    top: 6px;
+    right: 6px;
+
+    width: 7px;
+    height: 7px;
+
+    background: #22c55e;
+
+    border-radius: 50%;
+
+    border: 1px solid #0f223f;
+}
+
+
+/* =========================
+   PAINEL DE NOTIFICAÇÕES
+========================= */
+
+.notification-panel {
+    position: absolute;
+
+    top: calc(100% + 12px);
+
+    right: 0;
+
+    width: 360px;
+
+    background: #0e1f3d;
+
+    border: 1px solid #2a3f66;
+
+    border-radius: 12px;
+
+    box-shadow: 0 15px 40px rgba(0, 0, 0, .35);
+
+    overflow: hidden;
+
+    opacity: 0;
+
+    visibility: hidden;
+
+    transform: translateY(-8px);
+
+    transition:
+        opacity .2s ease,
+        transform .2s ease,
+        visibility .2s ease;
+
+    z-index: 999;
+}
+
+
+/* =========================
+   PAINEL ABERTO
+========================= */
+
+.notification-panel.show {
+    opacity: 1;
+
+    visibility: visible;
+
+    transform: translateY(0);
+}
+
+
+/* =========================
+   CABEÇALHO
+========================= */
+
+.notification-header {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 16px;
+
+    border-bottom: 1px solid #223b67;
+}
+
+.notification-header h3 {
+    font-size: 14px;
+
+    font-weight: 600;
+
+    color: white;
+}
+
+.notification-header button {
+    background: none;
+
+    border: none;
+
+    color: #6ea8ff;
+
+    font-size: 10px;
+
+    cursor: pointer;
+
+    transition: .2s;
+}
+
+.notification-header button:hover {
+    color: white;
+}
+
+
+/* =========================
+   LISTA DE NOTIFICAÇÕES
+========================= */
+
+.notification-list {
+    max-height: 330px;
+
+    overflow-y: auto;
+}
+
+
+/* =========================
+   SEM NOTIFICAÇÕES
+========================= */
+
+.empty-notifications {
+    min-height: 170px;
+
+    padding: 30px 20px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    text-align: center;
+
+    gap: 7px;
+}
+
+.empty-notifications i {
+    font-size: 25px;
+
+    color: #526b91;
+
+    margin-bottom: 4px;
+}
+
+.empty-notifications strong {
+    color: #dce6f8;
+
+    font-size: 12px;
+}
+
+.empty-notifications p {
+    color: #6f86aa;
+
+    font-size: 10px;
+}
+
+
+/* =========================
+   ITEM
+========================= */
+
+.notification-item {
+    position: relative;
+
+    display: flex;
+
+    gap: 12px;
+
+    padding: 14px 16px;
+
+    border-bottom: 1px solid #1d3357;
+
+    transition: .2s;
+}
+
+.notification-item:hover {
+    background: #12294b;
+}
+
+
+/* =========================
+   NÃO LIDA
+========================= */
+
+.notification-item.unread {
+    background: rgba(59, 130, 246, .06);
+}
+
+
+/* =========================
+   ÍCONE DA NOTIFICAÇÃO
+========================= */
+
+.notification-icon {
+    width: 34px;
+    height: 34px;
+
+    min-width: 34px;
+
+    border-radius: 9px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+}
+
+.notification-icon i {
+    font-size: 14px;
+}
+
+
+/* AZUL */
+
+.notification-icon.blue {
+    background: rgba(59, 130, 246, .15);
+
+    color: #60a5fa;
+}
+
+
+/* VERDE */
+
+.notification-icon.green-icon {
+    background: rgba(34, 197, 94, .15);
+
+    color: #22c55e;
+}
+
+
+/* AMARELO */
+
+.notification-icon.yellow {
+    background: rgba(234, 179, 8, .15);
+
+    color: #eab308;
+}
+
+
+/* VERMELHO */
+
+.notification-icon.red-icon {
+    background: rgba(239, 68, 68, .15);
+
+    color: #ef4444;
+}
+
+
+/* =========================
+   CONTEÚDO
+========================= */
+
+.notification-content {
+    flex: 1;
+
+    min-width: 0;
+}
+
+.notification-content strong {
+    display: block;
+
+    color: #e5edff;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    margin-bottom: 4px;
+}
+
+.notification-content p {
+    color: #8ea4c7;
+
+    font-size: 10px;
+
+    line-height: 1.5;
+}
+
+.notification-content p span {
+    color: #22c55e;
+
+    font-weight: 600;
+}
+
+.notification-content p span.negative {
+    color: #ef4444;
+}
+
+.notification-content small {
+    display: block;
+
+    margin-top: 6px;
+
+    color: #587091;
+
+    font-size: 9px;
+}
+
+
+/* =========================
+   BOLINHA DE NÃO LIDA
+========================= */
+
+.unread-dot {
+    width: 6px;
+    height: 6px;
+
+    background: #3b82f6;
+
+    border-radius: 50%;
+
+    position: absolute;
+
+    top: 18px;
+    right: 12px;
+}
+
+
+/* =========================
+   RODAPÉ
+========================= */
+
+.notification-footer {
+    padding: 12px 16px;
+
+    text-align: center;
+
+    border-top: 1px solid #223b67;
+}
+
+.notification-footer a {
+    color: #6ea8ff;
+
+    font-size: 10px;
+
+    transition: .2s;
+}
+
+.notification-footer a:hover {
+    color: white;
+}
+
+
+/* =========================
+   SCROLL DO PAINEL
+========================= */
+
+.notification-list::-webkit-scrollbar {
+    width: 5px;
+}
+
+.notification-list::-webkit-scrollbar-track {
+    background: #0e1f3d;
+}
+
+.notification-list::-webkit-scrollbar-thumb {
+    background: #29446d;
+
+    border-radius: 10px;
+}
+
+
+/* =========================
+   USUÁRIO
+========================= */
 
 .user {
     display: flex;
     align-items: center;
+
     gap: 10px;
 
-    font-size: 14px;
+    flex-shrink: 0;
 }
 
-.user p {
+.user-info strong {
+    display: block;
+
+    font-size: 13px;
+}
+
+.user-info p {
     color: #8aa0c2;
-    font-size: 11px;
+
+    font-size: 10px;
+
+    margin-top: 3px;
 }
 
 
-/* AVATAR */
+/* =========================
+   AVATAR
+========================= */
 
 .avatar {
     width: 35px;
@@ -158,7 +657,23 @@ a {
     align-items: center;
     justify-content: center;
 
+    font-size: 14px;
     font-weight: 600;
+
+    flex-shrink: 0;
+}
+
+.avatar.small {
+    width: 38px;
+    height: 38px;
+
+    cursor: pointer;
+
+    transition: .2s;
+}
+
+.avatar.small:hover {
+    transform: scale(1.08);
 }
 
 
@@ -183,19 +698,25 @@ a {
 
 .topbar {
     display: flex;
-    justify-content: space-between;
+
     align-items: center;
+    justify-content: space-between;
 
     margin-bottom: 20px;
 }
 
 .topbar h1 {
-    font-size: 22px;
+    font-size: 24px;
+
+    font-weight: 700;
 }
 
 .topbar p {
+    margin-top: 4px;
+
+    color: #7c94b8;
+
     font-size: 12px;
-    color: #8aa0c2;
 }
 
 
@@ -204,32 +725,69 @@ a {
 ========================= */
 
 .card-big {
-    background: linear-gradient(135deg, #1d4ed8, #1e3a8a);
+    background: linear-gradient(
+        135deg,
+        #1d4ed8,
+        #1e3a8a
+    );
 
-    padding: 20px;
+    padding: 22px;
 
     border-radius: 14px;
 
     display: flex;
-    justify-content: space-between;
+
     align-items: flex-start;
+    justify-content: space-between;
+
+    border: 1px solid rgba(255, 255, 255, .05);
+}
+
+.card-label {
+    color: #d7e4ff;
+
+    font-size: 11px;
+
+    letter-spacing: .2px;
 }
 
 .card-big h2 {
-    font-size: 34px;
     margin: 10px 0;
+
+    font-size: 34px;
+
+    font-weight: 700;
 }
+
+
+/* =========================
+   ESTATÍSTICAS
+========================= */
 
 .stats {
     display: flex;
-    gap: 20px;
-    margin-top: 10px;
+
+    gap: 30px;
+
+    margin-top: 12px;
 }
 
 .stats p {
-    font-size: 11px;
     color: #bcd0ff;
+
+    font-size: 11px;
+
+    margin-bottom: 4px;
 }
+
+.stats strong {
+    font-size: 14px;
+}
+
+
+/* =========================
+   CORES
+========================= */
 
 .green {
     color: #22c55e;
@@ -239,14 +797,21 @@ a {
     color: #ef4444;
 }
 
-.badge {
-    background: rgba(0, 0, 0, 0.2);
 
-    padding: 6px 10px;
+/* =========================
+   BADGE
+========================= */
+
+.badge {
+    background: rgba(0, 0, 0, .2);
+
+    padding: 7px 11px;
 
     border-radius: 20px;
 
     font-size: 12px;
+
+    white-space: nowrap;
 }
 
 
@@ -267,24 +832,80 @@ a {
 .card {
     background: #0f223f;
 
-    padding: 15px;
+    padding: 18px;
+
+    border: 1px solid #223b67;
 
     border-radius: 12px;
+
+    transition: .2s;
 }
 
-.card h4 {
-    font-size: 13px;
-    color: #9bb0d1;
-}
+.card:hover {
+    border-color: #31558c;
 
-.card p {
-    font-size: 20px;
-    margin-top: 8px;
+    transform: translateY(-2px);
 }
 
 
 /* =========================
-   CHART
+   ÍCONE DOS CARDS
+========================= */
+
+.card-icon {
+    width: 34px;
+    height: 34px;
+
+    margin-bottom: 12px;
+
+    border-radius: 8px;
+
+    background: #162f58;
+
+    color: #3b82f6;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+}
+
+.card-icon i {
+    font-size: 15px;
+}
+
+
+/* =========================
+   TEXTO DOS CARDS
+========================= */
+
+.card h4 {
+    color: #9bb0d1;
+
+    font-size: 13px;
+
+    font-weight: 500;
+}
+
+.card p {
+    margin-top: 8px;
+
+    font-size: 21px;
+
+    font-weight: 600;
+}
+
+.card span {
+    display: block;
+
+    margin-top: 7px;
+
+    font-size: 11px;
+}
+
+
+/* =========================
+   GRÁFICO
 ========================= */
 
 .chart {
@@ -292,84 +913,99 @@ a {
 
     background: #0f223f;
 
-    padding: 15px;
+    padding: 18px;
+
+    border: 1px solid #223b67;
 
     border-radius: 12px;
 }
 
-.chart-box {
-    margin-top: 10px;
-
-    height: 400px;
-
+.chart-header {
     display: flex;
-    align-items: center;
-    justify-content: center;
 
-    color: #6f86aa;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.chart h3 {
+    font-size: 15px;
+}
+
+.chart-header p {
+    margin-top: 4px;
+
+    color: #7187a8;
+
+    font-size: 11px;
 }
 
 
 /* =========================
-   ICONES TOPBAR
+   FILTRO DO GRÁFICO
 ========================= */
 
-.icons {
+.chart-filter {
     display: flex;
+
     align-items: center;
-    gap: 12px;
-}
 
-.notification-btn {
-    width: 38px;
-    height: 38px;
+    gap: 7px;
 
-    border: none;
-    border-radius: 10px;
+    padding: 8px 11px;
 
-    background: #0f223f;
-
-    border: 1px solid #2a3f66;
+    background: #162c4d;
 
     color: #9bb0d1;
 
+    border: 1px solid #29446d;
+
+    border-radius: 7px;
+
+    font-size: 11px;
+
     cursor: pointer;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    position: relative;
-
-    transition: .2s;
 }
 
-.notification-btn:hover {
+.chart-filter:hover {
     background: #1c3563;
+
     color: white;
 }
 
-.notification-btn i {
-    font-size: 16px;
+
+/* =========================
+   ÁREA DO GRÁFICO
+========================= */
+
+.chart-box {
+    height: 350px;
+
+    margin-top: 15px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
 }
 
-.notification-dot {
-    position: absolute;
+.chart-placeholder {
+    display: flex;
 
-    top: 8px;
-    right: 8px;
+    flex-direction: column;
 
-    width: 8px;
-    height: 8px;
+    align-items: center;
 
-    background: #22c55e;
+    gap: 8px;
 
-    border-radius: 50%;
+    color: #5d7497;
+
+    font-size: 12px;
 }
 
-.avatar.small {
-    width: 38px;
-    height: 38px;
+.chart-placeholder i {
+    font-size: 30px;
+
+    color: #315b99;
 }
 
 
@@ -377,10 +1013,38 @@ a {
    RESPONSIVIDADE
 ========================= */
 
+@media (max-width: 1200px) {
+
+    .menu a {
+        padding: 9px 10px;
+
+        gap: 6px;
+    }
+
+    .menu a span {
+        font-size: 13px;
+    }
+
+    .top {
+        gap: 20px;
+    }
+
+    .grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+
+/* =========================
+   TABLET
+========================= */
+
 @media (max-width: 900px) {
 
     .sidebar {
         height: auto;
+
         min-height: 75px;
 
         padding: 15px 20px;
@@ -402,22 +1066,59 @@ a {
         width: 100%;
 
         overflow-x: auto;
+
+        padding-bottom: 2px;
     }
 
-    .user {
+    .user-area {
         display: none;
     }
 
-    .grid {
-        grid-template-columns: repeat(2, 1fr);
+    .card-big {
+        flex-direction: column;
+
+        gap: 20px;
     }
+
 }
 
+
+/* =========================
+   CELULAR
+========================= */
 
 @media (max-width: 600px) {
 
     .main {
         padding: 20px 15px;
+    }
+
+    .sidebar {
+        padding: 15px;
+    }
+
+    .logo {
+        font-size: 15px;
+    }
+
+    .divider {
+        display: none;
+    }
+
+    .menu {
+        gap: 4px;
+    }
+
+    .menu a {
+        padding: 9px 11px;
+    }
+
+    .menu a span {
+        font-size: 12px;
+    }
+
+    .menu a i {
+        font-size: 14px;
     }
 
     .grid {
@@ -426,12 +1127,8 @@ a {
 
     .stats {
         flex-direction: column;
-        gap: 10px;
-    }
 
-    .card-big {
-        flex-direction: column;
-        gap: 20px;
+        gap: 12px;
     }
 
     .topbar {
@@ -439,7 +1136,43 @@ a {
     }
 
     .topbar h1 {
-        font-size: 20px;
+        font-size: 21px;
+    }
+
+    .topbar p {
+        font-size: 11px;
+    }
+
+    .card-big h2 {
+        font-size: 29px;
+    }
+
+    .chart-header {
+        align-items: flex-start;
+
+        gap: 10px;
+
+        flex-direction: column;
+    }
+
+    .chart-filter {
+        align-self: flex-start;
+    }
+
+
+    /* =========================
+       PAINEL NO CELULAR
+    ========================== */
+
+    .notification-panel {
+        position: fixed;
+
+        top: 70px;
+
+        right: 15px;
+        left: 15px;
+
+        width: auto;
     }
 
 }

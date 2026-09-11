@@ -178,7 +178,7 @@
     font-size: 15px;
 }
 
-.list-header > span {
+.list-header>span {
     color: #7f96bb;
     font-size: 11px;
     white-space: nowrap;
@@ -293,8 +293,22 @@
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    gap: 14px;
+    gap: 18px;
     flex-shrink: 0;
+}
+
+.aporte-value {
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.aporte-qtd {
+    color: #8ea4c7;
+    font-size: 11px;
+    font-weight: 500;
+    white-space: nowrap;
 }
 
 .aporte-value {
@@ -366,11 +380,11 @@
     transition: 0.2s;
 }
 
-.switch input:checked + span {
+.switch input:checked+span {
     background: #2563eb;
 }
 
-.switch input:checked + span::before {
+.switch input:checked+span::before {
     transform: translateX(15px);
     background: #ffffff;
 }
@@ -461,6 +475,13 @@
 
     .aporte-value {
         font-size: 12px;
+    }
+
+    .aporte-qtd {
+        color: #60a5fa;
+        font-size: 11px;
+        white-space: nowrap;
+        display: inline-block;
     }
 
     .info-card h3 {

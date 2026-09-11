@@ -80,7 +80,6 @@ class aporte
             ]);
 
             exit;
-
         } catch (PDOException $erro) {
 
             echo json_encode([
@@ -127,11 +126,17 @@ class aporte
 
                 $item["preco_atual"] = null;
                 $item["rentabilidade"] = null;
+                $item["quantidade"] = null;
 
                 if (
                     $item["preco_unitario_compra"] !== null &&
                     $item["preco_unitario_compra"] > 0
                 ) {
+
+                    $item["quantidade"] = round(
+                        (float) $item["preco_aporte"] / (float) $item["preco_unitario_compra"],
+                        8
+                    );
 
                     $ativo = $item["ativo_aporte"];
 
@@ -167,7 +172,6 @@ class aporte
             ]);
 
             exit;
-
         } catch (PDOException $erro) {
 
             echo json_encode([
@@ -203,7 +207,6 @@ class aporte
             ]);
 
             exit;
-
         } catch (PDOException $erro) {
 
             echo json_encode([
@@ -222,11 +225,6 @@ class aporte
             return $this->buscarPrecoAcao($ativo);
         }
 
-        if (array_key_exists($ativo, $this->criptos)) {
-            return $this->buscarPrecoCripto(
-                $this->criptos[$ativo]
-            );
-        }
 
         return null;
     }
@@ -235,14 +233,13 @@ class aporte
     {
         require_once __DIR__ . '/../configs/config.php';
 
-        $url = BRAPI_BASE_URL .
-            "/v2/stocks/quote?symbols=" .
-            urlencode($ticker);
+        $url = BRAPI_BASE_URL . "/v2/stocks/quote?symbols=" . urlencode($ticker);
 
         $curl = curl_init($url);
 
         curl_setopt_array($curl, [
             CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_TIMEOUT => 10,
             CURLOPT_HTTPHEADER => [
                 "Authorization: Bearer " . BRAPI_TOKEN,
                 "Accept: application/json"
@@ -254,38 +251,30 @@ class aporte
         $resposta = curl_exec($curl);
 
         if ($resposta === false) {
-
-            error_log(
-                "Erro BRAPI: " . curl_error($curl)
-            );
-
+            error_log("Erro cURL Brapi: " . curl_error($curl));
             curl_close($curl);
-
             return null;
         }
+
+        $codigoHTTP = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
         curl_close($curl);
 
-        $dados = json_decode($resposta, true);
-
-        return $dados["results"][0]["regularMarketPrice"] ?? null;
-    }
-
-    private function buscarPrecoCripto($idCoingecko)
-    {
-        $url =
-            "https://api.coingecko.com/api/v3/simple/price" .
-            "?ids=" . urlencode($idCoingecko) .
-            "&vs_currencies=brl";
-
-        $resposta = @file_get_contents($url);
-
-        if ($resposta === false) {
+        if ($codigoHTTP !== 200) {
+            error_log("Erro HTTP Brapi: " . $codigoHTTP);
+            error_log("Resposta Brapi: " . $resposta);
             return null;
         }
 
         $dados = json_decode($resposta, true);
 
-        return $dados[$idCoingecko]["brl"] ?? null;
+        if (
+            !isset($dados["results"][0]["data"]["regularMarketPrice"])
+        ) {
+            error_log("Preço não encontrado na resposta Brapi: " . $resposta);
+            return null;
+        }
+
+        return (float) $dados["results"][0]["data"]["regularMarketPrice"];
     }
 }

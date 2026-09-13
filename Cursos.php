@@ -1,3 +1,12 @@
+<?php
+session_start();
+include('configs/conexao.php');
+
+if (!isset($_SESSION["id"])) {
+    header("Location: login.php");
+    exit;
+}
+?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -194,7 +203,7 @@
                     <a href="perfil.php">
 
                         <strong>
-                            Nome da pessoa
+                            <?= htmlspecialchars($_SESSION["nome"] ?? "Usuário") ?>
                         </strong>
 
                     </a>

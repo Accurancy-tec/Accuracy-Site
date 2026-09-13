@@ -145,7 +145,7 @@ if (!isset($_SESSION["id"])) {
 
                 <div class="user-info">
                     <a href="perfil.php">
-                        <strong>Nome da pessoa</strong>
+                        <strong><?= htmlspecialchars($_SESSION["nome"] ?? "Usuário") ?></strong>
                     </a>
 
                     <p>Perfil do usuário</p>

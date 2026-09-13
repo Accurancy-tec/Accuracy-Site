@@ -199,7 +199,7 @@ if (!isset($_SESSION["nome"])) {
                     <a href="perfil.html">
 
                         <strong>
-                            Nome da pessoa
+                            <?= htmlspecialchars($_SESSION["nome"] ?? "Usuário") ?>
                         </strong>
 
                     </a>

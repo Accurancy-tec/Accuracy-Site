@@ -1,82 +1,39 @@
-
 const formulario = document.getElementById("formLogin");
 
-formulario.addEventListener("submit", function (event) {
-    event.preventDefault();
+if (formulario) {
 
+    formulario.addEventListener("submit", function (event) {
 
-    const email = document.getElementById("email");
-    const senha = document.getElementById("senha");
-
-    const dados = new FormData(formulario);
-
-    fetch("login.php", {
-        method: "POST",
-        body: dados
-    })
-
-        .then(resposta => resposta.json())
-
-        .then(resultado => {
-            if (resultado.success) {
-
-            
-            window.location.href = "dashboard.php";
-            }
-            else {
-                alert(resultado.message);
-            }
-
-        })
-
-        .catch(erro => {
-            console.error("Erro na requisição:", erro);
-            alert("erro ao fazer login");
-        });
-    })
-
-    const formAlterar = document.getElementById("formAlterar");
-
-    formAlterar.addEventListener("submit", function (event) {
         event.preventDefault();
 
-        const dados = new FormData(formAlterar);
+        const dados = new FormData(formulario);
 
-        fetch("perfil.php", {
+        fetch("login.php", {
             method: "POST",
             body: dados
         })
-
         .then(resposta => resposta.json())
-
         .then(resultado => {
+
             if (resultado.success) {
-                alert("Perfil atualizado com sucesso!");
 
-            }
-            else {
+                window.location.href = "dashboard.php";
+
+            } else {
+
                 alert(resultado.message);
+
             }
+
         })
-
         .catch(erro => {
+
             console.error("Erro na requisição:", erro);
-            alert("Erro ao atualizar perfil");
+
+            alert("Erro ao fazer login.");
+
         });
+
     });
-    fetch("API.php")
-        .then(response => response.json())
-        .then(dados => { console.log("Dados recebidos da API:", dados);
-     document.getElementById("dolar").textContent = dados.dolar;})
 
-    
-
-
-
-
-
-
-
-
-
-
+}

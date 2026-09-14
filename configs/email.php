@@ -16,16 +16,16 @@ function enviarCodigo($email, $codigo)
         $mail->Host = "smtp.gmail.com";
         $mail->SMTPAuth = true;
 
-        $mail->Username = "tccaccuracy@gmail.com";
+        $mail->Username = "accuracytcc@gmail.com";
 
         // COLOQUE SUA NOVA SENHA DE APP AQUI
-        $mail->Password = "admv flxn ibxm mvfd";
+        $mail->Password = "hipt docm qhid zipj";
 
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port = 587;
 
         $mail->setFrom(
-            "tccaccuracy@gmail.com",
+            "accuracytcc@gmail.com",
             "Accuracy"
         );
 

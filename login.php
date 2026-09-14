@@ -1,23 +1,28 @@
 <?php
-session_start();
-include('configs/conexao.php');
-include('classes/usuario.class.php');
 
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
-// Verifica se a requisição foi enviada via POST
+require_once "configs/conexao.php";
+require_once "classes/usuario.class.php";
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+    header("Content-Type: application/json");
 
     $usuario = new usuario();
 
-    $usuario->email_usuario = $_POST["emailLogin"];
-    $usuario->senha_usuario = $_POST["senhaLogin"];
+    $usuario->email_usuario = $_POST["emailLogin"] ?? "";
+    $usuario->senha_usuario = $_POST["senhaLogin"] ?? "";
 
     $usuario->logar();
+
+    exit;
 }
 
-
 ?>
-
+?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 

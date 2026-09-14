@@ -53,7 +53,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Verifica se o e-mail foi enviado
             if ($enviado) {
 
-                header("Location: verificar_email.php");
+                header("Location: confirmacodigo.php");
                 exit;
 
             } else {

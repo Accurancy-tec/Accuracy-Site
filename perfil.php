@@ -239,6 +239,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     </p>
 
                 </div>
+                <form id="formAlterar" method="POST" action="perfil.php">
 
             </header>
 
@@ -534,71 +535,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     <!-- =========================
      JAVASCRIPT
-========================= -->
-
-    <script>
-        const notificationBtn =
-            document.getElementById("notificationBtn");
-
-        const notificationPanel =
-            document.getElementById("notificationPanel");
-
-        const notificationDot =
-            document.getElementById("notificationDot");
-
-        const markRead =
-            document.getElementById("markRead");
-
-
-        notificationBtn.addEventListener("click", function(event) {
-
-            event.stopPropagation();
-
-            notificationPanel.classList.toggle("show");
-
-        });
-
-
-        notificationPanel.addEventListener("click", function(event) {
-
-            event.stopPropagation();
-
-        });
-
-
-        document.addEventListener("click", function() {
-
-            notificationPanel.classList.remove("show");
-
-        });
-
-
-        markRead.addEventListener("click", function() {
-
-            const unreadItems =
-                document.querySelectorAll(
-                    ".notification-item.unread"
-                );
-
-            unreadItems.forEach(function(item) {
-
-                item.classList.remove("unread");
-
-                const unreadDot =
-                    item.querySelector(".unread-dot");
-
-                if (unreadDot) {
-
-                    unreadDot.remove();
-
-                }
-
-            });
-
-            notificationDot.style.display = "none";
-
-        });
-    </script>
 
 </body>
 

@@ -1,28 +1,4 @@
-<?php
 
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
-require_once "configs/conexao.php";
-require_once "classes/usuario.class.php";
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
-    header("Content-Type: application/json");
-
-    $usuario = new usuario();
-
-    $usuario->email_usuario = $_POST["emailLogin"] ?? "";
-    $usuario->senha_usuario = $_POST["senhaLogin"] ?? "";
-
-    $usuario->logar();
-
-    exit;
-}
-
-?>
-?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -97,10 +73,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <p>Acesse sua conta para ver sua carteira</p>
 
                     <label>E-mail</label>
-                    <input type="email" placeholder="seu@email.com" name="emailLogin" id="email">
+                    <input type="email" placeholder="seu@email.com" name="email_usuario" id="email_usuario">
 
                     <label>Senha</label>
-                    <input type="password" placeholder="••••••••" name="senhaLogin" id="senha">
+                    <input type="password" placeholder="••••••••" name="senha_usuario" id="senha_usuario">
 
                     <a href="#">Esqueci minha senha</a>
 

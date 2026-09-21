@@ -1,77 +1,4 @@
-<?php
 
-    session_start();
-
-require_once 'configs/conexao.php';
-require_once 'configs/email.php';
-include_once 'classes/usuario.class.php';
-$erroCadastro = "";
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
-    // Cria o objeto usuário
-    $usuario = new usuario();
-
-    // Pega os dados enviados pelo formulário
-    $usuario->nome_usuario = $_POST["nomeCadastro"];
-    $usuario->email_usuario = $_POST["emailCadastro"];
-    $usuario->senha_usuario = $_POST["senhaCadastro"];
-    $usuario->cpf_usuario = $_POST["cpfCadastro"];
-    $usuario->telefone_usuario = $_POST["telefoneCadastro"];
-
-    // Faz o cadastro
-    $codigo = $usuario->cadastrar();
-
-    // Verifica se o cadastro deu certo
-    if ($codigo !== false) {
-
-        // Procura o ID do usuário recém-cadastrado
-        $sql = "SELECT id_usuario
-                FROM usuarios_info
-                WHERE email_usuario = ?";
-
-        $stmt = $conexao->prepare($sql);
-
-        $stmt->bindParam(1, $usuario->email_usuario);
-
-        $stmt->execute();
-
-        $dados = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        // Verifica se encontrou o usuário
-        if ($dados) {
-
-            // Guarda o ID temporariamente na sessão
-            $_SESSION["id_verificacao"] = $dados["id_usuario"];
-
-            // Envia o código por e-mail
-            $enviado = enviarCodigo(
-                $usuario->email_usuario,
-                $codigo
-            );
-
-            // Verifica se o e-mail foi enviado
-            if ($enviado) {
-
-                header("Location: confirmacodigo.php");
-                exit;
-
-            } else {
-
-                $erroCadastro = "Erro ao enviar e-mail.";
-            }
-
-        } else {
-
-            $erroCadastro = "Usuário não encontrado.";
-        }
-
-    } else {
-
-        $erroCadastro = "Erro ao cadastrar o usuário.";
-    }
-}
-?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -167,7 +94,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <main class="content">
 
-        <form class="register" method="POST" action="cadastro.php">
+        <form class="register" method="POST" action="cadastro.php" id="formCadastro">
 
             <h1>Criar conta gratuita</h1>
 
@@ -181,12 +108,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             <div class="field">
                 <label>Nome Completo</label>
-                <input type="text" name="nomeCadastro" placeholder="João da Silva" id="nome">
+                <input type="text" name="nome_usuario" placeholder="João da Silva" id="nome">
             </div>
 
             <div class="field">
                 <label>E-mail</label>
-                <input type="email" name="emailCadastro" placeholder="seu@email.com" id="email">
+                <input type="email" name="email_usuario" placeholder="seu@email.com" id="email">
 
             </div>
 
@@ -200,7 +127,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                         type="password"
                         placeholder="Mín. 8 caracteres"
-                        name="senhaCadastro" id="senha">
+                        name="senha_usuario" id="senha">
 
                 </div>
 
@@ -211,10 +138,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <input
                         type="number"
                         placeholder="Telefone"
-                        name="telefoneCadastro">
+                        name="telefone_usuario">
 
                         <label for="cpf">CPF</label>
-                        <input type="number" name="cpfCadastro" placeholder="CPF" id="cpf">
+                        <input type="number" name="cpf_usuario" placeholder="CPF" id="cpf">
 
                 </div>
 
@@ -257,6 +184,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </main>
 
 </div>
-
+<script src="js/usuario.js"></script>
 </body>
 </html>

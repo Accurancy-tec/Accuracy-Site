@@ -1,83 +1,4 @@
-<?php
 
-session_start();
-
-require_once "configs/conexao.php";
-require_once "classes/usuario.class.php";
-
-$emailOculto = "e-mail não encontrado";
-
-$id = $_SESSION["id_verificacao"] ?? null;
-
-if ($id) {
-
-    $sql = "SELECT email_usuario
-            FROM usuarios_info
-            WHERE id_usuario = :id";
-
-    $stmt = $conexao->prepare($sql);
-    $stmt->bindValue(":id", $id);
-    $stmt->execute();
-
-    $dados = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    if ($dados) {
-
-        $email = $dados["email_usuario"];
-
-        $partes = explode("@", $email);
-
-        if (count($partes) == 2) {
-
-            $primeiraLetra = substr($partes[0], 0, 1);
-            $dominio = $partes[1];
-
-            $emailOculto = $primeiraLetra . "****@" . $dominio;
-        }
-    }
-}
-
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-
-    header("Content-Type: application/json");
-
-    $codigo = $_POST["codigo"] ?? "";
-
-    $id = $_SESSION["id_verificacao"] ?? null;
-
-    if (!$id) {
-
-        echo json_encode([
-            "success" => false,
-            "message" => "Sessão de verificação inválida."
-        ]);
-
-        exit;
-    }
-
-    $usuario = new usuario();
-
-    if ($usuario->verificarEmail($id, $codigo)) {
-
-        unset($_SESSION["id_verificacao"]);
-
-        echo json_encode([
-            "success" => true,
-            "message" => "E-mail verificado com sucesso!"
-        ]);
-
-    } else {
-
-        echo json_encode([
-            "success" => false,
-            "message" => "Código inválido ou expirado."
-        ]);
-    }
-
-    exit;
-}
-
-?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -110,7 +31,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
       <h1>Confirme seu código</h1>
       <p class="subtitle">Enviamos um código de 6 dígitos para<br><strong>
-          <?= htmlspecialchars($emailOculto) ?>
+        
         </strong></p>
 
       <div class="code-row" id="codeRow">
@@ -124,7 +45,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
       <div class="status-row" id="statusRow"></div>
 
-      <button class="btn" id="confirmBtn" disabled>Confirmar código</button>
+      <button class="btn" id="verifyBtn">Confirmar código</button>
 
       <div class="resend">
         Não recebeu o código? <a href="#" id="resendLink">Reenviar (<span class="timer" id="timer">30s</span>)</a>
@@ -133,7 +54,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     <a href="#" class="back-link">← Voltar ao login</a>
   </div>
-  <script src="js/verificar_email.js"></script>
+  <script src="js/confirmacodigo.js"></script>
 
 </body>
 

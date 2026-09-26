@@ -1,12 +1,4 @@
-<?php
-session_start();
-include('configs/conexao.php');
 
-if (!isset($_SESSION["id"])) {
-    header("Location: login.php");
-    exit;
-}
-?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -829,6 +821,14 @@ if (!isset($_SESSION["id"])) {
 ========================= -->
 
 <script>
+
+    const token = localStorage.getItem("token");
+    const usuario = localStorage.getItem("usuario");
+
+    if (!token || !usuario) {
+        window.location.href = "login.php";
+    }
+
 
     /* =========================
        ELEMENTOS

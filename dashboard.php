@@ -1,11 +1,5 @@
 <?php
-session_start();
-include('configs/conexao.php');
 
-if (!isset($_SESSION["nome"])) {
-    header("Location: login.php");
-    exit;
-}
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -202,7 +196,7 @@ if (!isset($_SESSION["nome"])) {
 
                         <a href="perfil.php">
 
-                            <strong><?= htmlspecialchars($_SESSION["nome"]) ?></strong>
+                            <strong id="nomeUsuario">Usuário</strong>
 
 
                         </a>
@@ -490,6 +484,7 @@ if (!isset($_SESSION["nome"])) {
         /* =========================
        ELEMENTOS
     ========================== */
+    
 
         const notificationBtn =
             document.getElementById("notificationBtn");

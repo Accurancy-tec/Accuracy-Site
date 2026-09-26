@@ -1,16 +1,18 @@
+const token = localStorage.getItem("token");
+const usuarioSalvo = localStorage.getItem("usuario");
 
-     fetch("configs/API.php")
-    .then(resposta => resposta.json())
-    .then(dados => {
+if (!token || !usuarioSalvo) {
 
-        console.log(dados);
+    window.location.href = "login.php";
 
-        const preco = dados.results[0].data.regularMarketPrice;
+} else {
 
-        document.getElementById("precoPetr4").textContent =
-            "R$ " + preco;
+    const usuario = JSON.parse(usuarioSalvo);
 
-    })
-    .catch(erro => {
-        console.error("Erro:", erro);
-    });
+    const nomeUsuario = document.getElementById("nomeUsuario");
+
+    if (nomeUsuario) {
+        nomeUsuario.textContent = usuario.nome_usuario;
+    }
+
+}

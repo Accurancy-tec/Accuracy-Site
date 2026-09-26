@@ -1,21 +1,5 @@
 <?php
 
-session_start();
-include('configs/conexao.php');
-include('classes/usuario.class.php');
-
-if (!isset($_SESSION["id"])) {
-    header("Location: login.php");
-    exit;
-}
-
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $usuario = new usuario();
-    $usuario->nome_usuario = $_POST["nome"] ?? "";
-    $usuario->email_usuario = $_POST["email"] ?? "";
-
-    $usuario->alterarDados();
-}
 
 ?>
 
@@ -205,7 +189,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     <div class="user-info">
 
                         <a href="perfil.php">
-                            <strong><?= htmlspecialchars($_SESSION["nome"]) ?></strong>
+                            <strong>nome</strong>
                         </a>
 
                         <p>Perfil do usuário</p>
@@ -271,10 +255,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     </div>
 
 
-                    <h2><?= htmlspecialchars($_SESSION["nome"] ?? "Usuário") ?></h2>
+                    <h2>nome</h2>
 
                     <p class="profile-email">
-                        <?= htmlspecialchars($_SESSION["email"] ?? "usuario@email.com") ?>
+                        email
                     </p>
 
 
@@ -313,7 +297,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
                             <span>Nome</span>
 
-                            <p><?= htmlspecialchars($_SESSION["nome"] ?? "Usuário") ?></p>
+                            <p>nome</p>
 
                         </div>
 
@@ -332,7 +316,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
                             <span>E-mail</span>
 
-                            <p><?= htmlspecialchars($_SESSION["email"] ?? "usuario@email.com") ?></p>
+                            <p>email</p>
 
                         </div>
 
@@ -351,7 +335,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
                             <span>Telefone</span>
 
-                            <p><?= htmlspecialchars($_SESSION["telefone"] ?? "(00) 00000-0000") ?></p>
+                            <p>telefone</p>
 
                         </div>
 
@@ -370,7 +354,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
                             <span>CPF</span>
 
-                            <p>123.456.789-01</p>   
+                            <p>123.456.789-01</p>
 
                         </div>
 
@@ -535,6 +519,76 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     <!-- =========================
      JAVASCRIPT
+
+    <script>
+        const token = localStorage.getItem("token");
+        const usuario = localStorage.getItem("usuario");
+
+        if (!token || !usuario) {
+            window.location.href = "login.php";
+        }
+        const notificationBtn =
+            document.getElementById("notificationBtn");
+
+        const notificationPanel =
+            document.getElementById("notificationPanel");
+
+        const notificationDot =
+            document.getElementById("notificationDot");
+
+        const markRead =
+            document.getElementById("markRead");
+
+
+        notificationBtn.addEventListener("click", function(event) {
+
+            event.stopPropagation();
+
+            notificationPanel.classList.toggle("show");
+
+        });
+
+
+        notificationPanel.addEventListener("click", function(event) {
+
+            event.stopPropagation();
+
+        });
+
+
+        document.addEventListener("click", function() {
+
+            notificationPanel.classList.remove("show");
+
+        });
+
+
+        markRead.addEventListener("click", function() {
+
+            const unreadItems =
+                document.querySelectorAll(
+                    ".notification-item.unread"
+                );
+
+            unreadItems.forEach(function(item) {
+
+                item.classList.remove("unread");
+
+                const unreadDot =
+                    item.querySelector(".unread-dot");
+
+                if (unreadDot) {
+
+                    unreadDot.remove();
+
+                }
+
+            });
+
+            notificationDot.style.display = "none";
+
+        });
+    </script>
 
 </body>
 

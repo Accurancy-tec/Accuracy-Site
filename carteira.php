@@ -588,6 +588,7 @@ function dinheiro($valor)
 </div>
 
 <script>
+    
 
 const notificationBtn =
     document.getElementById("notificationBtn");

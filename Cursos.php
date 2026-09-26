@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -8,6 +7,7 @@
 
     <title>Cursos - Accuracy</title>
 
+    <link rel="stylesheet" href="css/tema.css">
     <link rel="stylesheet" href="css/cursos.css">
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
@@ -15,6 +15,8 @@
 
     <link rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script src="js/avatar-global.js"></script>
+    <script src="js/tema.js"></script>
 </head>
 
 <body>
@@ -31,7 +33,7 @@
 
             <!-- LOGO -->
 
-            <a href="dashboard.php" class="logo">
+            <a href="dashboard.html" class="logo">
 
                 <div class="logo-box">
                     <i class="bi bi-graph-up"></i>
@@ -163,7 +165,7 @@
 
                         <div class="notification-footer">
 
-                            <a href="historico.php">
+                            <a href="historico.html">
                                 Ver todas as notificações
                             </a>
 
@@ -182,7 +184,7 @@
 
             <div class="user">
 
-                <a href="perfil.php">
+                <a href="perfil.html">
 
                     <div class="avatar">
                         N
@@ -192,10 +194,10 @@
 
                 <div class="user-info">
 
-                    <a href="perfil.php">
+                    <a href="perfil.html">
 
                         <strong>
-                            <?= htmlspecialchars($_SESSION["nome"] ?? "Usuário") ?>
+                            Nome da pessoa
                         </strong>
 
                     </a>
@@ -822,14 +824,6 @@
 
 <script>
 
-    const token = localStorage.getItem("token");
-    const usuario = localStorage.getItem("usuario");
-
-    if (!token || !usuario) {
-        window.location.href = "login.php";
-    }
-
-
     /* =========================
        ELEMENTOS
     ========================== */
@@ -921,7 +915,7 @@
 
 </script>
 
-
+<script src="js/cursos.js"></script>
 
 </body>
 </html>

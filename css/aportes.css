@@ -10,20 +10,20 @@
 }
 
 .info-card {
-    background: #0f223f;
-    border: 1px solid #223b67;
+    background: var(--surface-2);
+    border: 1px solid var(--borda-suave);
     border-radius: 12px;
     padding: 18px;
 }
 
 .info-card span {
-    color: #7f96bb;
+    color: var(--texto-secundario);
     font-size: 11px;
 }
 
 .info-card h3 {
     margin-top: 10px;
-    color: #ffffff;
+    color: var(--texto);
     font-size: 26px;
 }
 
@@ -34,11 +34,11 @@
 }
 
 .green {
-    color: #22c55e;
+    color: var(--verde);
 }
 
 .blue {
-    color: #60a5fa;
+    color: var(--primaria);
 }
 
 /* =========================
@@ -53,15 +53,15 @@
 
 .aporte-form,
 .aporte-list {
-    background: #0f223f;
-    border: 1px solid #223b67;
+    background: var(--surface-2);
+    border: 1px solid var(--borda-suave);
     border-radius: 12px;
     padding: 18px;
 }
 
 .aporte-form h3,
 .aporte-list h3 {
-    color: #ffffff;
+    color: var(--texto);
     font-size: 15px;
 }
 
@@ -76,7 +76,7 @@
 .aporte-form label {
     display: block;
     margin: 15px 0 6px;
-    color: #7f96bb;
+    color: var(--texto-secundario);
     font-size: 11px;
 }
 
@@ -84,23 +84,23 @@
 .aporte-form select {
     width: 100%;
     padding: 11px 12px;
-    border: 1px solid #29446d;
+    border: 1px solid var(--borda);
     border-radius: 8px;
     outline: none;
-    background: #162c4d;
-    color: #ffffff;
+    background: var(--icone-bg);
+    color: var(--texto);
     font-family: inherit;
     font-size: 12px;
 }
 
 .aporte-form input:focus,
 .aporte-form select:focus {
-    border-color: #3b82f6;
+    border-color: var(--primaria);
 }
 
 .aporte-form select option {
-    background: #162c4d;
-    color: white;
+    background: var(--icone-bg);
+    color: var(--texto);
 }
 
 .quick-values {
@@ -111,10 +111,10 @@
 
 .quick-values button {
     padding: 9px 5px;
-    border: 1px solid #2d4e82;
+    border: 1px solid var(--borda);
     border-radius: 8px;
-    background: #15325d;
-    color: #6ea8ff;
+    background: var(--icone-bg);
+    color: var(--link);
     cursor: pointer;
     font-family: inherit;
     font-size: 11px;
@@ -123,9 +123,9 @@
 
 .quick-values button:hover,
 .quick-values button.selected {
-    border-color: #3b82f6;
-    background: #1c3563;
-    color: #ffffff;
+    border-color: var(--primaria);
+    background: var(--primaria-suave);
+    color: var(--texto-ativo);
 }
 
 .row {
@@ -148,7 +148,7 @@
     padding: 12px;
     border: none;
     border-radius: 8px;
-    background: #3b82f6;
+    background: var(--primaria);
     color: #ffffff;
     cursor: pointer;
     font-family: inherit;
@@ -158,7 +158,7 @@
 }
 
 .confirm-btn:hover {
-    background: #2563eb;
+    background: var(--primaria-forte);
 }
 
 /* =========================
@@ -171,23 +171,71 @@
     justify-content: space-between;
     gap: 15px;
     padding-bottom: 15px;
-    border-bottom: 1px solid #223b67;
+    border-bottom: 1px solid var(--borda-suave);
 }
 
 .list-header h3 {
     font-size: 15px;
 }
 
-.list-header>span {
-    color: #7f96bb;
+.list-header > span {
+    color: var(--texto-secundario);
     font-size: 11px;
     white-space: nowrap;
 }
 
 .list-subtitle {
     margin-top: 5px;
-    color: #7187a8;
+    color: var(--texto-fraco);
     font-size: 11px;
+}
+
+/* =========================
+   AÇÕES DO CABEÇALHO DA LISTA
+   (contador + botão de
+   excluir todos os aportes)
+========================= */
+
+.list-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.list-header-actions #contributionCount {
+    color: var(--texto-secundario);
+    font-size: 11px;
+    white-space: nowrap;
+}
+
+.clear-btn {
+    appearance: none;
+    -webkit-appearance: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 0;
+    padding: 6px 10px;
+    border: 1px solid rgba(239, 68, 68, 0.25);
+    border-radius: 8px;
+    background: rgba(239, 68, 68, 0.08);
+    color: var(--vermelho);
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 500;
+    line-height: normal;
+    white-space: nowrap;
+    transition: 0.2s;
+}
+
+.clear-btn:hover {
+    border-color: var(--vermelho);
+    background: rgba(239, 68, 68, 0.18);
+}
+
+.clear-btn i {
+    font-size: 12px;
 }
 
 /* =========================
@@ -200,7 +248,7 @@
     justify-content: space-between;
     gap: 15px;
     padding: 16px 4px;
-    border-bottom: 1px solid #1d3357;
+    border-bottom: 1px solid var(--borda-item);
     transition: 0.2s;
 }
 
@@ -212,7 +260,7 @@
     padding-left: 8px;
     padding-right: 8px;
     border-radius: 8px;
-    background: #12294b;
+    background: var(--surface-hover);
 }
 
 .aporte-item .left {
@@ -236,7 +284,7 @@
 
 .green-bg {
     background: rgba(34, 197, 94, 0.15);
-    color: #22c55e;
+    color: var(--verde);
 }
 
 .orange-bg {
@@ -251,12 +299,12 @@
 
 .yellow-bg {
     background: rgba(234, 179, 8, 0.15);
-    color: #eab308;
+    color: var(--amarelo);
 }
 
 .blue-bg {
     background: rgba(59, 130, 246, 0.15);
-    color: #60a5fa;
+    color: var(--primaria);
 }
 
 .aporte-info {
@@ -266,7 +314,7 @@
 .aporte-info strong {
     display: block;
     overflow: hidden;
-    color: #e5edff;
+    color: var(--texto-forte);
     font-size: 13px;
     font-weight: 600;
     text-overflow: ellipsis;
@@ -275,7 +323,7 @@
 
 .aporte-info p {
     margin-top: 4px;
-    color: #8ea4c7;
+    color: var(--texto-secundario);
     font-size: 11px;
 }
 
@@ -283,7 +331,7 @@
     display: block;
     margin-top: 5px;
     overflow: hidden;
-    color: #587091;
+    color: var(--texto-muito-fraco);
     font-size: 10px;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -293,26 +341,12 @@
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    gap: 18px;
+    gap: 14px;
     flex-shrink: 0;
 }
 
 .aporte-value {
-    color: #ffffff;
-    font-size: 13px;
-    font-weight: 600;
-    white-space: nowrap;
-}
-
-.aporte-qtd {
-    color: #8ea4c7;
-    font-size: 11px;
-    font-weight: 500;
-    white-space: nowrap;
-}
-
-.aporte-value {
-    color: #ffffff;
+    color: var(--texto);
     font-size: 13px;
     font-weight: 600;
     white-space: nowrap;
@@ -331,13 +365,13 @@
     border: 1px solid rgba(239, 68, 68, 0.25);
     border-radius: 8px;
     background: rgba(239, 68, 68, 0.08);
-    color: #ef4444;
+    color: var(--vermelho);
     cursor: pointer;
     transition: 0.2s;
 }
 
 .delete-btn:hover {
-    border-color: #ef4444;
+    border-color: var(--vermelho);
     background: rgba(239, 68, 68, 0.18);
 }
 
@@ -363,7 +397,7 @@
     position: absolute;
     inset: 0;
     border-radius: 20px;
-    background: #29446d;
+    background: var(--scroll-thumb);
     cursor: pointer;
     transition: 0.2s;
 }
@@ -376,15 +410,15 @@
     left: 3px;
     top: 3px;
     border-radius: 50%;
-    background: #9bb0d1;
+    background: var(--texto-suave);
     transition: 0.2s;
 }
 
-.switch input:checked+span {
-    background: #2563eb;
+.switch input:checked + span {
+    background: var(--primaria-forte);
 }
 
-.switch input:checked+span::before {
+.switch input:checked + span::before {
     transform: translateX(15px);
     background: #ffffff;
 }
@@ -400,22 +434,22 @@
     justify-content: center;
     flex-direction: column;
     gap: 8px;
-    color: #7187a8;
+    color: var(--texto-fraco);
     text-align: center;
 }
 
 .empty-state i {
-    color: #315b99;
+    color: var(--primaria);
     font-size: 34px;
 }
 
 .empty-state strong {
-    color: #9bb0d1;
+    color: var(--texto-suave);
     font-size: 13px;
 }
 
 .empty-state p {
-    color: #7187a8;
+    color: var(--texto-fraco);
     font-size: 11px;
 }
 
@@ -432,16 +466,90 @@
     align-items: center;
     gap: 8px;
     padding: 13px 16px;
-    border: 1px solid #2a3f66;
+    border: 1px solid var(--borda);
     border-radius: 8px;
-    background: #0e1f3d;
-    color: #22c55e;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    background: var(--surface);
+    color: var(--verde);
+    box-shadow: 0 10px 30px var(--sombra);
     font-size: 12px;
 }
 
 .toast.show {
     display: flex;
+}
+
+/* =========================
+   CHUVA DE DINHEIRO
+   (animação ao confirmar
+   um aporte)
+========================= */
+
+.money-rain {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 2000;
+}
+
+.money-note {
+    position: absolute;
+    top: -60px;
+
+    width: 48px;
+    height: 26px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 4px;
+
+    background: linear-gradient(135deg, #22c55e, #15803d);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.3);
+
+    color: #ecfdf5;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+
+    animation-name: moneyFall;
+    animation-timing-function: ease-in;
+    animation-fill-mode: forwards;
+}
+
+.money-note::before {
+    content: "";
+    position: absolute;
+    inset: 4px;
+    border: 1px dashed rgba(255, 255, 255, 0.45);
+    border-radius: 2px;
+}
+
+@keyframes moneyFall {
+
+    0% {
+        transform:
+            translateY(-60px)
+            translateX(0)
+            rotate(var(--rot-start));
+        opacity: 1;
+    }
+
+    80% {
+        opacity: 1;
+    }
+
+    100% {
+        transform:
+            translateY(112vh)
+            translateX(var(--drift))
+            rotate(var(--rot-end));
+        opacity: 0;
+    }
+
 }
 
 /* =========================
@@ -477,13 +585,6 @@
         font-size: 12px;
     }
 
-    .aporte-qtd {
-        color: #60a5fa;
-        font-size: 11px;
-        white-space: nowrap;
-        display: inline-block;
-    }
-
     .info-card h3 {
         font-size: 23px;
     }
@@ -491,5 +592,14 @@
     .aporte-form,
     .aporte-list {
         padding: 15px;
+    }
+
+    .list-header {
+        flex-wrap: wrap;
+    }
+
+    .list-header-actions {
+        width: 100%;
+        justify-content: space-between;
     }
 }

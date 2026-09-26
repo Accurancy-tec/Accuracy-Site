@@ -1,5 +1,7 @@
 /* =========================
    RESET
+========================= */
+
 * {
     margin: 0;
     padding: 0;
@@ -8,8 +10,8 @@
 }
 
 body {
-    background: #071427;
-    color: white;
+    background: var(--bg);
+    color: var(--texto);
 }
 
 a {
@@ -24,29 +26,450 @@ button {
 
 /* =========================
    APP
+========================= */
+
+.app {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+
+/* =========================
+   NAVBAR SUPERIOR
+========================= */
+
+.sidebar {
+    width: 100%;
+    height: 75px;
+
+    background: var(--surface);
+
+    padding: 0 30px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    border-bottom: 1px solid var(--borda);
+
+    position: sticky;
+    top: 0;
+
+    z-index: 100;
+}
+
+
+/* =========================
+   TOPO
+========================= */
+
+.top {
+    display: flex;
+    align-items: center;
+
+    gap: 30px;
+
+    min-width: 0;
+}
+
+
+/* =========================
+   LOGO
+========================= */
+
+.logo {
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    font-size: 16px;
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+.logo-box {
+    width: 30px;
+    height: 30px;
+
+    background: var(--primaria);
+
+    border-radius: 8px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo-box i {
+    font-size: 16px;
+    color: #ffffff;
+}
+
+
+/* =========================
+   DIVISOR
+========================= */
+
+.divider {
+    width: 1px;
+    height: 32px;
+
+    background: var(--borda);
+}
+
+
+/* =========================
+   MENU
+========================= */
+
+.menu {
+    display: flex;
+    align-items: center;
+
+    gap: 5px;
+}
+
+.menu a {
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    padding: 10px 13px;
+
+    border-radius: 8px;
+
+    color: var(--texto-suave);
+
+    font-size: 14px;
+
+    white-space: nowrap;
+
+    transition: .2s;
+}
+
+.menu a i {
+    font-size: 15px;
+}
+
+.menu a:hover {
+    background: var(--primaria-suave);
+    color: var(--texto-ativo);
+}
+
+.menu a.active {
+    background: var(--primaria-suave);
+    color: var(--texto-ativo);
+}
+
+
+/* =========================
+   ÁREA DO USUÁRIO
+========================= */
+
+.user-area {
+    display: flex;
+    align-items: center;
+
+    gap: 15px;
+
+    flex-shrink: 0;
+}
+
+
+/* =========================
+   ÍCONES
+========================= */
+
+.icons {
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+}
+
+
+/* =========================
+   CONTAINER DA NOTIFICAÇÃO
+========================= */
+
+.notification-container {
+    position: relative;
+}
+
+
+/* =========================
+   BOTÃO DO SINO
+========================= */
+
+.notification-btn {
+    position: relative;
+
+    width: 38px;
+    height: 38px;
+
+    border: 1px solid var(--borda);
+
+    border-radius: 10px;
+
+    background: var(--surface-2);
+
+    color: var(--texto-suave);
+
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    transition: .2s;
+}
+
+.notification-btn:hover {
+    background: var(--primaria-suave);
+
+    color: var(--texto-ativo);
+
+    border-color: var(--primaria);
+}
+
+.notification-btn i {
+    font-size: 16px;
+}
+
+
+/* =========================
+   BOLINHA DO SINO
+========================= */
+
+.notification-dot {
+    position: absolute;
+
+    top: 6px;
+    right: 6px;
+
+    width: 7px;
+    height: 7px;
+
+    background: var(--verde);
+
+    border-radius: 50%;
+
+    border: 1px solid var(--surface-2);
+}
+
+
+/* =========================
+   PAINEL DE NOTIFICAÇÕES
+========================= */
+
+.notification-panel {
+    position: absolute;
+
+    top: calc(100% + 12px);
+
+    right: 0;
+
+    width: 360px;
+
+    background: var(--surface);
+
+    border: 1px solid var(--borda);
+
+    border-radius: 12px;
+
+    box-shadow: 0 15px 40px var(--sombra);
+
+    overflow: hidden;
+
+    opacity: 0;
+
+    visibility: hidden;
+
+    transform: translateY(-8px);
+
+    transition:
+        opacity .2s ease,
+        transform .2s ease,
+        visibility .2s ease;
+
+    z-index: 999;
+}
+
+
+/* =========================
+   PAINEL ABERTO
+========================= */
+
+.notification-panel.show {
+    opacity: 1;
+
+    visibility: visible;
+
+    transform: translateY(0);
+}
+
+
+/* =========================
+   CABEÇALHO
+========================= */
+
+.notification-header {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 16px;
+
+    border-bottom: 1px solid var(--borda-suave);
+}
+
+.notification-header h3 {
+    font-size: 14px;
+
+    font-weight: 600;
+
+    color: var(--texto);
+}
+
+.notification-header button {
+    background: none;
+
+    border: none;
+
+    color: var(--link);
+
+    font-size: 10px;
+
+    cursor: pointer;
+
+    transition: .2s;
+}
+
+.notification-header button:hover {
+    color: var(--texto);
+}
+
+
+/* =========================
+   LISTA DE NOTIFICAÇÕES
+========================= */
+
+.notification-list {
+    max-height: 330px;
+
+    overflow-y: auto;
+}
+
+
+/* =========================
+   SEM NOTIFICAÇÕES
+========================= */
+
+.empty-notifications {
+    min-height: 170px;
+
+    padding: 30px 20px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    text-align: center;
+
+    gap: 7px;
+}
+
+.empty-notifications i {
+    font-size: 25px;
+
+    color: var(--texto-muito-fraco);
+
+    margin-bottom: 4px;
+}
+
+.empty-notifications strong {
+    color: var(--texto-forte);
+
+    font-size: 12px;
+}
+
+.empty-notifications p {
+    color: var(--texto-fraco);
+
+    font-size: 10px;
+}
+
+
+/* =========================
+   ITEM
+========================= */
+
+.notification-item {
+    position: relative;
+
+    display: flex;
+
+    gap: 12px;
+
+    padding: 14px 16px;
+
+    border-bottom: 1px solid var(--borda-item);
+
+    transition: .2s;
+}
+
+.notification-item:hover {
+    background: var(--surface-hover);
+}
+
+
+/* =========================
+   NÃO LIDA
+========================= */
+
+.notification-item.unread {
+    background: var(--destaque-nao-lida);
+}
+
+
+/* =========================
+   ÍCONE DA NOTIFICAÇÃO
+========================= */
+
+.notification-icon {
+    width: 34px;
+    height: 34px;
+
+    min-width: 34px;
+
+    border-radius: 9px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+}
+
+.notification-icon i {
     font-size: 14px;
 }
 
-.user p {
-    color: #8aa0c2;
-    font-size: 11px;
-}
-
-
-/* AVATAR */
-
-.avatar {
-    width: 35px;
-    height: 35px;
-
-    border-radius: 50%;
 
 /* AZUL */
 
 .notification-icon.blue {
     background: rgba(59, 130, 246, .15);
 
-    color: #60a5fa;
+    color: var(--primaria);
 }
 
 
@@ -55,7 +478,7 @@ button {
 .notification-icon.green-icon {
     background: rgba(34, 197, 94, .15);
 
-    color: #22c55e;
+    color: var(--verde);
 }
 
 
@@ -64,7 +487,7 @@ button {
 .notification-icon.yellow {
     background: rgba(234, 179, 8, .15);
 
-    color: #eab308;
+    color: var(--amarelo);
 }
 
 
@@ -73,10 +496,694 @@ button {
 .notification-icon.red-icon {
     background: rgba(239, 68, 68, .15);
 
-    color: #ef4444;
+    color: var(--vermelho);
 }
 
 
 /* =========================
    CONTEÚDO
+========================= */
+
+.notification-content {
+    flex: 1;
+
+    min-width: 0;
+}
+
+.notification-content strong {
+    display: block;
+
+    color: var(--texto-forte);
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    margin-bottom: 4px;
+}
+
+.notification-content p {
+    color: var(--texto-secundario);
+
+    font-size: 10px;
+
+    line-height: 1.5;
+}
+
+.notification-content p span {
+    color: var(--verde);
+
+    font-weight: 600;
+}
+
+.notification-content p span.negative {
+    color: var(--vermelho);
+}
+
+.notification-content small {
+    display: block;
+
+    margin-top: 6px;
+
+    color: var(--texto-muito-fraco);
+
+    font-size: 9px;
+}
+
+
+/* =========================
+   BOLINHA DE NÃO LIDA
+========================= */
+
+.unread-dot {
+    width: 6px;
+    height: 6px;
+
+    background: var(--primaria);
+
+    border-radius: 50%;
+
+    position: absolute;
+
+    top: 18px;
+    right: 12px;
+}
+
+
+/* =========================
+   RODAPÉ
+========================= */
+
+.notification-footer {
+    padding: 12px 16px;
+
+    text-align: center;
+
+    border-top: 1px solid var(--borda-suave);
+}
+
+.notification-footer a {
+    color: var(--link);
+
+    font-size: 10px;
+
+    transition: .2s;
+}
+
+.notification-footer a:hover {
+    color: var(--texto);
+}
+
+
+/* =========================
+   SCROLL DO PAINEL
+========================= */
+
+.notification-list::-webkit-scrollbar {
+    width: 5px;
+}
+
+.notification-list::-webkit-scrollbar-track {
+    background: var(--surface);
+}
+
+.notification-list::-webkit-scrollbar-thumb {
+    background: var(--scroll-thumb);
+
+    border-radius: 10px;
+}
+
+
+/* =========================
+   USUÁRIO
+========================= */
+
+.user {
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    flex-shrink: 0;
+}
+
+.user-info strong {
+    display: block;
+
+    font-size: 13px;
+}
+
+.user-info p {
+    color: var(--texto-secundario);
+
+    font-size: 10px;
+
+    margin-top: 3px;
+}
+
+
+/* =========================
+   AVATAR
+========================= */
+
+.avatar {
+    width: 35px;
+    height: 35px;
+
+    border-radius: 50%;
+
+    background: var(--primaria);
+
+    color: #ffffff;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    flex-shrink: 0;
+}
+
+.avatar.small {
+    width: 38px;
+    height: 38px;
+
+    cursor: pointer;
+
+    transition: .2s;
+}
+
+.avatar.small:hover {
+    transform: scale(1.08);
+}
+
+
+/* =========================
+   MAIN
+========================= */
+
+.main {
+    flex: 1;
+
+    width: 100%;
+
+    padding: 25px 30px;
+
+    overflow: auto;
+}
+
+
+/* =========================
+   TOPBAR
+========================= */
+
+.topbar {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 20px;
+}
+
+.topbar h1 {
+    font-size: 24px;
+
+    font-weight: 700;
+}
+
+.topbar p {
+    margin-top: 4px;
+
+    color: var(--texto-secundario);
+
+    font-size: 12px;
+}
+
+
+/* =========================
+   CARD PRINCIPAL
+   (mantém o azul fixo -
+   é a cor de marca do card,
+   não a superfície do tema)
+========================= */
+
+.card-big {
+    background: linear-gradient(
+        135deg,
+        #1d4ed8,
+        #1e3a8a
+    );
+
+    padding: 22px;
+
+    border-radius: 14px;
+
+    display: flex;
+
+    align-items: flex-start;
+    justify-content: space-between;
+
+    border: 1px solid rgba(255, 255, 255, .05);
+}
+
+.card-label {
+    color: #d7e4ff;
+
+    font-size: 11px;
+
+    letter-spacing: .2px;
+}
+
+.card-big h2 {
+    margin: 10px 0;
+
+    font-size: 34px;
+
+    font-weight: 700;
+
+    color: #ffffff;
+}
+
+
+/* =========================
+   ESTATÍSTICAS
+========================= */
+
+.stats {
+    display: flex;
+
+    gap: 30px;
+
+    margin-top: 12px;
+}
+
+.stats p {
+    color: #bcd0ff;
+
+    font-size: 11px;
+
+    margin-bottom: 4px;
+}
+
+.stats strong {
+    font-size: 14px;
+    color: #ffffff;
+}
+
+
+/* =========================
+   CORES
+========================= */
+
+.green {
+    color: var(--verde);
+}
+
+.red {
+    color: var(--vermelho);
+}
+
+
+/* =========================
+   BADGE
+========================= */
+
+.badge {
+    background: rgba(0, 0, 0, .2);
+
+    padding: 7px 11px;
+
+    border-radius: 20px;
+
+    font-size: 12px;
+
+    white-space: nowrap;
+
+    color: #ffffff;
+}
+
+
+/* =========================
+   GRID
+========================= */
+
+.grid {
+    margin-top: 20px;
+
+    display: grid;
+
+    grid-template-columns: repeat(4, 1fr);
+
+    gap: 15px;
+}
+
+.card {
+    background: var(--surface-2);
+
+    padding: 18px;
+
+    border: 1px solid var(--borda-suave);
+
+    border-radius: 12px;
+
+    transition: .2s;
+}
+
+.card:hover {
+    border-color: var(--primaria);
+
+    transform: translateY(-2px);
+}
+
+
+/* =========================
+   ÍCONE DOS CARDS
+========================= */
+
+.card-icon {
+    width: 34px;
+    height: 34px;
+
+    margin-bottom: 12px;
+
+    border-radius: 8px;
+
+    background: var(--icone-bg);
+
+    color: var(--primaria);
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+}
+
+.card-icon i {
+    font-size: 15px;
+}
+
+
+/* =========================
+   TEXTO DOS CARDS
+========================= */
+
+.card h4 {
+    color: var(--texto-suave);
+
+    font-size: 13px;
+
+    font-weight: 500;
+}
+
+.card p {
+    margin-top: 8px;
+
+    font-size: 21px;
+
+    font-weight: 600;
+}
+
+.card span {
+    display: block;
+
+    margin-top: 7px;
+
+    font-size: 11px;
+}
+
+
+/* =========================
+   GRÁFICO
+========================= */
+
+.chart {
+    margin-top: 20px;
+
+    background: var(--surface-2);
+
+    padding: 18px;
+
+    border: 1px solid var(--borda-suave);
+
+    border-radius: 12px;
+}
+
+.chart-header {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+}
+
+.chart h3 {
+    font-size: 15px;
+}
+
+.chart-header p {
+    margin-top: 4px;
+
+    color: var(--texto-fraco);
+
+    font-size: 11px;
+}
+
+
+/* =========================
+   FILTRO DO GRÁFICO
+========================= */
+
+.chart-filter {
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    padding: 8px 11px;
+
+    background: var(--icone-bg);
+
+    color: var(--texto-suave);
+
+    border: 1px solid var(--borda);
+
+    border-radius: 7px;
+
+    font-size: 11px;
+
+    cursor: pointer;
+}
+
+.chart-filter:hover {
+    background: var(--primaria-suave);
+
+    color: var(--texto-ativo);
+}
+
+
+/* =========================
+   ÁREA DO GRÁFICO
+========================= */
+
+.chart-box {
+    height: 350px;
+
+    margin-top: 15px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+}
+
+.chart-placeholder {
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    gap: 8px;
+
+    color: var(--texto-fraco);
+
+    font-size: 12px;
+}
+
+.chart-placeholder i {
+    font-size: 30px;
+
+    color: var(--primaria);
+}
+
+
+/* =========================
+   RESPONSIVIDADE
+========================= */
+
+@media (max-width: 1200px) {
+
+    .menu a {
+        padding: 9px 10px;
+
+        gap: 6px;
+    }
+
+    .menu a span {
+        font-size: 13px;
+    }
+
+    .top {
+        gap: 20px;
+    }
+
+    .grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 900px) {
+
+    .sidebar {
+        height: auto;
+
+        min-height: 75px;
+
+        padding: 15px 20px;
+
+        flex-wrap: wrap;
+
+        gap: 15px;
+    }
+
+    .top {
+        width: 100%;
+
+        flex-wrap: wrap;
+
+        gap: 15px;
+    }
+
+    .menu {
+        width: 100%;
+
+        overflow-x: auto;
+
+        padding-bottom: 2px;
+    }
+
+    .user-area {
+        display: none;
+    }
+
+    .card-big {
+        flex-direction: column;
+
+        gap: 20px;
+    }
+
+}
+
+
+/* =========================
+   CELULAR
+========================= */
+
+@media (max-width: 600px) {
+
+    .main {
+        padding: 20px 15px;
+    }
+
+    .sidebar {
+        padding: 15px;
+    }
+
+    .logo {
+        font-size: 15px;
+    }
+
+    .divider {
+        display: none;
+    }
+
+    .menu {
+        gap: 4px;
+    }
+
+    .menu a {
+        padding: 9px 11px;
+    }
+
+    .menu a span {
+        font-size: 12px;
+    }
+
+    .menu a i {
+        font-size: 14px;
+    }
+
+    .grid {
+        grid-template-columns: 1fr;
+    }
+
+    .stats {
+        flex-direction: column;
+
+        gap: 12px;
+    }
+
+    .topbar {
+        align-items: flex-start;
+    }
+
+    .topbar h1 {
+        font-size: 21px;
+    }
+
+    .topbar p {
+        font-size: 11px;
+    }
+
+    .card-big h2 {
+        font-size: 29px;
+    }
+
+    .chart-header {
+        align-items: flex-start;
+
+        gap: 10px;
+
+        flex-direction: column;
+    }
+
+    .chart-filter {
+        align-self: flex-start;
+    }
+
+
+    /* =========================
+       PAINEL NO CELULAR
+    ========================== */
+
+    .notification-panel {
+        position: fixed;
+
+        top: 70px;
+
+        right: 15px;
+        left: 15px;
+
+        width: auto;
+    }
+
 }

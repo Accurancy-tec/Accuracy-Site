@@ -10,8 +10,8 @@
 }
 
 body {
-    background: #071427;
-    color: white;
+    background: var(--bg);
+    color: var(--texto);
 }
 
 a {
@@ -43,7 +43,7 @@ button {
     width: 100%;
     height: 75px;
 
-    background: #0e1f3d;
+    background: var(--surface);
 
     padding: 0 30px;
 
@@ -51,7 +51,7 @@ button {
     align-items: center;
     justify-content: space-between;
 
-    border-bottom: 1px solid #2a3f66;
+    border-bottom: 1px solid var(--borda);
 
     position: sticky;
     top: 0;
@@ -94,7 +94,7 @@ button {
     width: 30px;
     height: 30px;
 
-    background: #3b82f6;
+    background: var(--primaria);
 
     border-radius: 8px;
 
@@ -105,6 +105,7 @@ button {
 
 .logo-box i {
     font-size: 16px;
+    color: #ffffff;
 }
 
 
@@ -116,7 +117,7 @@ button {
     width: 1px;
     height: 32px;
 
-    background: #2a3f66;
+    background: var(--borda);
 }
 
 
@@ -141,7 +142,7 @@ button {
 
     border-radius: 8px;
 
-    color: #9bb0d1;
+    color: var(--texto-suave);
 
     font-size: 14px;
 
@@ -155,13 +156,13 @@ button {
 }
 
 .menu a:hover {
-    background: #1c3563;
-    color: white;
+    background: var(--primaria-suave);
+    color: var(--texto-ativo);
 }
 
 .menu a.active {
-    background: #1c3563;
-    color: white;
+    background: var(--primaria-suave);
+    color: var(--texto-ativo);
 }
 
 
@@ -210,13 +211,13 @@ button {
     width: 38px;
     height: 38px;
 
-    border: 1px solid #2a3f66;
+    border: 1px solid var(--borda);
 
     border-radius: 10px;
 
-    background: #0f223f;
+    background: var(--surface-2);
 
-    color: #9bb0d1;
+    color: var(--texto-suave);
 
     cursor: pointer;
 
@@ -228,11 +229,11 @@ button {
 }
 
 .notification-btn:hover {
-    background: #1c3563;
+    background: var(--primaria-suave);
 
-    color: white;
+    color: var(--texto-ativo);
 
-    border-color: #3b82f6;
+    border-color: var(--primaria);
 }
 
 .notification-btn i {
@@ -253,11 +254,11 @@ button {
     width: 7px;
     height: 7px;
 
-    background: #22c55e;
+    background: var(--verde);
 
     border-radius: 50%;
 
-    border: 1px solid #0f223f;
+    border: 1px solid var(--surface-2);
 }
 
 
@@ -274,13 +275,13 @@ button {
 
     width: 360px;
 
-    background: #0e1f3d;
+    background: var(--surface);
 
-    border: 1px solid #2a3f66;
+    border: 1px solid var(--borda);
 
     border-radius: 12px;
 
-    box-shadow: 0 15px 40px rgba(0, 0, 0, .35);
+    box-shadow: 0 15px 40px var(--sombra);
 
     overflow: hidden;
 
@@ -324,7 +325,7 @@ button {
 
     padding: 16px;
 
-    border-bottom: 1px solid #223b67;
+    border-bottom: 1px solid var(--borda-suave);
 }
 
 .notification-header h3 {
@@ -332,7 +333,7 @@ button {
 
     font-weight: 600;
 
-    color: white;
+    color: var(--texto);
 }
 
 .notification-header button {
@@ -340,7 +341,7 @@ button {
 
     border: none;
 
-    color: #6ea8ff;
+    color: var(--link);
 
     font-size: 10px;
 
@@ -350,7 +351,7 @@ button {
 }
 
 .notification-header button:hover {
-    color: white;
+    color: var(--texto);
 }
 
 
@@ -390,19 +391,19 @@ button {
 .empty-notifications i {
     font-size: 25px;
 
-    color: #526b91;
+    color: var(--texto-muito-fraco);
 
     margin-bottom: 4px;
 }
 
 .empty-notifications strong {
-    color: #dce6f8;
+    color: var(--texto-forte);
 
     font-size: 12px;
 }
 
 .empty-notifications p {
-    color: #6f86aa;
+    color: var(--texto-fraco);
 
     font-size: 10px;
 }
@@ -421,13 +422,13 @@ button {
 
     padding: 14px 16px;
 
-    border-bottom: 1px solid #1d3357;
+    border-bottom: 1px solid var(--borda-item);
 
     transition: .2s;
 }
 
 .notification-item:hover {
-    background: #12294b;
+    background: var(--surface-hover);
 }
 
 
@@ -436,7 +437,7 @@ button {
 ========================= */
 
 .notification-item.unread {
-    background: rgba(59, 130, 246, .06);
+    background: var(--destaque-nao-lida);
 }
 
 
@@ -468,7 +469,7 @@ button {
 .notification-icon.blue {
     background: rgba(59, 130, 246, .15);
 
-    color: #60a5fa;
+    color: var(--primaria);
 }
 
 
@@ -477,7 +478,7 @@ button {
 .notification-icon.green-icon {
     background: rgba(34, 197, 94, .15);
 
-    color: #22c55e;
+    color: var(--verde);
 }
 
 
@@ -486,7 +487,7 @@ button {
 .notification-icon.yellow {
     background: rgba(234, 179, 8, .15);
 
-    color: #eab308;
+    color: var(--amarelo);
 }
 
 
@@ -495,7 +496,7 @@ button {
 .notification-icon.red-icon {
     background: rgba(239, 68, 68, .15);
 
-    color: #ef4444;
+    color: var(--vermelho);
 }
 
 
@@ -512,7 +513,7 @@ button {
 .notification-content strong {
     display: block;
 
-    color: #e5edff;
+    color: var(--texto-forte);
 
     font-size: 12px;
 
@@ -522,7 +523,7 @@ button {
 }
 
 .notification-content p {
-    color: #8ea4c7;
+    color: var(--texto-secundario);
 
     font-size: 10px;
 
@@ -530,13 +531,13 @@ button {
 }
 
 .notification-content p span {
-    color: #22c55e;
+    color: var(--verde);
 
     font-weight: 600;
 }
 
 .notification-content p span.negative {
-    color: #ef4444;
+    color: var(--vermelho);
 }
 
 .notification-content small {
@@ -544,7 +545,7 @@ button {
 
     margin-top: 6px;
 
-    color: #587091;
+    color: var(--texto-muito-fraco);
 
     font-size: 9px;
 }
@@ -558,7 +559,7 @@ button {
     width: 6px;
     height: 6px;
 
-    background: #3b82f6;
+    background: var(--primaria);
 
     border-radius: 50%;
 
@@ -578,11 +579,11 @@ button {
 
     text-align: center;
 
-    border-top: 1px solid #223b67;
+    border-top: 1px solid var(--borda-suave);
 }
 
 .notification-footer a {
-    color: #6ea8ff;
+    color: var(--link);
 
     font-size: 10px;
 
@@ -590,7 +591,7 @@ button {
 }
 
 .notification-footer a:hover {
-    color: white;
+    color: var(--texto);
 }
 
 
@@ -603,11 +604,11 @@ button {
 }
 
 .notification-list::-webkit-scrollbar-track {
-    background: #0e1f3d;
+    background: var(--surface);
 }
 
 .notification-list::-webkit-scrollbar-thumb {
-    background: #29446d;
+    background: var(--scroll-thumb);
 
     border-radius: 10px;
 }
@@ -633,7 +634,7 @@ button {
 }
 
 .user-info p {
-    color: #8aa0c2;
+    color: var(--texto-secundario);
 
     font-size: 10px;
 
@@ -651,7 +652,9 @@ button {
 
     border-radius: 50%;
 
-    background: #3b82f6;
+    background: var(--primaria);
+
+    color: #ffffff;
 
     display: flex;
     align-items: center;
@@ -713,7 +716,7 @@ button {
 }
 
 .page-header p {
-    color: #7c94b8;
+    color: var(--texto-secundario);
     font-size: 13px;
 
     margin-top: 3px;
@@ -737,6 +740,8 @@ button {
 
 /* =========================================
    BANNER
+   (gradiente e ilustração mantidos fixos,
+   são a identidade visual do banner)
 ========================================= */
 
 .learning-banner {
@@ -748,9 +753,9 @@ button {
             rgba(59, 130, 246, .18),
             transparent 38%
         ),
-        #0f223f;
+        var(--surface-2);
 
-    border: 1px solid #223b67;
+    border: 1px solid var(--borda-suave);
 
     border-radius: 14px;
 
@@ -773,7 +778,7 @@ button {
 
 .banner-tag,
 .small-title {
-    color: #6f8ab4;
+    color: var(--texto-muito-fraco);
 
     font-size: 10px;
 
@@ -789,11 +794,11 @@ button {
 }
 
 .banner-content h2 span {
-    color: #3b82f6;
+    color: var(--primaria);
 }
 
 .banner-content p {
-    color: #91a4c2;
+    color: var(--texto-fraco);
 
     font-size: 13px;
 
@@ -807,9 +812,9 @@ button {
 
     border: none;
 
-    background: #2563eb;
+    background: var(--primaria-forte);
 
-    color: white;
+    color: #ffffff;
 
     border-radius: 8px;
 
@@ -828,7 +833,7 @@ button {
 
 
 /* =========================================
-   LIVROS DO BANNER
+   LIVROS DO BANNER (fixos, decorativos)
 ========================================= */
 
 .banner-illustration {
@@ -886,7 +891,7 @@ button {
 
     font-size: 72px;
 
-    color: #3b82f6;
+    color: var(--primaria);
 
     transform: rotate(-7deg);
 
@@ -903,9 +908,9 @@ button {
 .continue-card {
     min-height: 230px;
 
-    background: #0f223f;
+    background: var(--surface-2);
 
-    border: 1px solid #223b67;
+    border: 1px solid var(--borda-suave);
 
     border-radius: 14px;
 
@@ -921,7 +926,7 @@ button {
 }
 
 .section-title span:first-child {
-    color: #7f96bb;
+    color: var(--texto-secundario);
     font-size: 10px;
 }
 
@@ -932,7 +937,7 @@ button {
 }
 
 .course-progress-text {
-    color: #22c55e;
+    color: var(--verde);
 
     font-weight: 600;
 }
@@ -956,7 +961,7 @@ button {
 .continue-info p {
     font-size: 12px;
 
-    color: #91a4c2;
+    color: var(--texto-fraco);
 
     margin-bottom: 12px;
 }
@@ -965,7 +970,7 @@ button {
 .path-progress {
     height: 5px;
 
-    background: #243b5e;
+    background: var(--borda);
 
     border-radius: 100px;
 
@@ -975,7 +980,7 @@ button {
 .progress {
     height: 100%;
 
-    background: #3b82f6;
+    background: var(--primaria);
 
     border-radius: inherit;
 }
@@ -983,7 +988,7 @@ button {
 .continue-info small {
     display: block;
 
-    color: #6f86a8;
+    color: var(--texto-muito-fraco);
 
     margin-top: 9px;
 }
@@ -996,9 +1001,9 @@ button {
 
     border: none;
 
-    background: #2563eb;
+    background: var(--primaria-forte);
 
-    color: white;
+    color: #ffffff;
 
     padding: 10px 18px;
 
@@ -1030,7 +1035,7 @@ button {
 
 .filter-section p,
 .section-header p {
-    color: #7187a8;
+    color: var(--texto-fraco);
 
     font-size: 11px;
 
@@ -1046,11 +1051,11 @@ button {
 }
 
 .filter {
-    background: #0d1e37;
+    background: var(--icone-bg);
 
-    border: 1px solid #223b67;
+    border: 1px solid var(--borda-suave);
 
-    color: #91a4c2;
+    color: var(--texto-fraco);
 
     border-radius: 30px;
 
@@ -1063,11 +1068,11 @@ button {
 
 .filter:hover,
 .filter.active {
-    background: #2563eb;
+    background: var(--primaria-forte);
 
-    border-color: #2563eb;
+    border-color: var(--primaria-forte);
 
-    color: white;
+    color: #ffffff;
 }
 
 
@@ -1085,7 +1090,7 @@ button {
 }
 
 .section-header a {
-    color: #3b82f6;
+    color: var(--primaria);
 
     font-size: 12px;
 }
@@ -1108,9 +1113,9 @@ button {
 }
 
 .course-card {
-    background: #0f223f;
+    background: var(--surface-2);
 
-    border: 1px solid #1f385f;
+    border: 1px solid var(--borda-suave);
 
     border-radius: 12px;
 
@@ -1120,7 +1125,7 @@ button {
 }
 
 .course-card:hover {
-    border-color: #315489;
+    border-color: var(--primaria);
 
     transform: translateY(-3px);
 }
@@ -1214,7 +1219,7 @@ button {
 }
 
 .course-top > i {
-    color: #7187a8;
+    color: var(--texto-fraco);
 
     cursor: pointer;
 }
@@ -1230,13 +1235,13 @@ button {
 .level.beginner {
     background: rgba(34,197,94,.12);
 
-    color: #22c55e;
+    color: var(--verde);
 }
 
 .level.intermediate {
     background: rgba(59,130,246,.15);
 
-    color: #60a5fa;
+    color: var(--primaria);
 }
 
 .course-body h3 {
@@ -1246,7 +1251,7 @@ button {
 }
 
 .course-body p {
-    color: #7187a8;
+    color: var(--texto-fraco);
 
     font-size: 11px;
 
@@ -1260,7 +1265,7 @@ button {
 
     justify-content: space-between;
 
-    color: #7187a8;
+    color: var(--texto-fraco);
 
     font-size: 10px;
 }
@@ -1280,9 +1285,9 @@ button {
 
 .learning-paths,
 .progress-card {
-    background: #0f223f;
+    background: var(--surface-2);
 
-    border: 1px solid #223b67;
+    border: 1px solid var(--borda-suave);
 
     border-radius: 14px;
 
@@ -1303,9 +1308,9 @@ button {
 }
 
 .path-card {
-    background: #102746;
+    background: var(--icone-bg);
 
-    border: 1px solid #1f3b63;
+    border: 1px solid var(--borda-suave);
 
     border-radius: 10px;
 
@@ -1326,9 +1331,9 @@ button {
 
     border-radius: 10px;
 
-    background: #173866;
+    background: var(--primaria-suave);
 
-    color: #3b82f6;
+    color: var(--primaria);
 
     display: flex;
 
@@ -1353,7 +1358,7 @@ button {
 .path-info small {
     display: block;
 
-    color: #22c55e;
+    color: var(--verde);
 
     font-size: 9px;
 
@@ -1388,12 +1393,12 @@ button {
     background:
         radial-gradient(
             closest-side,
-            #0f223f 76%,
+            var(--surface-2) 76%,
             transparent 77%
         ),
         conic-gradient(
             #3b82f6 78%,
-            #213858 0
+            var(--borda) 0
         );
 }
 
@@ -1410,7 +1415,7 @@ button {
 }
 
 .progress-card p {
-    color: #91a4c2;
+    color: var(--texto-fraco);
 
     font-size: 11px;
 
@@ -1418,7 +1423,7 @@ button {
 }
 
 .progress-card small {
-    color: #7187a8;
+    color: var(--texto-fraco);
 
     font-size: 10px;
 }

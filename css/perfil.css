@@ -12,8 +12,8 @@
 
 
 body {
-    background: #071427;
-    color: white;
+    background: var(--bg);
+    color: var(--texto);
 }
 
 
@@ -46,7 +46,7 @@ a {
     width: 100%;
     height: 75px;
 
-    background: #0e1f3d;
+    background: var(--surface);
 
     padding: 0 30px;
 
@@ -54,7 +54,7 @@ a {
     align-items: center;
     justify-content: space-between;
 
-    border-bottom: 1px solid #2a3f66;
+    border-bottom: 1px solid var(--borda);
 
     position: sticky;
     top: 0;
@@ -101,7 +101,7 @@ a {
     width: 30px;
     height: 30px;
 
-    background: #3b82f6;
+    background: var(--primaria);
 
     border-radius: 8px;
 
@@ -114,7 +114,7 @@ a {
 .logo-box i {
 
     font-size: 15px;
-    color: white;
+    color: #ffffff;
 }
 
 
@@ -127,7 +127,7 @@ a {
     width: 1px;
     height: 32px;
 
-    background: #2a3f66;
+    background: var(--borda);
 }
 
 
@@ -155,7 +155,7 @@ a {
 
     border-radius: 8px;
 
-    color: #9bb0d1;
+    color: var(--texto-suave);
 
     text-decoration: none;
 
@@ -175,17 +175,17 @@ a {
 
 .menu a:hover {
 
-    background: #1c3563;
+    background: var(--primaria-suave);
 
-    color: white;
+    color: var(--texto-ativo);
 }
 
 
 .menu a.active {
 
-    background: #1c3563;
+    background: var(--primaria-suave);
 
-    color: white;
+    color: var(--texto-ativo);
 }
 
 
@@ -239,13 +239,13 @@ a {
     width: 38px;
     height: 38px;
 
-    border: 1px solid #2a3f66;
+    border: 1px solid var(--borda);
 
     border-radius: 10px;
 
-    background: #0f223f;
+    background: var(--surface-2);
 
-    color: #9bb0d1;
+    color: var(--texto-suave);
 
     cursor: pointer;
 
@@ -260,11 +260,11 @@ a {
 
 .notification-btn:hover {
 
-    background: #1c3563;
+    background: var(--primaria-suave);
 
-    color: white;
+    color: var(--texto-ativo);
 
-    border-color: #3b82f6;
+    border-color: var(--primaria);
 }
 
 
@@ -288,11 +288,11 @@ a {
     width: 7px;
     height: 7px;
 
-    background: #22c55e;
+    background: var(--verde);
 
     border-radius: 50%;
 
-    border: 1px solid #0f223f;
+    border: 1px solid var(--surface-2);
 }
 
 
@@ -310,13 +310,13 @@ a {
 
     width: 360px;
 
-    background: #0e1f3d;
+    background: var(--surface);
 
-    border: 1px solid #2a3f66;
+    border: 1px solid var(--borda);
 
     border-radius: 12px;
 
-    box-shadow: 0 15px 40px rgba(0, 0, 0, .35);
+    box-shadow: 0 15px 40px var(--sombra);
 
     overflow: hidden;
 
@@ -362,7 +362,7 @@ a {
 
     padding: 16px;
 
-    border-bottom: 1px solid #223b67;
+    border-bottom: 1px solid var(--borda-suave);
 }
 
 
@@ -372,7 +372,7 @@ a {
 
     font-weight: 600;
 
-    color: white;
+    color: var(--texto);
 }
 
 
@@ -382,7 +382,7 @@ a {
 
     border: none;
 
-    color: #6ea8ff;
+    color: var(--link);
 
     font-size: 10px;
 
@@ -394,7 +394,7 @@ a {
 
 .notification-header button:hover {
 
-    color: white;
+    color: var(--texto);
 }
 
 
@@ -438,7 +438,7 @@ a {
 
     font-size: 25px;
 
-    color: #526b91;
+    color: var(--texto-muito-fraco);
 
     margin-bottom: 4px;
 }
@@ -446,7 +446,7 @@ a {
 
 .empty-notifications strong {
 
-    color: #dce6f8;
+    color: var(--texto-forte);
 
     font-size: 12px;
 }
@@ -454,7 +454,7 @@ a {
 
 .empty-notifications p {
 
-    color: #6f86aa;
+    color: var(--texto-fraco);
 
     font-size: 10px;
 }
@@ -474,7 +474,7 @@ a {
 
     padding: 14px 16px;
 
-    border-bottom: 1px solid #1d3357;
+    border-bottom: 1px solid var(--borda-item);
 
     transition: .2s;
 }
@@ -482,7 +482,7 @@ a {
 
 .notification-item:hover {
 
-    background: #12294b;
+    background: var(--surface-hover);
 }
 
 
@@ -492,7 +492,7 @@ a {
 
 .notification-item.unread {
 
-    background: rgba(59, 130, 246, .06);
+    background: var(--destaque-nao-lida);
 }
 
 
@@ -526,7 +526,7 @@ a {
 
     background: rgba(59, 130, 246, .15);
 
-    color: #60a5fa;
+    color: var(--primaria);
 }
 
 
@@ -534,7 +534,7 @@ a {
 
     background: rgba(34, 197, 94, .15);
 
-    color: #22c55e;
+    color: var(--verde);
 }
 
 
@@ -542,7 +542,7 @@ a {
 
     background: rgba(234, 179, 8, .15);
 
-    color: #eab308;
+    color: var(--amarelo);
 }
 
 
@@ -550,7 +550,7 @@ a {
 
     background: rgba(239, 68, 68, .15);
 
-    color: #ef4444;
+    color: var(--vermelho);
 }
 
 
@@ -570,7 +570,7 @@ a {
 
     display: block;
 
-    color: #e5edff;
+    color: var(--texto-forte);
 
     font-size: 12px;
 
@@ -582,7 +582,7 @@ a {
 
 .notification-content p {
 
-    color: #8ea4c7;
+    color: var(--texto-secundario);
 
     font-size: 10px;
 
@@ -592,7 +592,7 @@ a {
 
 .notification-content p span {
 
-    color: #22c55e;
+    color: var(--verde);
 
     font-weight: 600;
 }
@@ -600,7 +600,7 @@ a {
 
 .notification-content p span.negative {
 
-    color: #ef4444;
+    color: var(--vermelho);
 }
 
 
@@ -610,7 +610,7 @@ a {
 
     margin-top: 6px;
 
-    color: #587091;
+    color: var(--texto-muito-fraco);
 
     font-size: 9px;
 }
@@ -625,7 +625,7 @@ a {
     width: 6px;
     height: 6px;
 
-    background: #3b82f6;
+    background: var(--primaria);
 
     border-radius: 50%;
 
@@ -646,13 +646,13 @@ a {
 
     text-align: center;
 
-    border-top: 1px solid #223b67;
+    border-top: 1px solid var(--borda-suave);
 }
 
 
 .notification-footer a {
 
-    color: #6ea8ff;
+    color: var(--link);
 
     font-size: 10px;
 
@@ -662,7 +662,7 @@ a {
 
 .notification-footer a:hover {
 
-    color: white;
+    color: var(--texto);
 }
 
 
@@ -678,13 +678,13 @@ a {
 
 .notification-list::-webkit-scrollbar-track {
 
-    background: #0e1f3d;
+    background: var(--surface);
 }
 
 
 .notification-list::-webkit-scrollbar-thumb {
 
-    background: #29446d;
+    background: var(--scroll-thumb);
 
     border-radius: 10px;
 }
@@ -717,7 +717,7 @@ a {
 
 .user-info p {
 
-    color: #8aa0c2;
+    color: var(--texto-secundario);
 
     font-size: 10px;
 
@@ -736,7 +736,9 @@ a {
 
     border-radius: 50%;
 
-    background: #3b82f6;
+    background: var(--primaria);
+
+    color: #ffffff;
 
     display: flex;
     align-items: center;
@@ -789,7 +791,7 @@ a {
 
 .topbar p {
 
-    color: #7c94b8;
+    color: var(--texto-secundario);
 
     font-size: 12px;
 
@@ -819,9 +821,9 @@ a {
 .info-card,
 .security-card {
 
-    background: #0f223f;
+    background: var(--surface-2);
 
-    border: 1px solid #223b67;
+    border: 1px solid var(--borda-suave);
 
     border-radius: 14px;
 }
@@ -868,9 +870,11 @@ a {
 
     border-radius: 50%;
 
-    background: #3b82f6;
+    background: var(--primaria);
 
-    border: 4px solid #162c4d;
+    color: #ffffff;
+
+    border: 4px solid var(--avatar-borda);
 
     display: flex;
     align-items: center;
@@ -894,11 +898,11 @@ a {
 
     border-radius: 50%;
 
-    border: 3px solid #0f223f;
+    border: 3px solid var(--surface-2);
 
-    background: #2563eb;
+    background: var(--primaria-forte);
 
-    color: white;
+    color: #ffffff;
 
     display: flex;
     align-items: center;
@@ -928,7 +932,7 @@ a {
 
 .profile-email {
 
-    color: #8aa0c2;
+    color: var(--texto-secundario);
 
     font-size: 11px;
 
@@ -950,11 +954,11 @@ a {
 
     border-radius: 7px;
 
-    border: 1px solid #2563eb;
+    border: 1px solid var(--primaria-forte);
 
     background: transparent;
 
-    color: #3b82f6;
+    color: var(--primaria);
 
     cursor: pointer;
 
@@ -966,9 +970,9 @@ a {
 
 .edit-btn:hover {
 
-    background: #1c3563;
+    background: var(--primaria-suave);
 
-    color: white;
+    color: var(--texto-ativo);
 }
 
 
@@ -1012,7 +1016,7 @@ a {
 
     gap: 10px;
 
-    border-top: 1px solid #1d355d;
+    border-top: 1px solid var(--borda-fraca);
 
     transition: .2s;
 }
@@ -1020,7 +1024,7 @@ a {
 
 .info-row:hover {
 
-    background: #12294b;
+    background: var(--surface-hover);
 }
 
 
@@ -1035,9 +1039,9 @@ a {
 
     border-radius: 7px;
 
-    background: #102b51;
+    background: var(--icone-bg);
 
-    color: #3b82f6;
+    color: var(--primaria);
 
     display: flex;
     align-items: center;
@@ -1071,7 +1075,7 @@ a {
 
     font-size: 10px;
 
-    color: #8aa0c2;
+    color: var(--texto-secundario);
 
     margin-bottom: 2px;
 }
@@ -1079,7 +1083,7 @@ a {
 
 .info-content p {
 
-    color: #dbe5f5;
+    color: var(--texto-forte);
 
     font-size: 10px;
 
@@ -1097,7 +1101,7 @@ a {
 
 .arrow {
 
-    color: #7289aa;
+    color: var(--texto-fraco);
 
     font-size: 12px;
 }
@@ -1105,7 +1109,7 @@ a {
 
 .lock {
 
-    color: #7289aa;
+    color: var(--texto-fraco);
 
     font-size: 12px;
 }
@@ -1137,7 +1141,7 @@ a {
 
     align-items: center;
 
-    border: 1px solid #1d355d;
+    border: 1px solid var(--borda-fraca);
 
     border-radius: 10px;
 
@@ -1167,7 +1171,7 @@ a {
 
 .security-item:hover {
 
-    background: #12294b;
+    background: var(--surface-hover);
 }
 
 
@@ -1185,7 +1189,7 @@ a {
 
 .security-item p {
 
-    color: #7187a8;
+    color: var(--texto-fraco);
 
     font-size: 9px;
 
@@ -1204,9 +1208,9 @@ a {
 
     border-radius: 8px;
 
-    background: #102b51;
+    background: var(--icone-bg);
 
-    color: #3b82f6;
+    color: var(--primaria);
 
     display: flex;
     align-items: center;
@@ -1231,9 +1235,9 @@ a {
 
     border-radius: 8px;
 
-    background: #3a202b;
+    background: var(--logout-bg);
 
-    color: #ef4444;
+    color: var(--vermelho);
 
     display: flex;
     align-items: center;
@@ -1243,7 +1247,7 @@ a {
 
 .logout {
 
-    color: #ef4444;
+    color: var(--vermelho);
 }
 
 
@@ -1253,7 +1257,451 @@ a {
 
     height: 45px;
 
-    background: #1d355d;
+    background: var(--borda-fraca);
+}
+
+
+/* =========================
+   MODAL - TROCAR FOTO
+========================= */
+
+.hidden {
+
+    display: none !important;
+}
+
+
+.avatar-modal-overlay {
+
+    position: fixed;
+
+    inset: 0;
+
+    background: rgba(0, 0, 0, .55);
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    opacity: 0;
+
+    visibility: hidden;
+
+    transition: opacity .2s ease, visibility .2s ease;
+
+    z-index: 1000;
+}
+
+
+.avatar-modal-overlay.show {
+
+    opacity: 1;
+
+    visibility: visible;
+}
+
+
+.avatar-modal {
+
+    width: 100%;
+    max-width: 380px;
+
+    background: var(--surface-2);
+
+    border: 1px solid var(--borda-suave);
+
+    border-radius: 14px;
+
+    overflow: hidden;
+}
+
+
+.avatar-modal-header {
+
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 16px 18px;
+
+    border-bottom: 1px solid var(--borda-suave);
+}
+
+
+.avatar-modal-header h3 {
+
+    font-size: 14px;
+}
+
+
+.avatar-modal-close {
+
+    width: 28px;
+    height: 28px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background: var(--icone-bg);
+
+    color: var(--texto-suave);
+
+    cursor: pointer;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    transition: .2s;
+}
+
+
+.avatar-modal-close:hover {
+
+    background: var(--primaria-suave);
+
+    color: var(--texto-ativo);
+}
+
+
+.avatar-modal-body {
+
+    padding: 20px 18px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    gap: 14px;
+}
+
+
+.avatar-preview {
+
+    width: 200px;
+    height: 200px;
+
+    border-radius: 50%;
+
+    background: var(--icone-bg);
+
+    border: 3px solid var(--borda);
+
+    overflow: hidden;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    position: relative;
+}
+
+
+.avatar-preview video,
+.avatar-preview img {
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+}
+
+
+.avatar-preview-placeholder i {
+
+    font-size: 90px;
+
+    color: var(--texto-muito-fraco);
+}
+
+
+.avatar-modal-hint {
+
+    color: var(--texto-secundario);
+
+    font-size: 11px;
+
+    text-align: center;
+
+    line-height: 1.5;
+}
+
+
+.avatar-modal-actions {
+
+    width: 100%;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+}
+
+
+.avatar-action-btn {
+
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    padding: 11px;
+
+    border-radius: 8px;
+
+    border: 1px solid var(--borda);
+
+    background: var(--icone-bg);
+
+    color: var(--texto);
+
+    cursor: pointer;
+
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 500;
+
+    transition: .2s;
+}
+
+
+.avatar-action-btn:hover {
+
+    border-color: var(--primaria);
+
+    background: var(--primaria-suave);
+
+    color: var(--texto-ativo);
+}
+
+
+.avatar-action-btn.primary {
+
+    background: var(--primaria);
+
+    border-color: var(--primaria);
+
+    color: #ffffff;
+}
+
+
+.avatar-action-btn.primary:hover {
+
+    background: var(--primaria-forte);
+}
+
+
+/* =========================
+   MODAL - EDITAR PERFIL
+========================= */
+
+.profile-edit-modal-overlay {
+
+    position: fixed;
+
+    inset: 0;
+
+    background: rgba(0, 0, 0, .55);
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    opacity: 0;
+
+    visibility: hidden;
+
+    transition: opacity .2s ease, visibility .2s ease;
+
+    z-index: 1000;
+}
+
+
+.profile-edit-modal-overlay.show {
+
+    opacity: 1;
+
+    visibility: visible;
+}
+
+
+.profile-edit-modal {
+
+    width: 100%;
+    max-width: 420px;
+
+    background: var(--surface-2);
+
+    border: 1px solid var(--borda-suave);
+
+    border-radius: 14px;
+
+    overflow: hidden;
+}
+
+
+.profile-edit-modal-body {
+
+    padding: 22px 20px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    gap: 16px;
+}
+
+
+.profile-edit-icon {
+
+    width: 70px;
+    height: 70px;
+
+    border-radius: 50%;
+
+    background: var(--icone-bg);
+
+    color: var(--primaria);
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+
+    flex-shrink: 0;
+}
+
+
+.profile-edit-icon i {
+
+    font-size: 34px;
+}
+
+
+.profile-edit-icon img {
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+}
+
+
+#profileEditForm {
+
+    width: 100%;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 14px;
+}
+
+
+.profile-edit-field {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 5px;
+}
+
+
+.profile-edit-field label {
+
+    font-size: 11px;
+
+    color: var(--texto-secundario);
+}
+
+
+.profile-edit-field input {
+
+    width: 100%;
+
+    padding: 10px 12px;
+
+    border-radius: 8px;
+
+    border: 1px solid var(--borda);
+
+    background: var(--surface);
+
+    color: var(--texto);
+
+    font-family: inherit;
+    font-size: 13px;
+
+    transition: .2s;
+}
+
+
+.profile-edit-field input:focus {
+
+    outline: none;
+
+    border-color: var(--primaria);
+}
+
+
+.profile-edit-field input:disabled {
+
+    opacity: .6;
+
+    cursor: not-allowed;
+}
+
+
+.profile-edit-field input.input-error {
+
+    border-color: var(--vermelho);
+}
+
+
+.profile-edit-error {
+
+    font-size: 10px;
+
+    color: var(--vermelho);
+
+    margin-top: -2px;
+}
+
+
+.profile-edit-lock-hint {
+
+    font-size: 10px;
+
+    color: var(--texto-fraco);
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 4px;
 }
 
 
@@ -1399,4 +1847,46 @@ a {
         width: auto;
     }
 
+}
+
+/* =========================
+   PADRÃO DE FUNDO
+   (estilo "doodle" com figuras
+   de dinheiro e finanças)
+========================= */
+
+/* intensidade do padrão — ajuste aqui (ou sobrescreva no tema.css para cada tema) */
+:root {
+    --padrao-opacidade: .08;
+}
+
+body::before {
+
+    content: "";
+
+    position: fixed;
+    inset: 0;
+
+    z-index: 0;
+    pointer-events: none;
+
+    /* a cor vem do tema: troca sozinha entre claro e escuro */
+    background: var(--primaria);
+    opacity: var(--padrao-opacidade);
+
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='420' height='420' viewBox='0 0 420 420'%3E%3Cdefs%3E%3Cg id='b_dolar_coin'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Ccircle cx='12' cy='12' r='7.6'/%3E%3Cg transform='translate(12 12) scale(0.58) translate(-12 -11.3)' stroke-width='1.72'%3E%3Cpath d='M12 2.5V5M12 17.5V20'/%3E%3Cpath d='M16 7.5C16 6 14.2 5 12 5S8 6 8 7.5 9.8 10 12 10.8 16 12 16 14.5 14.2 17.5 12 17.5 8 16.5 8 15'/%3E%3C/g%3E%3C/g%3E%3Cg id='b_euro_coin'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Ccircle cx='12' cy='12' r='7.6'/%3E%3Cg transform='translate(12 12) scale(0.58) translate(-10.5 -12)' stroke-width='1.72'%3E%3Cpath d='M17 6.5A7 7 0 1 0 17 17.5'/%3E%3Cpath d='M4 10h10M4 14h10'/%3E%3C/g%3E%3C/g%3E%3Cg id='b_nota'%3E%3Crect x='1.5' y='5' width='21' height='14' rx='2.5'/%3E%3Ccircle cx='12' cy='12' r='3.2'/%3E%3Ccircle cx='5.6' cy='12' r='.7'/%3E%3Ccircle cx='18.4' cy='12' r='.7'/%3E%3C/g%3E%3Cg id='b_porquinho'%3E%3Cellipse cx='11.5' cy='13' rx='8' ry='6'/%3E%3Cpath d='M7.5 8.3L7 4.5l3.8 2.2'/%3E%3Cpath d='M19.4 11.3l2.3.7v3l-2.3.6'/%3E%3Cpath d='M7.5 18.6v2.6M15.5 18.6v2.6'/%3E%3Cpath d='M10.5 8.4h3'/%3E%3Ccircle cx='16.5' cy='11.5' r='.5'/%3E%3Cpath d='M3.6 12.5c-1.6-.3-2 .8-1.5 1.8'/%3E%3C/g%3E%3Cg id='b_carteira'%3E%3Crect x='3' y='7' width='18' height='13' rx='2.5'/%3E%3Cpath d='M5.5 7l10.5-3.6 1.2 3.6'/%3E%3Crect x='14' y='11.5' width='7' height='4.2' rx='1.6'/%3E%3Ccircle cx='17.2' cy='13.6' r='.5'/%3E%3C/g%3E%3Cg id='b_sacola'%3E%3Cpath d='M9 3.5h6l-1.5 3.2c3 1.4 5 4.2 5 7.3 0 3.4-2.7 6-7.5 6s-7.5-2.6-7.5-6c0-3.1 2-5.9 5-7.3z'/%3E%3Cpath d='M9.8 6.7h4.4'/%3E%3Cg transform='translate(12 14) scale(0.5) translate(-12 -11.3)' stroke-width='2.0'%3E%3Cpath d='M12 2.5V5M12 17.5V20'/%3E%3Cpath d='M16 7.5C16 6 14.2 5 12 5S8 6 8 7.5 9.8 10 12 10.8 16 12 16 14.5 14.2 17.5 12 17.5 8 16.5 8 15'/%3E%3C/g%3E%3C/g%3E%3Cg id='b_barras'%3E%3Cpath d='M2.5 21.5h19'/%3E%3Crect x='4' y='13' width='4' height='8.5' rx='1'/%3E%3Crect x='10' y='8' width='4' height='13.5' rx='1'/%3E%3Crect x='16' y='3.5' width='4' height='18' rx='1'/%3E%3C/g%3E%3Cg id='b_linha'%3E%3Cpath d='M2.5 2.5v19h19'/%3E%3Cpath d='M7 16l4.5-6 4 3.5 5-7'/%3E%3C/g%3E%3Cg id='b_velas'%3E%3Cpath d='M7.5 2.5V6M7.5 16v3.5M16.5 6V9.5M16.5 20v2'/%3E%3Crect x='5' y='6' width='5' height='10' rx='1'/%3E%3Crect x='14' y='9.5' width='5' height='10.5' rx='1'/%3E%3C/g%3E%3Cg id='b_pizza'%3E%3Ccircle cx='12' cy='12' r='9.5'/%3E%3Cpath d='M12 2.5v9.5l8 5'/%3E%3C/g%3E%3Cg id='b_etiqueta'%3E%3Cpath d='M3.5 3.5h8.2l9 9a1.5 1.5 0 0 1 0 2.1l-6.1 6.1a1.5 1.5 0 0 1-2.1 0l-9-9z'/%3E%3Ccircle cx='7.5' cy='7.5' r='1.2'/%3E%3C/g%3E%3Cg id='b_cartao'%3E%3Crect x='2' y='4.5' width='20' height='15' rx='2.5'/%3E%3Cpath d='M2 9.5h20M5.5 15h4.5M14 15h2'/%3E%3C/g%3E%3Cg id='b_alta'%3E%3Cpath d='M2.5 17.5l6.5-6.5 4 4L21 6.5'/%3E%3Cpath d='M15 6.5h6v6'/%3E%3C/g%3E%3Cg id='b_calc'%3E%3Crect x='5' y='2.5' width='14' height='19' rx='2.5'/%3E%3Crect x='8' y='5.5' width='8' height='3.5' rx='.8'/%3E%3Cpath d='M9 13h.01M12 13h.01M15 13h.01M9 16h.01M12 16h.01M15 16h.01M9 19h.01M12 19h.01M15 19h.01'/%3E%3C/g%3E%3Cg id='b_ouro'%3E%3Cpath d='M2.5 19l2.2-6.5h14.6l2.2 6.5z'/%3E%3Cpath d='M7.5 12.5l1.6-5h5.8l1.6 5'/%3E%3C/g%3E%3Cg id='b_pilha'%3E%3Cpath d='M4 7c0-1.7 3.6-3 8-3s8 1.3 8 3-3.6 3-8 3-8-1.3-8-3z'/%3E%3Cpath d='M4 7v4.5c0 1.7 3.6 3 8 3s8-1.3 8-3V7'/%3E%3Cpath d='M4 11.5V16c0 1.7 3.6 3 8 3s8-1.3 8-3v-4.5'/%3E%3C/g%3E%3Cg id='b_cofre'%3E%3Crect x='3' y='3.5' width='18' height='16' rx='2'/%3E%3Ccircle cx='12' cy='11.5' r='4'/%3E%3Cpath d='M12 8.6v1.3M12 13.1v1.3M9.1 11.5h1.3M13.6 11.5h1.3'/%3E%3Cpath d='M6.5 19.5v2M17.5 19.5v2'/%3E%3C/g%3E%3Cg id='b_bitcoin'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M9.5 7.5v9M9.5 7.5h3.6a2.2 2.2 0 0 1 0 4.4H9.5m3.9 0a2.3 2.3 0 0 1 0 4.6H9.5M11 6v1.5M13.5 6v1.5M11 16.5V18M13.5 16.5V18'/%3E%3C/g%3E%3Cg id='b_libra'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M15 8.2A3.2 3.2 0 0 0 9.2 9.6V17M7.5 17h9M7.5 12.5h6'/%3E%3C/g%3E%3Cg id='b_ampulheta'%3E%3Cpath d='M6 3h12M6 21h12M7 3v3.5L12 12l-5 5.5V21M17 3v3.5L12 12l5 5.5V21'/%3E%3C/g%3E%3Cg id='b_foguete'%3E%3Cpath d='M12 2.5c3 2 4.5 5.5 4.5 9.5l2 3.5v3l-3-1.5H8.5L5.5 18.5v-3L7.5 12c0-4 1.5-7.5 4.5-9.5z'/%3E%3Ccircle cx='12' cy='9.5' r='1.8'/%3E%3Cpath d='M10 19.5c0 1.5.7 2.5 2 3 1.3-.5 2-1.5 2-3'/%3E%3C/g%3E%3Cg id='b_planta'%3E%3Cpath d='M12 21v-9'/%3E%3Cpath d='M12 13c0-3.5-2.5-5.5-6-5.5 0 3.5 2.5 5.5 6 5.5z'/%3E%3Cpath d='M12 11c0-3 2-5 5.5-5 0 3-2 5-5.5 5z'/%3E%3Cpath d='M8 21h8'/%3E%3C/g%3E%3Cg id='s_mais'%3E%3Cpath d='M-5 0h10M0-5v10'/%3E%3C/g%3E%3Cg id='s_xis'%3E%3Cpath d='M-4-4l8 8M4-4l-8 8'/%3E%3C/g%3E%3Cg id='s_anel'%3E%3Ccircle r='3.6'/%3E%3C/g%3E%3Cg id='s_brilho'%3E%3Cpath d='M0-8C1-3 3-1 8 0 3 1 1 3 0 8-1 3-3 1-8 0-3-1-1-3 0-8z'/%3E%3C/g%3E%3Cg id='s_moedinha'%3E%3Ccircle r='5.5'/%3E%3Ccircle r='2.3'/%3E%3C/g%3E%3Cg id='s_cifrao'%3E%3Cg transform='scale(0.45) translate(-12 -11.3)' stroke-width='3.56'%3E%3Cpath d='M12 2.5V5M12 17.5V20'/%3E%3Cpath d='M16 7.5C16 6 14.2 5 12 5S8 6 8 7.5 9.8 10 12 10.8 16 12 16 14.5 14.2 17.5 12 17.5 8 16.5 8 15'/%3E%3C/g%3E%3C/g%3E%3Cg id='s_seta'%3E%3Cpath d='M-4.5 2.5l4.5-5 4.5 5'/%3E%3C/g%3E%3Cg id='s_losango'%3E%3Cpath d='M0-5l5 5-5 5-5-5z'/%3E%3C/g%3E%3Cg id='s_tri'%3E%3Cpath d='M0-5l5 8h-10z'/%3E%3C/g%3E%3Cg id='s_onda'%3E%3Cpath d='M-6 0q1.5-3 3 0t3 0t3 0t3 0'/%3E%3C/g%3E%3Cg id='s_barrinhas'%3E%3Cpath d='M-5 4v-3M0 4v-8M5 4v-5'/%3E%3C/g%3E%3Cg id='s_ponto'%3E%3Ccircle r='1.4'/%3E%3C/g%3E%3C/defs%3E%3Cg fill='none' stroke='%23000' stroke-width='1' stroke-linecap='round' stroke-linejoin='round'%3E%3Cuse href='%23b_dolar_coin' transform='translate(136.0 63.4) rotate(-17.8) scale(1.82) translate(-12 -12)'/%3E%3Cuse href='%23b_ouro' transform='translate(273.4 30.4) rotate(-17.0) scale(1.92) translate(-12 -12)'/%3E%3Cuse href='%23b_ouro' transform='translate(273.4 450.4) rotate(-17.0) scale(1.92) translate(-12 -12)'/%3E%3Cuse href='%23b_nota' transform='translate(225.1 153.6) rotate(17.3) scale(1.97) translate(-12 -12)'/%3E%3Cuse href='%23b_euro_coin' transform='translate(24.4 213.1) rotate(12.3) scale(2.0) translate(-12 -12)'/%3E%3Cuse href='%23b_euro_coin' transform='translate(444.4 213.1) rotate(12.3) scale(2.0) translate(-12 -12)'/%3E%3Cuse href='%23b_pilha' transform='translate(29.3 38.1) rotate(-9.9) scale(1.91) translate(-12 -12)'/%3E%3Cuse href='%23b_pilha' transform='translate(449.3 38.1) rotate(-9.9) scale(1.91) translate(-12 -12)'/%3E%3Cuse href='%23b_linha' transform='translate(178.3 347.3) rotate(-11.1) scale(1.71) translate(-12 -12)'/%3E%3Cuse href='%23b_planta' transform='translate(360.6 121.6) rotate(-17.5) scale(1.92) translate(-12 -12)'/%3E%3Cuse href='%23b_velas' transform='translate(131.9 245.9) rotate(-4.8) scale(1.72) translate(-12 -12)'/%3E%3Cuse href='%23b_porquinho' transform='translate(333.6 293.6) rotate(12.0) scale(1.72) translate(-12 -12)'/%3E%3Cuse href='%23b_calc' transform='translate(352.8 -23.2) rotate(-8.5) scale(1.77) translate(-12 -12)'/%3E%3Cuse href='%23b_calc' transform='translate(352.8 396.8) rotate(-8.5) scale(1.77) translate(-12 -12)'/%3E%3Cuse href='%23b_bitcoin' transform='translate(25.5 294.6) rotate(0.1) scale(1.79) translate(-12 -12)'/%3E%3Cuse href='%23b_bitcoin' transform='translate(445.5 294.6) rotate(0.1) scale(1.79) translate(-12 -12)'/%3E%3Cuse href='%23b_pizza' transform='translate(216.5 259.4) rotate(-4.2) scale(1.74) translate(-12 -12)'/%3E%3Cuse href='%23b_libra' transform='translate(105.9 145.9) rotate(-23.0) scale(1.88) translate(-12 -12)'/%3E%3Cuse href='%23b_sacola' transform='translate(353.0 201.4) rotate(22.1) scale(1.78) translate(-12 -12)'/%3E%3Cuse href='%23b_cofre' transform='translate(55.1 382.2) rotate(7.7) scale(1.92) translate(-12 -12)'/%3E%3Cuse href='%23b_cartao' transform='translate(266.5 336.7) rotate(-27.5) scale(1.97) translate(-12 -12)'/%3E%3Cuse href='%23b_etiqueta' transform='translate(26.1 116.6) rotate(-9.6) scale(1.95) translate(-12 -12)'/%3E%3Cuse href='%23b_etiqueta' transform='translate(446.1 116.6) rotate(-9.6) scale(1.95) translate(-12 -12)'/%3E%3Cuse href='%23b_alta' transform='translate(194.6 5.7) rotate(-11.6) scale(1.94) translate(-12 -12)'/%3E%3Cuse href='%23b_alta' transform='translate(194.6 425.7) rotate(-11.6) scale(1.94) translate(-12 -12)'/%3E%3Cuse href='%23b_ampulheta' transform='translate(100.9 321.5) rotate(-12.7) scale(1.89) translate(-12 -12)'/%3E%3C/g%3E%3Cg fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cuse href='%23s_mais' transform='translate(76.8 25.3) rotate(87.7)'/%3E%3Cuse href='%23s_xis' transform='translate(302.8 82.4) rotate(87.3)'/%3E%3Cuse href='%23s_anel' transform='translate(363.1 353.7) rotate(113.6)'/%3E%3Cuse href='%23s_brilho' transform='translate(312.5 379.9) rotate(241.0)'/%3E%3Cuse href='%23s_moedinha' transform='translate(160.5 174.0) rotate(232.6)'/%3E%3Cuse href='%23s_cifrao' transform='translate(185.4 143.8) rotate(350.7)'/%3E%3Cuse href='%23s_seta' transform='translate(172.9 203.6) rotate(4.9)'/%3E%3Cuse href='%23s_losango' transform='translate(295.9 232.2) rotate(205.5)'/%3E%3Cuse href='%23s_tri' transform='translate(406.5 57.1) rotate(261.3)'/%3E%3Cuse href='%23s_onda' transform='translate(405.5 87.3) rotate(151.3)'/%3E%3Cuse href='%23s_barrinhas' transform='translate(62.7 93.1) rotate(40.8)'/%3E%3Cuse href='%23s_ponto' transform='translate(208.6 202.4) rotate(209.7)'/%3E%3Cuse href='%23s_mais' transform='translate(140.5 390.5) rotate(106.5)'/%3E%3Cuse href='%23s_xis' transform='translate(34.4 252.7) rotate(219.9)'/%3E%3Cuse href='%23s_anel' transform='translate(57.3 172.2) rotate(316.7)'/%3E%3Cuse href='%23s_brilho' transform='translate(257.5 297.0) rotate(191.6)'/%3E%3Cuse href='%23s_moedinha' transform='translate(383.5 27.9) rotate(332.0)'/%3E%3Cuse href='%23s_cifrao' transform='translate(301.4 158.8) rotate(182.3)'/%3E%3Cuse href='%23s_seta' transform='translate(403.6 197.8) rotate(332.2)'/%3E%3Cuse href='%23s_losango' transform='translate(32.0 -4.1) rotate(127.2)'/%3E%3Cuse href='%23s_losango' transform='translate(32.0 415.9) rotate(127.2)'/%3E%3Cuse href='%23s_tri' transform='translate(400.7 393.9) rotate(110.0)'/%3E%3Cuse href='%23s_onda' transform='translate(80.0 204.1) rotate(251.9)'/%3E%3Cuse href='%23s_barrinhas' transform='translate(233.8 104.2) rotate(242.5)'/%3E%3Cuse href='%23s_ponto' transform='translate(378.3 266.7) rotate(195.7)'/%3E%3Cuse href='%23s_mais' transform='translate(-6.9 332.0) rotate(41.7)'/%3E%3Cuse href='%23s_mais' transform='translate(413.1 332.0) rotate(41.7)'/%3E%3Cuse href='%23s_xis' transform='translate(23.3 346.1) rotate(336.8)'/%3E%3Cuse href='%23s_anel' transform='translate(241.7 73.4) rotate(177.8)'/%3E%3Cuse href='%23s_brilho' transform='translate(125.4 0.9) rotate(195.8)'/%3E%3Cuse href='%23s_brilho' transform='translate(125.4 420.9) rotate(195.8)'/%3E%3Cuse href='%23s_moedinha' transform='translate(407.7 4.6) rotate(65.0)'/%3E%3Cuse href='%23s_moedinha' transform='translate(407.7 424.6) rotate(65.0)'/%3E%3Cuse href='%23s_cifrao' transform='translate(-0.3 258.7) rotate(55.6)'/%3E%3Cuse href='%23s_cifrao' transform='translate(419.7 258.7) rotate(55.6)'/%3E%3Cuse href='%23s_seta' transform='translate(64.8 62.0) rotate(182.3)'/%3E%3Cuse href='%23s_losango' transform='translate(404.6 166.7) rotate(91.5)'/%3E%3Cuse href='%23s_tri' transform='translate(278.4 376.2) rotate(114.7)'/%3E%3Cuse href='%23s_onda' transform='translate(218.5 335.8) rotate(251.8)'/%3E%3Cuse href='%23s_barrinhas' transform='translate(374.5 61.7) rotate(320.4)'/%3E%3Cuse href='%23s_ponto' transform='translate(99.7 362.6) rotate(83.9)'/%3E%3Cuse href='%23s_mais' transform='translate(338.7 66.0) rotate(261.3)'/%3E%3Cuse href='%23s_xis' transform='translate(148.3 106.1) rotate(52.4)'/%3E%3Cuse href='%23s_anel' transform='translate(311.0 125.2) rotate(17.6)'/%3E%3Cuse href='%23s_brilho' transform='translate(69.3 234.9) rotate(70.9)'/%3E%3Cuse href='%23s_moedinha' transform='translate(204.6 74.7) rotate(262.0)'/%3E%3Cuse href='%23s_cifrao' transform='translate(181.2 97.6) rotate(168.2)'/%3E%3Cuse href='%23s_seta' transform='translate(303.8 -5.9) rotate(249.0)'/%3E%3Cuse href='%23s_seta' transform='translate(303.8 414.1) rotate(249.0)'/%3E%3Cuse href='%23s_losango' transform='translate(325.2 253.1) rotate(126.4)'/%3E%3Cuse href='%23s_tri' transform='translate(329.6 26.1) rotate(313.7)'/%3E%3Cuse href='%23s_onda' transform='translate(167.7 274.6) rotate(209.5)'/%3E%3Cuse href='%23s_barrinhas' transform='translate(133.1 202.1) rotate(100.7)'/%3E%3Cuse href='%23s_ponto' transform='translate(239.2 207.3) rotate(70.6)'/%3E%3Cuse href='%23s_mais' transform='translate(96.5 265.9) rotate(213.3)'/%3E%3Cuse href='%23s_xis' transform='translate(52.3 326.1) rotate(159.3)'/%3E%3Cuse href='%23s_anel' transform='translate(281.9 197.5) rotate(126.5)'/%3E%3Cuse href='%23s_brilho' transform='translate(93.4 79.6) rotate(90.6)'/%3E%3Cuse href='%23s_moedinha' transform='translate(402.7 286.1) rotate(114.1)'/%3E%3Cuse href='%23s_cifrao' transform='translate(155.8 310.3) rotate(333.7)'/%3E%3Cuse href='%23s_seta' transform='translate(379.3 322.6) rotate(291.0)'/%3E%3Cuse href='%23s_losango' transform='translate(230.7 374.3) rotate(57.6)'/%3E%3Cuse href='%23s_tri' transform='translate(264.5 226.9) rotate(95.8)'/%3E%3Cuse href='%23s_onda' transform='translate(337.2 157.1) rotate(289.5)'/%3E%3Cuse href='%23s_barrinhas' transform='translate(325.3 352.7) rotate(96.3)'/%3E%3Cuse href='%23s_ponto' transform='translate(196.8 299.1) rotate(81.1)'/%3E%3C/g%3E%3C/svg%3E");
+            mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='420' height='420' viewBox='0 0 420 420'%3E%3Cdefs%3E%3Cg id='b_dolar_coin'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Ccircle cx='12' cy='12' r='7.6'/%3E%3Cg transform='translate(12 12) scale(0.58) translate(-12 -11.3)' stroke-width='1.72'%3E%3Cpath d='M12 2.5V5M12 17.5V20'/%3E%3Cpath d='M16 7.5C16 6 14.2 5 12 5S8 6 8 7.5 9.8 10 12 10.8 16 12 16 14.5 14.2 17.5 12 17.5 8 16.5 8 15'/%3E%3C/g%3E%3C/g%3E%3Cg id='b_euro_coin'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Ccircle cx='12' cy='12' r='7.6'/%3E%3Cg transform='translate(12 12) scale(0.58) translate(-10.5 -12)' stroke-width='1.72'%3E%3Cpath d='M17 6.5A7 7 0 1 0 17 17.5'/%3E%3Cpath d='M4 10h10M4 14h10'/%3E%3C/g%3E%3C/g%3E%3Cg id='b_nota'%3E%3Crect x='1.5' y='5' width='21' height='14' rx='2.5'/%3E%3Ccircle cx='12' cy='12' r='3.2'/%3E%3Ccircle cx='5.6' cy='12' r='.7'/%3E%3Ccircle cx='18.4' cy='12' r='.7'/%3E%3C/g%3E%3Cg id='b_porquinho'%3E%3Cellipse cx='11.5' cy='13' rx='8' ry='6'/%3E%3Cpath d='M7.5 8.3L7 4.5l3.8 2.2'/%3E%3Cpath d='M19.4 11.3l2.3.7v3l-2.3.6'/%3E%3Cpath d='M7.5 18.6v2.6M15.5 18.6v2.6'/%3E%3Cpath d='M10.5 8.4h3'/%3E%3Ccircle cx='16.5' cy='11.5' r='.5'/%3E%3Cpath d='M3.6 12.5c-1.6-.3-2 .8-1.5 1.8'/%3E%3C/g%3E%3Cg id='b_carteira'%3E%3Crect x='3' y='7' width='18' height='13' rx='2.5'/%3E%3Cpath d='M5.5 7l10.5-3.6 1.2 3.6'/%3E%3Crect x='14' y='11.5' width='7' height='4.2' rx='1.6'/%3E%3Ccircle cx='17.2' cy='13.6' r='.5'/%3E%3C/g%3E%3Cg id='b_sacola'%3E%3Cpath d='M9 3.5h6l-1.5 3.2c3 1.4 5 4.2 5 7.3 0 3.4-2.7 6-7.5 6s-7.5-2.6-7.5-6c0-3.1 2-5.9 5-7.3z'/%3E%3Cpath d='M9.8 6.7h4.4'/%3E%3Cg transform='translate(12 14) scale(0.5) translate(-12 -11.3)' stroke-width='2.0'%3E%3Cpath d='M12 2.5V5M12 17.5V20'/%3E%3Cpath d='M16 7.5C16 6 14.2 5 12 5S8 6 8 7.5 9.8 10 12 10.8 16 12 16 14.5 14.2 17.5 12 17.5 8 16.5 8 15'/%3E%3C/g%3E%3C/g%3E%3Cg id='b_barras'%3E%3Cpath d='M2.5 21.5h19'/%3E%3Crect x='4' y='13' width='4' height='8.5' rx='1'/%3E%3Crect x='10' y='8' width='4' height='13.5' rx='1'/%3E%3Crect x='16' y='3.5' width='4' height='18' rx='1'/%3E%3C/g%3E%3Cg id='b_linha'%3E%3Cpath d='M2.5 2.5v19h19'/%3E%3Cpath d='M7 16l4.5-6 4 3.5 5-7'/%3E%3C/g%3E%3Cg id='b_velas'%3E%3Cpath d='M7.5 2.5V6M7.5 16v3.5M16.5 6V9.5M16.5 20v2'/%3E%3Crect x='5' y='6' width='5' height='10' rx='1'/%3E%3Crect x='14' y='9.5' width='5' height='10.5' rx='1'/%3E%3C/g%3E%3Cg id='b_pizza'%3E%3Ccircle cx='12' cy='12' r='9.5'/%3E%3Cpath d='M12 2.5v9.5l8 5'/%3E%3C/g%3E%3Cg id='b_etiqueta'%3E%3Cpath d='M3.5 3.5h8.2l9 9a1.5 1.5 0 0 1 0 2.1l-6.1 6.1a1.5 1.5 0 0 1-2.1 0l-9-9z'/%3E%3Ccircle cx='7.5' cy='7.5' r='1.2'/%3E%3C/g%3E%3Cg id='b_cartao'%3E%3Crect x='2' y='4.5' width='20' height='15' rx='2.5'/%3E%3Cpath d='M2 9.5h20M5.5 15h4.5M14 15h2'/%3E%3C/g%3E%3Cg id='b_alta'%3E%3Cpath d='M2.5 17.5l6.5-6.5 4 4L21 6.5'/%3E%3Cpath d='M15 6.5h6v6'/%3E%3C/g%3E%3Cg id='b_calc'%3E%3Crect x='5' y='2.5' width='14' height='19' rx='2.5'/%3E%3Crect x='8' y='5.5' width='8' height='3.5' rx='.8'/%3E%3Cpath d='M9 13h.01M12 13h.01M15 13h.01M9 16h.01M12 16h.01M15 16h.01M9 19h.01M12 19h.01M15 19h.01'/%3E%3C/g%3E%3Cg id='b_ouro'%3E%3Cpath d='M2.5 19l2.2-6.5h14.6l2.2 6.5z'/%3E%3Cpath d='M7.5 12.5l1.6-5h5.8l1.6 5'/%3E%3C/g%3E%3Cg id='b_pilha'%3E%3Cpath d='M4 7c0-1.7 3.6-3 8-3s8 1.3 8 3-3.6 3-8 3-8-1.3-8-3z'/%3E%3Cpath d='M4 7v4.5c0 1.7 3.6 3 8 3s8-1.3 8-3V7'/%3E%3Cpath d='M4 11.5V16c0 1.7 3.6 3 8 3s8-1.3 8-3v-4.5'/%3E%3C/g%3E%3Cg id='b_cofre'%3E%3Crect x='3' y='3.5' width='18' height='16' rx='2'/%3E%3Ccircle cx='12' cy='11.5' r='4'/%3E%3Cpath d='M12 8.6v1.3M12 13.1v1.3M9.1 11.5h1.3M13.6 11.5h1.3'/%3E%3Cpath d='M6.5 19.5v2M17.5 19.5v2'/%3E%3C/g%3E%3Cg id='b_bitcoin'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M9.5 7.5v9M9.5 7.5h3.6a2.2 2.2 0 0 1 0 4.4H9.5m3.9 0a2.3 2.3 0 0 1 0 4.6H9.5M11 6v1.5M13.5 6v1.5M11 16.5V18M13.5 16.5V18'/%3E%3C/g%3E%3Cg id='b_libra'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M15 8.2A3.2 3.2 0 0 0 9.2 9.6V17M7.5 17h9M7.5 12.5h6'/%3E%3C/g%3E%3Cg id='b_ampulheta'%3E%3Cpath d='M6 3h12M6 21h12M7 3v3.5L12 12l-5 5.5V21M17 3v3.5L12 12l5 5.5V21'/%3E%3C/g%3E%3Cg id='b_foguete'%3E%3Cpath d='M12 2.5c3 2 4.5 5.5 4.5 9.5l2 3.5v3l-3-1.5H8.5L5.5 18.5v-3L7.5 12c0-4 1.5-7.5 4.5-9.5z'/%3E%3Ccircle cx='12' cy='9.5' r='1.8'/%3E%3Cpath d='M10 19.5c0 1.5.7 2.5 2 3 1.3-.5 2-1.5 2-3'/%3E%3C/g%3E%3Cg id='b_planta'%3E%3Cpath d='M12 21v-9'/%3E%3Cpath d='M12 13c0-3.5-2.5-5.5-6-5.5 0 3.5 2.5 5.5 6 5.5z'/%3E%3Cpath d='M12 11c0-3 2-5 5.5-5 0 3-2 5-5.5 5z'/%3E%3Cpath d='M8 21h8'/%3E%3C/g%3E%3Cg id='s_mais'%3E%3Cpath d='M-5 0h10M0-5v10'/%3E%3C/g%3E%3Cg id='s_xis'%3E%3Cpath d='M-4-4l8 8M4-4l-8 8'/%3E%3C/g%3E%3Cg id='s_anel'%3E%3Ccircle r='3.6'/%3E%3C/g%3E%3Cg id='s_brilho'%3E%3Cpath d='M0-8C1-3 3-1 8 0 3 1 1 3 0 8-1 3-3 1-8 0-3-1-1-3 0-8z'/%3E%3C/g%3E%3Cg id='s_moedinha'%3E%3Ccircle r='5.5'/%3E%3Ccircle r='2.3'/%3E%3C/g%3E%3Cg id='s_cifrao'%3E%3Cg transform='scale(0.45) translate(-12 -11.3)' stroke-width='3.56'%3E%3Cpath d='M12 2.5V5M12 17.5V20'/%3E%3Cpath d='M16 7.5C16 6 14.2 5 12 5S8 6 8 7.5 9.8 10 12 10.8 16 12 16 14.5 14.2 17.5 12 17.5 8 16.5 8 15'/%3E%3C/g%3E%3C/g%3E%3Cg id='s_seta'%3E%3Cpath d='M-4.5 2.5l4.5-5 4.5 5'/%3E%3C/g%3E%3Cg id='s_losango'%3E%3Cpath d='M0-5l5 5-5 5-5-5z'/%3E%3C/g%3E%3Cg id='s_tri'%3E%3Cpath d='M0-5l5 8h-10z'/%3E%3C/g%3E%3Cg id='s_onda'%3E%3Cpath d='M-6 0q1.5-3 3 0t3 0t3 0t3 0'/%3E%3C/g%3E%3Cg id='s_barrinhas'%3E%3Cpath d='M-5 4v-3M0 4v-8M5 4v-5'/%3E%3C/g%3E%3Cg id='s_ponto'%3E%3Ccircle r='1.4'/%3E%3C/g%3E%3C/defs%3E%3Cg fill='none' stroke='%23000' stroke-width='1' stroke-linecap='round' stroke-linejoin='round'%3E%3Cuse href='%23b_dolar_coin' transform='translate(136.0 63.4) rotate(-17.8) scale(1.82) translate(-12 -12)'/%3E%3Cuse href='%23b_ouro' transform='translate(273.4 30.4) rotate(-17.0) scale(1.92) translate(-12 -12)'/%3E%3Cuse href='%23b_ouro' transform='translate(273.4 450.4) rotate(-17.0) scale(1.92) translate(-12 -12)'/%3E%3Cuse href='%23b_nota' transform='translate(225.1 153.6) rotate(17.3) scale(1.97) translate(-12 -12)'/%3E%3Cuse href='%23b_euro_coin' transform='translate(24.4 213.1) rotate(12.3) scale(2.0) translate(-12 -12)'/%3E%3Cuse href='%23b_euro_coin' transform='translate(444.4 213.1) rotate(12.3) scale(2.0) translate(-12 -12)'/%3E%3Cuse href='%23b_pilha' transform='translate(29.3 38.1) rotate(-9.9) scale(1.91) translate(-12 -12)'/%3E%3Cuse href='%23b_pilha' transform='translate(449.3 38.1) rotate(-9.9) scale(1.91) translate(-12 -12)'/%3E%3Cuse href='%23b_linha' transform='translate(178.3 347.3) rotate(-11.1) scale(1.71) translate(-12 -12)'/%3E%3Cuse href='%23b_planta' transform='translate(360.6 121.6) rotate(-17.5) scale(1.92) translate(-12 -12)'/%3E%3Cuse href='%23b_velas' transform='translate(131.9 245.9) rotate(-4.8) scale(1.72) translate(-12 -12)'/%3E%3Cuse href='%23b_porquinho' transform='translate(333.6 293.6) rotate(12.0) scale(1.72) translate(-12 -12)'/%3E%3Cuse href='%23b_calc' transform='translate(352.8 -23.2) rotate(-8.5) scale(1.77) translate(-12 -12)'/%3E%3Cuse href='%23b_calc' transform='translate(352.8 396.8) rotate(-8.5) scale(1.77) translate(-12 -12)'/%3E%3Cuse href='%23b_bitcoin' transform='translate(25.5 294.6) rotate(0.1) scale(1.79) translate(-12 -12)'/%3E%3Cuse href='%23b_bitcoin' transform='translate(445.5 294.6) rotate(0.1) scale(1.79) translate(-12 -12)'/%3E%3Cuse href='%23b_pizza' transform='translate(216.5 259.4) rotate(-4.2) scale(1.74) translate(-12 -12)'/%3E%3Cuse href='%23b_libra' transform='translate(105.9 145.9) rotate(-23.0) scale(1.88) translate(-12 -12)'/%3E%3Cuse href='%23b_sacola' transform='translate(353.0 201.4) rotate(22.1) scale(1.78) translate(-12 -12)'/%3E%3Cuse href='%23b_cofre' transform='translate(55.1 382.2) rotate(7.7) scale(1.92) translate(-12 -12)'/%3E%3Cuse href='%23b_cartao' transform='translate(266.5 336.7) rotate(-27.5) scale(1.97) translate(-12 -12)'/%3E%3Cuse href='%23b_etiqueta' transform='translate(26.1 116.6) rotate(-9.6) scale(1.95) translate(-12 -12)'/%3E%3Cuse href='%23b_etiqueta' transform='translate(446.1 116.6) rotate(-9.6) scale(1.95) translate(-12 -12)'/%3E%3Cuse href='%23b_alta' transform='translate(194.6 5.7) rotate(-11.6) scale(1.94) translate(-12 -12)'/%3E%3Cuse href='%23b_alta' transform='translate(194.6 425.7) rotate(-11.6) scale(1.94) translate(-12 -12)'/%3E%3Cuse href='%23b_ampulheta' transform='translate(100.9 321.5) rotate(-12.7) scale(1.89) translate(-12 -12)'/%3E%3C/g%3E%3Cg fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cuse href='%23s_mais' transform='translate(76.8 25.3) rotate(87.7)'/%3E%3Cuse href='%23s_xis' transform='translate(302.8 82.4) rotate(87.3)'/%3E%3Cuse href='%23s_anel' transform='translate(363.1 353.7) rotate(113.6)'/%3E%3Cuse href='%23s_brilho' transform='translate(312.5 379.9) rotate(241.0)'/%3E%3Cuse href='%23s_moedinha' transform='translate(160.5 174.0) rotate(232.6)'/%3E%3Cuse href='%23s_cifrao' transform='translate(185.4 143.8) rotate(350.7)'/%3E%3Cuse href='%23s_seta' transform='translate(172.9 203.6) rotate(4.9)'/%3E%3Cuse href='%23s_losango' transform='translate(295.9 232.2) rotate(205.5)'/%3E%3Cuse href='%23s_tri' transform='translate(406.5 57.1) rotate(261.3)'/%3E%3Cuse href='%23s_onda' transform='translate(405.5 87.3) rotate(151.3)'/%3E%3Cuse href='%23s_barrinhas' transform='translate(62.7 93.1) rotate(40.8)'/%3E%3Cuse href='%23s_ponto' transform='translate(208.6 202.4) rotate(209.7)'/%3E%3Cuse href='%23s_mais' transform='translate(140.5 390.5) rotate(106.5)'/%3E%3Cuse href='%23s_xis' transform='translate(34.4 252.7) rotate(219.9)'/%3E%3Cuse href='%23s_anel' transform='translate(57.3 172.2) rotate(316.7)'/%3E%3Cuse href='%23s_brilho' transform='translate(257.5 297.0) rotate(191.6)'/%3E%3Cuse href='%23s_moedinha' transform='translate(383.5 27.9) rotate(332.0)'/%3E%3Cuse href='%23s_cifrao' transform='translate(301.4 158.8) rotate(182.3)'/%3E%3Cuse href='%23s_seta' transform='translate(403.6 197.8) rotate(332.2)'/%3E%3Cuse href='%23s_losango' transform='translate(32.0 -4.1) rotate(127.2)'/%3E%3Cuse href='%23s_losango' transform='translate(32.0 415.9) rotate(127.2)'/%3E%3Cuse href='%23s_tri' transform='translate(400.7 393.9) rotate(110.0)'/%3E%3Cuse href='%23s_onda' transform='translate(80.0 204.1) rotate(251.9)'/%3E%3Cuse href='%23s_barrinhas' transform='translate(233.8 104.2) rotate(242.5)'/%3E%3Cuse href='%23s_ponto' transform='translate(378.3 266.7) rotate(195.7)'/%3E%3Cuse href='%23s_mais' transform='translate(-6.9 332.0) rotate(41.7)'/%3E%3Cuse href='%23s_mais' transform='translate(413.1 332.0) rotate(41.7)'/%3E%3Cuse href='%23s_xis' transform='translate(23.3 346.1) rotate(336.8)'/%3E%3Cuse href='%23s_anel' transform='translate(241.7 73.4) rotate(177.8)'/%3E%3Cuse href='%23s_brilho' transform='translate(125.4 0.9) rotate(195.8)'/%3E%3Cuse href='%23s_brilho' transform='translate(125.4 420.9) rotate(195.8)'/%3E%3Cuse href='%23s_moedinha' transform='translate(407.7 4.6) rotate(65.0)'/%3E%3Cuse href='%23s_moedinha' transform='translate(407.7 424.6) rotate(65.0)'/%3E%3Cuse href='%23s_cifrao' transform='translate(-0.3 258.7) rotate(55.6)'/%3E%3Cuse href='%23s_cifrao' transform='translate(419.7 258.7) rotate(55.6)'/%3E%3Cuse href='%23s_seta' transform='translate(64.8 62.0) rotate(182.3)'/%3E%3Cuse href='%23s_losango' transform='translate(404.6 166.7) rotate(91.5)'/%3E%3Cuse href='%23s_tri' transform='translate(278.4 376.2) rotate(114.7)'/%3E%3Cuse href='%23s_onda' transform='translate(218.5 335.8) rotate(251.8)'/%3E%3Cuse href='%23s_barrinhas' transform='translate(374.5 61.7) rotate(320.4)'/%3E%3Cuse href='%23s_ponto' transform='translate(99.7 362.6) rotate(83.9)'/%3E%3Cuse href='%23s_mais' transform='translate(338.7 66.0) rotate(261.3)'/%3E%3Cuse href='%23s_xis' transform='translate(148.3 106.1) rotate(52.4)'/%3E%3Cuse href='%23s_anel' transform='translate(311.0 125.2) rotate(17.6)'/%3E%3Cuse href='%23s_brilho' transform='translate(69.3 234.9) rotate(70.9)'/%3E%3Cuse href='%23s_moedinha' transform='translate(204.6 74.7) rotate(262.0)'/%3E%3Cuse href='%23s_cifrao' transform='translate(181.2 97.6) rotate(168.2)'/%3E%3Cuse href='%23s_seta' transform='translate(303.8 -5.9) rotate(249.0)'/%3E%3Cuse href='%23s_seta' transform='translate(303.8 414.1) rotate(249.0)'/%3E%3Cuse href='%23s_losango' transform='translate(325.2 253.1) rotate(126.4)'/%3E%3Cuse href='%23s_tri' transform='translate(329.6 26.1) rotate(313.7)'/%3E%3Cuse href='%23s_onda' transform='translate(167.7 274.6) rotate(209.5)'/%3E%3Cuse href='%23s_barrinhas' transform='translate(133.1 202.1) rotate(100.7)'/%3E%3Cuse href='%23s_ponto' transform='translate(239.2 207.3) rotate(70.6)'/%3E%3Cuse href='%23s_mais' transform='translate(96.5 265.9) rotate(213.3)'/%3E%3Cuse href='%23s_xis' transform='translate(52.3 326.1) rotate(159.3)'/%3E%3Cuse href='%23s_anel' transform='translate(281.9 197.5) rotate(126.5)'/%3E%3Cuse href='%23s_brilho' transform='translate(93.4 79.6) rotate(90.6)'/%3E%3Cuse href='%23s_moedinha' transform='translate(402.7 286.1) rotate(114.1)'/%3E%3Cuse href='%23s_cifrao' transform='translate(155.8 310.3) rotate(333.7)'/%3E%3Cuse href='%23s_seta' transform='translate(379.3 322.6) rotate(291.0)'/%3E%3Cuse href='%23s_losango' transform='translate(230.7 374.3) rotate(57.6)'/%3E%3Cuse href='%23s_tri' transform='translate(264.5 226.9) rotate(95.8)'/%3E%3Cuse href='%23s_onda' transform='translate(337.2 157.1) rotate(289.5)'/%3E%3Cuse href='%23s_barrinhas' transform='translate(325.3 352.7) rotate(96.3)'/%3E%3Cuse href='%23s_ponto' transform='translate(196.8 299.1) rotate(81.1)'/%3E%3C/g%3E%3C/svg%3E");
+
+    -webkit-mask-size: 420px 420px;
+            mask-size: 420px 420px;
+
+    -webkit-mask-repeat: repeat;
+            mask-repeat: repeat;
+}
+
+/* conteúdo fica acima do padrão */
+.app {
+
+    position: relative;
+    z-index: 1;
 }

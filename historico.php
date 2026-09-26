@@ -1,6 +1,3 @@
-<?php
-
-?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -9,10 +6,12 @@
 
 <title>Histórico - Accuracy</title>
 
-<link rel="stylesheet" href="css/historico.css">
+<link rel="stylesheet" href="css/Tema.css">
+<link rel="stylesheet" href="css/historico.css?v=3">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
+<script src="js/Tema.js"></script>
+<script src="js/avatar-global.js"></script>
 </head>
 
 <body>
@@ -180,7 +179,7 @@
 
             <div class="user">
 
-                <a href="perfil.html">
+                <a href="perfil.php">
 
                     <div class="avatar">
                         N
@@ -190,10 +189,10 @@
 
                 <div class="user-info">
 
-                    <a href="perfil.html">
+                    <a href="perfil.php">
 
                         <strong>
-                            <?= htmlspecialchars($_SESSION["nome"] ?? "Usuário") ?>
+                            Nome da pessoa
                         </strong>
 
                     </a>
@@ -217,39 +216,47 @@
         <header class="topbar">
             <div>
                 <h1>Histórico</h1>
-                <p>Quinta-feira, 18 de junho de 2026</p>
+                <p id="currentDate"></p>
             </div>
         </header>
 
         <section class="cards">
             <div class="card">
                 <span>Total aportado</span>
-                <h3>R$ 41.200</h3>
-                <p>28 operações</p>
+                <h3 id="cardTotal">R$ 0,00</h3>
+                <p id="cardTotalInfo">0 aportes ativos</p>
             </div>
 
             <div class="card green">
-                <span>Ganho realizado</span>
-                <h3>R$ 3.840</h3>
-                <p>+3,8%</p>
+                <span>Aportes realizados</span>
+                <h3 id="cardAdded">R$ 0,00</h3>
+                <p id="cardAddedInfo">0 operações</p>
             </div>
 
             <div class="card red">
-                <span>Perda realizada</span>
-                <h3>R$ 420</h3>
-                <p>-1,0%</p>
+                <span>Aportes removidos</span>
+                <h3 id="cardRemoved">R$ 0,00</h3>
+                <p id="cardRemovedInfo">0 remoções</p>
             </div>
 
             <div class="card">
-                <span>Resultado líquido</span>
-                <h3>R$ 3.420</h3>
-                <p class="green">+2,8% total</p>
+                <span>Movimentações</span>
+                <h3 id="cardMoves">0</h3>
+                <p id="cardMovesInfo">Nenhuma ainda</p>
             </div>
         </section>
 
         <section class="chart">
-            <h3>Rendimento mensal</h3>
-            <div class="chart-box">Gráfico</div>
+            <div class="chart-header">
+                <h3>Aportes por mês</h3>
+
+                <div class="chart-legend">
+                    <span><i class="dot dot-green"></i>Aportado</span>
+                    <span><i class="dot dot-red"></i>Removido</span>
+                </div>
+            </div>
+
+            <div class="chart-box" id="chartBox">Gráfico</div>
         </section>
 
         <section class="table">
@@ -258,10 +265,10 @@
                 <h3>Transações</h3>
 
                 <div class="filters">
-                    <button class="active">Todos</button>
-                    <button>Compra</button>
-                    <button>Venda</button>
-                    <button>Dividendo</button>
+                    <button class="active" data-filter="all">Todos</button>
+                    <button data-filter="Compra">Compra</button>
+                    <button data-filter="Aporte">Aporte</button>
+                    <button data-filter="removed">Removidos</button>
                 </div>
             </div>
 
@@ -272,68 +279,12 @@
                         <th>Tipo</th>
                         <th>Data</th>
                         <th>Valor</th>
-                        <th>Retorno</th>
+                        <th>Recorrência</th>
                         <th>Status</th>
                     </tr>
                 </thead>
 
-                <tbody>
-
-                    <tr>
-                        <td>PETR4</td>
-                        <td class="green">Compra</td>
-                        <td>12/06/2026</td>
-                        <td>R$ 7.480</td>
-                        <td class="green">+4,1%</td>
-                        <td><span class="status done">Concluída</span></td>
-                    </tr>
-
-                    <tr>
-                        <td>Bitcoin</td>
-                        <td class="green">Compra</td>
-                        <td>05/06/2026</td>
-                        <td>R$ 4.814</td>
-                        <td class="green">+18,4%</td>
-                        <td><span class="status done">Concluída</span></td>
-                    </tr>
-
-                    <tr>
-                        <td>XPML11</td>
-                        <td>Dividendo</td>
-                        <td>01/06/2026</td>
-                        <td>R$ 89,60</td>
-                        <td class="green">+0,9%</td>
-                        <td><span class="status done">Concluída</span></td>
-                    </tr>
-
-                    <tr>
-                        <td>VALE3</td>
-                        <td class="green">Compra</td>
-                        <td>22/05/2026</td>
-                        <td>R$ 9.855</td>
-                        <td class="red">-2,3%</td>
-                        <td><span class="status done">Concluída</span></td>
-                    </tr>
-
-                    <tr>
-                        <td>Ethereum</td>
-                        <td class="green">Compra</td>
-                        <td>10/05/2026</td>
-                        <td>R$ 7.190</td>
-                        <td class="green">+9,2%</td>
-                        <td><span class="status done">Concluída</span></td>
-                    </tr>
-
-                    <tr>
-                        <td>CDB Nubank</td>
-                        <td class="green">Compra</td>
-                        <td>01/05/2026</td>
-                        <td>R$ 5.000</td>
-                        <td class="green">+12,5%</td>
-                        <td><span class="status pending">Pendente</span></td>
-                    </tr>
-
-                </tbody>
+                <tbody id="historyBody"></tbody>
             </table>
 
         </section>
@@ -348,12 +299,442 @@
 ========================= -->
 
 <script>
- const token = localStorage.getItem("token");
-    const usuario = localStorage.getItem("usuario");
+(function () {
+"use strict";
 
-    if (!token || !usuario) {
-        window.location.href = "login.php";
+const $ = (selector) => document.querySelector(selector);
+
+const STORAGE_KEY = "accuracy_aportes";
+const HISTORY_KEY = "accuracy_historico";
+
+let currentFilter = "all";
+
+
+/* =========================
+   LEITURA DO LOCALSTORAGE
+========================= */
+
+function read(key) {
+
+    try {
+        return JSON.parse(localStorage.getItem(key));
+    } catch {
+        return null;
     }
+
+}
+
+
+/* =========================
+   APORTES ANTIGOS
+   (feitos antes do histórico
+   existir entram como "added")
+========================= */
+
+function seedHistory() {
+
+    const current = read(HISTORY_KEY);
+
+    if (Array.isArray(current) && current.length) {
+        return;
+    }
+
+    const old = read(STORAGE_KEY) || [];
+
+    if (!old.length) {
+        return;
+    }
+
+    const seeded = old.map(item => ({
+
+        id: `${item.id}-seed`,
+        action: "added",
+        contributionId: item.id,
+        asset: item.asset,
+        category: item.category,
+        type: item.type,
+        amount: item.amount,
+        date: item.date,
+        recurrence: item.recurrence,
+        recurrenceDay: item.recurrenceDay,
+        observation: item.observation,
+        timestamp: new Date(item.id).toISOString()
+
+    }));
+
+    localStorage.setItem(HISTORY_KEY, JSON.stringify(seeded));
+
+}
+
+
+/* =========================
+   FORMATAÇÕES
+========================= */
+
+function money(value) {
+
+    return new Intl.NumberFormat("pt-BR", {
+        style: "currency",
+        currency: "BRL"
+    }).format(value);
+
+}
+
+function formatDate(dateString) {
+
+    if (!dateString) {
+        return "-";
+    }
+
+    const [year, month, day] = dateString.split("-");
+
+    return `${day}/${month}/${year}`;
+
+}
+
+function formatDateTime(iso) {
+
+    return new Date(iso).toLocaleString("pt-BR", {
+        dateStyle: "short",
+        timeStyle: "short"
+    });
+
+}
+
+function recurrenceText(item) {
+
+    if (item.recurrence === "weekly") {
+        return "Semanal";
+    }
+
+    if (item.recurrence === "monthly") {
+        return `Mensal - dia ${item.recurrenceDay}`;
+    }
+
+    return "Único";
+
+}
+
+function escapeHtml(text) {
+
+    const div = document.createElement("div");
+
+    div.textContent = text ?? "";
+
+    return div.innerHTML;
+
+}
+
+function typeClass(type) {
+
+    if (type === "Compra") {
+        return "green";
+    }
+
+    if (type === "Venda") {
+        return "red";
+    }
+
+    return "blue";
+
+}
+
+function plural(count, singular, pluralWord) {
+
+    return `${count} ${count === 1 ? singular : pluralWord}`;
+
+}
+
+
+/* =========================
+   CARDS
+========================= */
+
+function updateCards(history) {
+
+    const added = history.filter(e => e.action === "added");
+    const removed = history.filter(e => e.action === "removed");
+
+    const sum = list => list.reduce((total, e) => total + e.amount, 0);
+
+    const totalAdded = sum(added);
+    const totalRemoved = sum(removed);
+
+    $("#cardTotal").textContent = money(totalAdded - totalRemoved);
+    $("#cardTotalInfo").textContent =
+        `${plural(added.length - removed.length, "aporte ativo", "aportes ativos")}`;
+
+    $("#cardAdded").textContent = money(totalAdded);
+    $("#cardAddedInfo").textContent = plural(added.length, "operação", "operações");
+
+    $("#cardRemoved").textContent = money(totalRemoved);
+    $("#cardRemovedInfo").textContent = plural(removed.length, "remoção", "remoções");
+
+    $("#cardMoves").textContent = history.length;
+    $("#cardMovesInfo").textContent =
+        history.length ? "Adições e remoções" : "Nenhuma ainda";
+
+}
+
+
+/* =========================
+   GRÁFICO (ÚLTIMOS 6 MESES)
+========================= */
+
+function renderChart(history) {
+
+    const box = $("#chartBox");
+
+    if (!box) {
+        return;
+    }
+
+    const names = [
+        "jan", "fev", "mar", "abr", "mai", "jun",
+        "jul", "ago", "set", "out", "nov", "dez"
+    ];
+
+    const now = new Date();
+
+    const months = [];
+
+    for (let i = 5; i >= 0; i--) {
+
+        const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+
+        months.push({
+            key: `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`,
+            label: `${names[d.getMonth()]}/${String(d.getFullYear()).slice(2)}`,
+            added: 0,
+            removed: 0
+        });
+
+    }
+
+    history.forEach(entry => {
+
+        const day = entry.date || (entry.timestamp || "").slice(0, 10);
+
+        const month = months.find(m => m.key === day.slice(0, 7));
+
+        if (!month) {
+            return;
+        }
+
+        if (entry.action === "removed") {
+            month.removed += entry.amount;
+        } else {
+            month.added += entry.amount;
+        }
+
+    });
+
+    const max = Math.max(...months.map(m => Math.max(m.added, m.removed)));
+
+    if (!max) {
+        box.textContent = "Nenhum aporte nos últimos 6 meses.";
+        return;
+    }
+
+    const AREA = 170;
+
+    const px = value =>
+        value ? Math.max(4, Math.round(value / max * AREA)) : 0;
+
+    const short = value => money(value).replace(",00", "");
+
+    box.innerHTML = `
+        <div class="bar-chart">
+            ${months.map(m => {
+
+                const net = m.added - m.removed;
+
+                return `
+                    <div class="bar-group">
+                        <div class="bar-cols">
+                            <div class="bar add"
+                                 style="height:${px(m.added)}px"
+                                 title="Aportado: ${money(m.added)}"></div>
+                            <div class="bar rem"
+                                 style="height:${px(m.removed)}px"
+                                 title="Removido: ${money(m.removed)}"></div>
+                        </div>
+                        <span class="bar-label">${m.label}</span>
+                        <small class="bar-net ${net < 0 ? "red" : "green"}">${short(net)}</small>
+                    </div>
+                `;
+
+            }).join("")}
+        </div>
+    `;
+
+}
+
+
+/* =========================
+   TABELA
+========================= */
+
+function render() {
+
+    const history = read(HISTORY_KEY) || [];
+
+    updateCards(history);
+
+    renderChart(history);
+
+    const sorted = [...history].sort(
+        (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
+    );
+
+    const visible = sorted.filter(entry => {
+
+        if (currentFilter === "all") {
+            return true;
+        }
+
+        if (currentFilter === "removed") {
+            return entry.action === "removed";
+        }
+
+        return entry.type === currentFilter;
+
+    });
+
+    const body = $("#historyBody");
+
+    if (!visible.length) {
+
+        body.innerHTML = `
+            <tr class="empty-row">
+                <td colspan="6">Nenhuma movimentação encontrada.</td>
+            </tr>
+        `;
+
+        return;
+    }
+
+    body.innerHTML = visible.map(entry => {
+
+        const isRemoved = entry.action === "removed";
+
+        const details = [
+            entry.date ? `Operação de ${formatDate(entry.date)}` : "",
+            entry.observation ? escapeHtml(entry.observation) : ""
+        ].filter(Boolean).join(" • ");
+
+        return `
+            <tr>
+                <td class="asset-cell">
+                    ${escapeHtml(entry.asset)}
+                    <small>${details}</small>
+                </td>
+                <td class="${typeClass(entry.type)}">${escapeHtml(entry.type)}</td>
+                <td>${formatDateTime(entry.timestamp)}</td>
+                <td class="${isRemoved ? "red" : ""}">
+                    ${isRemoved ? "- " : ""}${money(entry.amount)}
+                </td>
+                <td>${recurrenceText(entry)}</td>
+                <td>
+                    <span class="status ${isRemoved ? "removed" : "done"}">
+                        ${isRemoved ? "Removido" : "Concluída"}
+                    </span>
+                </td>
+            </tr>
+        `;
+
+    }).join("");
+
+}
+
+
+/* =========================
+   FILTROS
+========================= */
+
+document.querySelectorAll("[data-filter]").forEach(button => {
+
+    button.addEventListener("click", () => {
+
+        currentFilter = button.dataset.filter;
+
+        document
+            .querySelectorAll("[data-filter]")
+            .forEach(btn => btn.classList.remove("active"));
+
+        button.classList.add("active");
+
+        render();
+
+    });
+
+});
+
+
+/* =========================
+   DATA NO TOPO
+========================= */
+
+const currentDate = $("#currentDate");
+
+if (currentDate) {
+
+    currentDate.textContent =
+        new Date().toLocaleDateString("pt-BR", {
+            weekday: "long",
+            day: "2-digit",
+            month: "long",
+            year: "numeric"
+        });
+
+}
+
+
+/* =========================
+   ATUALIZA SE OUTRA ABA
+   MEXER NOS APORTES
+========================= */
+
+window.addEventListener("storage", event => {
+
+    if (event.key === HISTORY_KEY) {
+        render();
+    }
+
+});
+
+
+/* =========================
+   INICIALIZAÇÃO
+========================= */
+
+try {
+
+    seedHistory();
+
+    render();
+
+} catch (error) {
+
+    console.error("Erro no histórico:", error);
+
+    const body = $("#historyBody");
+
+    if (body) {
+        body.innerHTML = `
+            <tr class="empty-row">
+                <td colspan="6">Erro ao carregar o histórico: ${escapeHtml(error.message)}</td>
+            </tr>
+        `;
+    }
+
+}
+
+})();
+</script>
+
+<script>
+
     /* =========================
        ELEMENTOS
     ========================== */

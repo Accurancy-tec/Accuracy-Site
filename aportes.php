@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="css/dashboard.css">
 
     <!-- Depois o CSS específico desta página -->
-    <link rel="stylesheet" href="css/aportes.css">
+    <link rel="stylesheet" href="css/aportes.css?v=2">
 
     <!-- Estilos das janelas de carteira -->
     <link rel="stylesheet" href="css/carteiras.css">
@@ -311,9 +311,24 @@
                         </p>
                     </div>
 
-                    <span id="contributionCount">
-                        0 aportes
-                    </span>
+                    <div class="list-header-actions">
+
+                        <span id="contributionCount">
+                            0 aportes
+                        </span>
+
+                        <button
+                            class="clear-btn"
+                            id="clearAllBtn"
+                            type="button"
+                            title="Excluir todos os aportes">
+
+                            <i class="bi bi-trash3"></i>
+                            Excluir aportes
+
+                        </button>
+
+                    </div>
 
                 </div>
 
@@ -348,7 +363,7 @@
 
 <!-- ?v=2 força o navegador a baixar a versão nova do arquivo -->
 <script src="js/carteiras.js"></script>
-<script src="js/Aportes.js?v=3"></script>
+<script src="js/Aportes.js?v=4"></script>
 
 <script>
     const notificationBtn = document.getElementById("notificationBtn");

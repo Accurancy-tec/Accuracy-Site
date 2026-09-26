@@ -191,6 +191,54 @@
 }
 
 /* =========================
+   AÇÕES DO CABEÇALHO DA LISTA
+   (contador + botão de
+   excluir todos os aportes)
+========================= */
+
+.list-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.list-header-actions #contributionCount {
+    color: var(--texto-secundario);
+    font-size: 11px;
+    white-space: nowrap;
+}
+
+.clear-btn {
+    appearance: none;
+    -webkit-appearance: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 0;
+    padding: 6px 10px;
+    border: 1px solid rgba(239, 68, 68, 0.25);
+    border-radius: 8px;
+    background: rgba(239, 68, 68, 0.08);
+    color: var(--vermelho);
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 500;
+    line-height: normal;
+    white-space: nowrap;
+    transition: 0.2s;
+}
+
+.clear-btn:hover {
+    border-color: var(--vermelho);
+    background: rgba(239, 68, 68, 0.18);
+}
+
+.clear-btn i {
+    font-size: 12px;
+}
+
+/* =========================
    ITEM DO APORTE
 ========================= */
 
@@ -544,5 +592,14 @@
     .aporte-form,
     .aporte-list {
         padding: 15px;
+    }
+
+    .list-header {
+        flex-wrap: wrap;
+    }
+
+    .list-header-actions {
+        width: 100%;
+        justify-content: space-between;
     }
 }

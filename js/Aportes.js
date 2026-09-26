@@ -945,6 +945,54 @@ contributionList.addEventListener(
 
 
 /* =========================
+   EXCLUIR TODOS OS APORTES
+========================= */
+
+$("#clearAllBtn").addEventListener(
+    "click",
+    () => {
+
+        if (contributions.length === 0) {
+
+            toast(
+                "Não há aportes para excluir."
+            );
+
+            return;
+        }
+
+
+        const confirmed =
+            confirm(
+                `Tem certeza que deseja excluir todos os ${contributions.length} aportes? Essa ação não pode ser desfeita.`
+            );
+
+
+        if (!confirmed) {
+            return;
+        }
+
+
+        contributions.forEach(item => {
+            logHistory("removed", item);
+        });
+
+
+        contributions = [];
+
+        save();
+
+        render();
+
+        toast(
+            "Todos os aportes foram excluídos."
+        );
+
+    }
+);
+
+
+/* =========================
    ATUALIZAR CARDS
 ========================= */
 

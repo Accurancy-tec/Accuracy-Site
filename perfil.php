@@ -223,6 +223,7 @@
                     </p>
 
                 </div>
+                <form id="formAlterar" method="POST" action="perfil.php">
 
             </header>
 
@@ -518,7 +519,6 @@
 
     <!-- =========================
      JAVASCRIPT
-========================= -->
 
     <script>
         const token = localStorage.getItem("token");

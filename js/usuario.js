@@ -94,7 +94,7 @@ if (formulario) {
         try {
 
             const resposta = await fetch(
-                "http://localhost/accuracyAppApi/user/login.php",
+                "http://localhost/accuracyAppApi/user/loginSite.php",
                 {
                     method: "POST",
                     headers: {
@@ -173,4 +173,4 @@ if (formulario) {
         }
     });
 }
-}
+

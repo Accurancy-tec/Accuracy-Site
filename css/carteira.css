@@ -307,3 +307,260 @@
     }
 
 }
+
+
+/* =========================
+   GRID DOS CARDS
+   (página Carteira)
+========================= */
+
+.cards {
+    margin-top: 20px;
+
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 15px;
+}
+
+.cards .card {
+    background: linear-gradient(135deg, #1d4ed8, #1e3a8a);
+
+    padding: 18px;
+
+    border-radius: 12px;
+
+    border: 1px solid rgba(255, 255, 255, .05);
+}
+
+.cards .card h3 {
+    color: #d7e4ff;
+
+    font-size: 12px;
+
+    letter-spacing: .2px;
+}
+
+.cards .card p {
+    margin-top: 8px;
+
+    font-size: 22px;
+
+    font-weight: 700;
+
+    color: #ffffff;
+}
+
+.cards .card span {
+    display: block;
+
+    margin-top: 7px;
+
+    font-size: 11px;
+
+    color: #bcd0ff;
+}
+
+.cards .card .green {
+    color: #4ade80;
+}
+
+
+/* =========================
+   CONTEÚDO (TABELA + GRÁFICO)
+========================= */
+
+.content {
+    margin-top: 20px;
+
+    display: grid;
+
+    grid-template-columns: 5fr 1fr;
+
+    gap: 15px;
+
+    align-items: start;
+}
+
+.table-container {
+    background: var(--surface-2);
+
+    padding: 18px;
+
+    
+
+    border-radius: 12px;
+
+    height: fit-content;
+}
+
+.table-header {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 15px;
+}
+
+.table-header h3 {
+    font-size: 15px;
+}
+
+.badge {
+    background: var(--icone-bg);
+
+    padding: 4px 10px;
+
+    border-radius: 20px;
+
+    font-size: 11px;
+
+    color: var(--texto-suave);
+}
+
+table {
+    width: 100%;
+
+    border-collapse: collapse;
+}
+
+table th {
+    text-align: left;
+
+    padding: 10px 8px;
+
+    font-size: 11px;
+
+    color: var(--texto-fraco);
+
+    border-bottom: 1px solid var(--borda-suave);
+}
+
+table td {
+    padding: 10px 8px;
+
+    font-size: 13px;
+
+    border-bottom: 1px solid var(--borda-suave);
+}
+
+table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+
+/* =========================
+   RESPONSIVIDADE
+   (grid dos cards e conteúdo)
+========================= */
+
+@media (max-width: 1200px) {
+
+    .cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .content {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+@media (max-width: 600px) {
+
+    .cards {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+
+/* =========================
+   GRÁFICO DE DISTRIBUIÇÃO
+========================= */
+
+.chart {
+    background: var(--surface-2);
+
+    padding: 18px;
+    border-radius: 12px;
+
+    height: fit-content;
+}
+
+.chart h3 {
+    font-size: 15px;
+
+    margin-bottom: 20px;
+}
+
+.circle {
+    width: 120px;
+    height: 120px;
+
+    margin: 0 auto 20px;
+
+    border-radius: 50%;
+
+    background: var(--surface-3, var(--icone-bg));
+}
+
+.legend {
+    display: flex;
+    flex-direction: column;
+
+    gap: 10px;
+}
+
+.legend > div {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    font-size: 12px;
+
+    color: var(--texto-suave);
+}
+
+.legend-name {
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    color: var(--texto);
+}
+
+.legend-dot {
+    width: 10px;
+    height: 10px;
+
+    border-radius: 50%;
+
+    flex-shrink: 0;
+}
+
+.legend-empty {
+    color: var(--texto-fraco);
+
+    font-size: 12px;
+
+    text-align: center;
+}
+
+
+/* =========================
+   TABELA VAZIA
+========================= */
+
+.table-empty {
+    text-align: center;
+
+    padding: 20px 8px !important;
+
+    color: var(--texto-fraco);
+}

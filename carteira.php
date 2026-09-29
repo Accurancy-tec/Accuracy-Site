@@ -8,6 +8,7 @@
     <title>Carteira - Accuracy</title>
 
     <link rel="stylesheet" href="css/Tema.css">
+    <link rel="stylesheet" href="css/dashboard.css">
     <link rel="stylesheet" href="css/carteira.css">
     <link rel="stylesheet" href="css/carteiras.css">
 

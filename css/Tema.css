@@ -1,0 +1,202 @@
+/* =========================
+   TEMA - VARIÁVEIS GLOBAIS
+   Importe este arquivo ANTES do CSS de cada página
+========================= */
+
+/* ---- TEMA ESCURO (padrão) ---- */
+
+:root {
+
+    /* FUNDOS */
+    --bg: #071427;
+    --surface: #0e1f3d;
+    --surface-2: #0f223f;
+    --surface-hover: #12294b;
+    --icone-bg: #102b51;
+    --logout-bg: #3a202b;
+
+    /* BORDAS */
+    --borda: #2a3f66;
+    --borda-suave: #223b67;
+    --borda-fraca: #1d355d;
+    --borda-item: #1d3357;
+    --avatar-borda: #162c4d;
+
+    /* TEXTOS */
+    --texto: #ffffff;
+    --texto-forte: #dbe5f5;
+    --texto-suave: #9bb0d1;
+    --texto-secundario: #8aa0c2;
+    --texto-fraco: #7289aa;
+    --texto-muito-fraco: #587091;
+    --texto-ativo: #ffffff;
+
+    /* CORES DE DESTAQUE */
+    --primaria: #3b82f6;
+    --primaria-forte: #2563eb;
+    --primaria-suave: #1c3563;
+    --link: #6ea8ff;
+    --verde: #22c55e;
+    --vermelho: #ef4444;
+    --amarelo: #eab308;
+
+    /* OUTROS */
+    --sombra: rgba(0, 0, 0, .35);
+    --scroll-thumb: #29446d;
+    --destaque-nao-lida: rgba(59, 130, 246, .06);
+}
+
+
+/* ---- TEMA CLARO ---- */
+
+:root[data-theme="light"] {
+
+    /* FUNDOS */
+    --bg: #f1f5fa;
+    --surface: #ffffff;
+    --surface-2: #ffffff;
+    --surface-hover: #eef3fa;
+    --icone-bg: #e8f0fe;
+    --logout-bg: #fdeaea;
+
+    /* BORDAS */
+    --borda: #dbe3ef;
+    --borda-suave: #e3e9f3;
+    --borda-fraca: #e8edf5;
+    --borda-item: #eef2f8;
+    --avatar-borda: #dbe7fa;
+
+    /* TEXTOS */
+    --texto: #0f1b2d;
+    --texto-forte: #1b2a41;
+    --texto-suave: #5a6b85;
+    --texto-secundario: #6b7d99;
+    --texto-fraco: #8a9ab2;
+    --texto-muito-fraco: #9aa8bd;
+    --texto-ativo: #0f1b2d;
+
+    /* CORES DE DESTAQUE */
+    --primaria: #2563eb;
+    --primaria-forte: #1d4ed8;
+    --primaria-suave: #e4edfd;
+    --link: #2563eb;
+    --verde: #16a34a;
+    --vermelho: #dc2626;
+    --amarelo: #ca8a04;
+
+    /* OUTROS */
+    --sombra: rgba(15, 30, 60, .12);
+    --scroll-thumb: #c6d2e4;
+    --destaque-nao-lida: rgba(37, 99, 235, .06);
+}
+
+
+/* TRANSIÇÃO SUAVE NA TROCA */
+
+body {
+    transition: background .25s ease, color .25s ease;
+}
+
+
+/* =========================
+   BOTÃO DE TROCA DE TEMA
+========================= */
+
+.theme-btn {
+
+    width: 38px;
+    height: 38px;
+
+    border: 1px solid var(--borda);
+    border-radius: 10px;
+
+    background: var(--surface-2);
+    color: var(--texto-suave);
+
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    transition: .2s;
+}
+
+.theme-btn:hover {
+
+    background: var(--primaria-suave);
+    color: var(--texto-ativo);
+    border-color: var(--primaria);
+}
+
+.theme-btn i {
+    font-size: 16px;
+}
+/* =========================
+   SCROLLBAR GLOBAL
+========================= */
+
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--scroll-thumb);
+    border-radius: 10px;
+    border: 2px solid var(--bg);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--primaria);
+}
+
+/* Firefox */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scroll-thumb) var(--bg);
+}
+/* =========================
+   PADRÃO DE FUNDO
+   (figura repetida por toda a página)
+========================= */
+
+/* intensidade do padrão — ajuste aqui (ou sobrescreva no tema.css para cada tema) */
+:root {
+    --padrao-opacidade: .07;
+}
+
+body::before {
+
+    content: "";
+
+    position: fixed;
+    inset: 0;
+
+    z-index: 0;
+    pointer-events: none;
+
+    /* a cor vem do tema: troca sozinha entre claro e escuro */
+    background: var(--primaria);
+    opacity: var(--padrao-opacidade);
+
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cg transform='translate(16 16)'%3E%3Cpath d='M2 2v24h24' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M7 19l6-7 5 4 8-10' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/g%3E%3Cg transform='translate(76 76)'%3E%3Cpath d='M2 2v24h24' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M7 19l6-7 5 4 8-10' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/g%3E%3C/svg%3E");
+            mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cg transform='translate(16 16)'%3E%3Cpath d='M2 2v24h24' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M7 19l6-7 5 4 8-10' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/g%3E%3Cg transform='translate(76 76)'%3E%3Cpath d='M2 2v24h24' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M7 19l6-7 5 4 8-10' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/g%3E%3C/svg%3E");
+
+    -webkit-mask-size: 120px 120px;
+            mask-size: 120px 120px;
+
+    -webkit-mask-repeat: repeat;
+            mask-repeat: repeat;
+}
+
+/* conteúdo fica acima do padrão */
+.app {
+
+    position: relative;
+    z-index: 1;
+}

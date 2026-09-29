@@ -56,7 +56,7 @@ if (FormularioCadastro) {
                 );
 
                 window.location.href =
-                    "http://localhost/Accuracy-Site/confirmacodigo.php";
+                    "http://localhost/main_front_igor/confirmacodigo.php";
 
             } else {
 
@@ -152,7 +152,7 @@ if (formulario) {
                 );
 
                 window.location.href =
-                    "http://localhost/Accuracy-Site/dashboard.php";
+                    "http://localhost/main_front_igor/dashboard.php";
 
             } else {
 
@@ -173,4 +173,3 @@ if (formulario) {
         }
     });
 }
-

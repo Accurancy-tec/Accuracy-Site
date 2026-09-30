@@ -18,7 +18,13 @@
 
     <!-- Estilos das janelas de carteira -->
     <link rel="stylesheet" href="css/carteiras.css">
-
+    <style>
+        .asset-price { display:block; margin:6px 0 14px; font-size:13px; opacity:.85; }
+        .asset-price.up, .aporte-now.up { color:#22c55e; }
+        .asset-price.down, .aporte-now.down { color:#ef4444; }
+        .aporte-now { display:block; font-size:12px; opacity:.85; }
+    </style>
+    <script src="js/usuario-global.js"></script>
 
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
@@ -218,6 +224,8 @@
                     <option value="Outro">Outro</option>
                 </select>
 
+                <small id="assetPrice" class="asset-price"></small>
+
                 <label for="amount">Valor do aporte</label>
 
                 <input
@@ -363,7 +371,8 @@
 
 <!-- ?v=2 força o navegador a baixar a versão nova do arquivo -->
 <script src="js/carteiras.js"></script>
-<script src="js/Aportes.js?v=4"></script>
+<script src="js/cotacoes.js"></script>
+<script src="js/Aportes.js?v=5"></script>
 
 <script>
     const notificationBtn = document.getElementById("notificationBtn");

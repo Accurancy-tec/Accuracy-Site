@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -9,6 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Perfil - Accuracy</title>
+
+    <script src="js/usuario-global.js"></script>
 
     <link rel="stylesheet" href="css/tema.css">
     <link rel="stylesheet" href="css/perfil.css">
@@ -35,9 +35,7 @@
 
         <div class="top">
 
-            <!-- LOGO -->
-
-            <a href="dashboard.html" class="logo">
+            <a href="dashboard.php" class="logo">
 
                 <div class="logo-box">
                     <i class="bi bi-graph-up"></i>
@@ -48,8 +46,6 @@
             </a>
 
             <div class="divider"></div>
-
-            <!-- MENU -->
 
             <nav class="menu">
 
@@ -93,14 +89,9 @@
         </div>
 
 
-        <!-- =========================
-             ÁREA DO USUÁRIO
-        ========================== -->
+        <!-- ÁREA DO USUÁRIO -->
 
         <div class="user-area">
-
-
-            <!-- NOTIFICAÇÕES -->
 
             <div class="icons">
 
@@ -123,16 +114,10 @@
                     </button>
 
 
-                    <!-- =========================
-                         PAINEL DE NOTIFICAÇÕES
-                    ========================== -->
-
                     <div
                         class="notification-panel"
                         id="notificationPanel"
                     >
-
-                        <!-- CABEÇALHO -->
 
                         <div class="notification-header">
 
@@ -148,8 +133,6 @@
                         </div>
 
 
-                        <!-- LISTA -->
-
                         <div class="notification-list">
 
                             <div class="empty-notifications">
@@ -161,11 +144,9 @@
                         </div>
 
 
-                        <!-- RODAPÉ -->
-
                         <div class="notification-footer">
 
-                            <a href="#">
+                            <a href="historico.php">
                                 Ver todas as notificações
                             </a>
 
@@ -182,7 +163,7 @@
 
             <div class="user">
 
-                <a href="#">
+                <a href="perfil.php">
 
                     <div class="avatar" id="navAvatar">
                         N
@@ -192,7 +173,7 @@
 
                 <div class="user-info">
 
-                    <a href="#">
+                    <a href="perfil.php">
                         <strong>Nome da pessoa</strong>
                     </a>
 
@@ -213,9 +194,6 @@
 
     <main class="main">
 
-
-        <!-- TOPBAR -->
-
         <header class="topbar">
 
             <div>
@@ -231,17 +209,10 @@
         </header>
 
 
-
-        <!-- =========================
-             CONTEÚDO DO PERFIL
-        ========================== -->
-
         <section class="profile-layout">
 
 
-            <!-- =========================
-                 CARD PERFIL
-            ========================== -->
+            <!-- CARD PERFIL -->
 
             <div class="profile-card">
 
@@ -277,16 +248,12 @@
 
 
 
-            <!-- =========================
-                 MINHA CONTA
-            ========================== -->
+            <!-- MINHA CONTA -->
 
             <div class="info-card">
 
                 <div class="card-title">
-
                     <h3>Minha conta</h3>
-
                 </div>
 
 
@@ -297,11 +264,8 @@
                     </div>
 
                     <div class="info-content">
-
                         <span>Nome</span>
-
                         <p>Nome da pessoa</p>
-
                     </div>
 
                     <i class="bi bi-chevron-right arrow"></i>
@@ -316,11 +280,8 @@
                     </div>
 
                     <div class="info-content">
-
                         <span>E-mail</span>
-
                         <p>usuario@email.com</p>
-
                     </div>
 
                     <i class="bi bi-chevron-right arrow"></i>
@@ -335,11 +296,8 @@
                     </div>
 
                     <div class="info-content">
-
                         <span>Telefone</span>
-
                         <p>(11) 98765-4321</p>
-
                     </div>
 
                     <i class="bi bi-chevron-right arrow"></i>
@@ -354,11 +312,8 @@
                     </div>
 
                     <div class="info-content">
-
                         <span>CPF</span>
-
                         <p>123.456.789-01</p>
-
                     </div>
 
                     <i class="bi bi-lock lock"></i>
@@ -369,38 +324,24 @@
 
 
 
-            <!-- =========================
-                 PREFERÊNCIAS
-            ========================== -->
+            <!-- PREFERÊNCIAS -->
 
             <div class="info-card">
 
                 <div class="card-title">
-
                     <h3>Preferências</h3>
-
                 </div>
 
-
-                
-
-
-                <!-- LINHA DE APARÊNCIA — CLICÁVEL, TROCA O TEMA -->
 
                 <div class="info-row" id="linhaAparencia">
 
                     <div class="info-icon">
-
                         <i class="bi bi-palette"></i>
-
                     </div>
 
                     <div class="info-content">
-
                         <span>Aparência</span>
-
                         <p id="temaLabel">Tema Claro e Tema Escuro</p>
-
                     </div>
 
                     <i class="bi bi-chevron-right arrow"></i>
@@ -411,17 +352,12 @@
                 <div class="info-row">
 
                     <div class="info-icon">
-
                         <i class="bi bi-shield-check"></i>
-
                     </div>
 
                     <div class="info-content">
-
                         <span>Segurança</span>
-
                         <p>Login e autenticação</p>
-
                     </div>
 
                     <i class="bi bi-chevron-right arrow"></i>
@@ -432,9 +368,7 @@
 
 
 
-            <!-- =========================
-                 SEGURANÇA
-            ========================== -->
+            <!-- SEGURANÇA -->
 
             <div class="security-card">
 
@@ -447,19 +381,12 @@
                     <div class="security-item">
 
                         <div class="security-icon">
-
                             <i class="bi bi-lock"></i>
-
                         </div>
 
                         <div>
-
                             <strong>Alterar senha</strong>
-
-                            <p>
-                                Atualize sua senha de acesso
-                            </p>
-
+                            <p>Atualize sua senha de acesso</p>
                         </div>
 
                         <i class="bi bi-chevron-right arrow"></i>
@@ -473,19 +400,12 @@
                     <div class="security-item logout">
 
                         <div class="logout-icon">
-
                             <i class="bi bi-box-arrow-right"></i>
-
                         </div>
 
                         <div>
-
                             <strong>Sair da conta</strong>
-
-                            <p>
-                                Encerrar sessão em todos os dispositivos
-                            </p>
-
+                            <p>Encerrar sessão em todos os dispositivos</p>
                         </div>
 
                         <i class="bi bi-chevron-right arrow"></i>
@@ -659,10 +579,6 @@
 
 </div>
 
-
-<!-- =========================
-     JAVASCRIPT
-========================= -->
 
 <script>
 

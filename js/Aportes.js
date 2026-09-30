@@ -24,6 +24,9 @@ const HISTORY_KEY = "accuracy_historico";
 let contributions =
     JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
 
+/* Cotações atuais { PETR4: 38.5, ... } (vem de js/cotacoes.js) */
+let quotes = {};
+
 
 /* =========================
    HISTÓRICO
@@ -486,9 +489,14 @@ $("#confirmBtn").addEventListener(
         }
 
 
+        /* Cotação no momento da compra (permite calcular quantidade e lucro depois) */
+        const buyQuote = await Cotacoes.fetch([asset.value]);
+
         const contribution = {
 
             id: Date.now(),
+
+            unitPrice: buyQuote[asset.value] ?? null,
 
             asset: asset.value,
 
@@ -664,6 +672,59 @@ function walletLabel(item) {
 
 
 /* =========================
+   COTAÇÃO DO ATIVO
+========================= */
+
+function updateAssetPrice() {
+
+    const box = $("#assetPrice");
+
+    const price = quotes[asset.value];
+
+    box.className = "asset-price";
+
+    box.textContent = price
+        ? `Cotação atual: ${money(price)}`
+        : "";
+
+}
+
+/* Quanto o aporte vale hoje (só para aportes com cotação de compra salva) */
+
+function nowInfo(item) {
+
+    const price = quotes[item.asset];
+
+    if (!price) {
+        return "";
+    }
+
+    if (!item.unitPrice) {
+        return `<span class="aporte-now">Cotação: ${money(price)}</span>`;
+    }
+
+    const value = (item.amount / item.unitPrice) * price;
+    const diff = value - item.amount;
+    const pct = (diff / item.amount) * 100;
+    const sign = diff >= 0 ? "+" : "";
+
+    return `<span class="aporte-now ${diff >= 0 ? "up" : "down"}">
+        Hoje: ${money(value)} (${sign}${pct.toFixed(2).replace(".", ",")}%)
+        • Cotação: ${money(price)}
+    </span>`;
+
+}
+
+asset.addEventListener("change", () => {
+    Cotacoes.fetch([asset.value]).then(q => {
+        Object.assign(quotes, q);
+        updateAssetPrice();
+    });
+    updateAssetPrice();
+});
+
+
+/* =========================
    RENDERIZAR APORTES
 ========================= */
 
@@ -753,9 +814,12 @@ function render() {
 
             <div class="right">
 
-                <strong class="aporte-value">
-                    ${money(item.amount)}
-                </strong>
+                <div>
+                    <strong class="aporte-value">
+                        ${money(item.amount)}
+                    </strong>
+                    ${nowInfo(item)}
+                </div>
 
 
                 ${
@@ -1141,3 +1205,14 @@ $("#notificationBtn").addEventListener(
 ========================= */
 
 render();
+
+/* Busca as cotações agora e a cada 60s */
+
+Cotacoes.watch(
+    () => [asset.value, ...contributions.map(item => item.asset)],
+    result => {
+        quotes = result;
+        updateAssetPrice();
+        render();
+    }
+);

@@ -8,6 +8,8 @@
 
     <title>Dashboard - Accuracy</title>
 
+    <script src="js/usuario-global.js"></script>
+
     <link rel="stylesheet" href="css/dashboard.css">
     <script src="js/avatar-global.js"></script>
     <link
@@ -39,7 +41,7 @@
 
             <!-- LOGO -->
 
-            <a href="dashboard.html" class="logo">
+            <a href="dashboard.php" class="logo">
 
                 <div class="logo-box">
                     <i class="bi bi-graph-up"></i>
@@ -129,16 +131,12 @@
                     </button>
 
 
-                    <!-- =========================
-                         PAINEL DE NOTIFICAÇÕES
-                    ========================== -->
+                    <!-- PAINEL DE NOTIFICAÇÕES -->
 
                     <div
                         class="notification-panel"
                         id="notificationPanel"
                     >
-
-                        <!-- CABEÇALHO -->
 
                         <div class="notification-header">
 
@@ -154,8 +152,6 @@
                         </div>
 
 
-                        <!-- LISTA -->
-
                         <div class="notification-list">
 
                             <div class="empty-notifications">
@@ -167,11 +163,9 @@
                         </div>
 
 
-                        <!-- RODAPÉ -->
-
                         <div class="notification-footer">
 
-                            <a href="historico.html">
+                            <a href="historico.php">
                                 Ver todas as notificações
                             </a>
 
@@ -190,7 +184,7 @@
 
             <div class="user">
 
-                <a href="perfil.html">
+                <a href="perfil.php">
 
                     <div class="avatar">
                         N
@@ -200,7 +194,7 @@
 
                 <div class="user-info">
 
-                    <a href="perfil.html">
+                    <a href="perfil.php">
 
                         <strong>
                             Nome da pessoa
@@ -228,10 +222,6 @@
     <main class="main">
 
 
-        <!-- =========================
-             TOPBAR
-        ========================== -->
-
         <header class="topbar">
 
             <div>
@@ -249,9 +239,7 @@
         </header>
 
 
-        <!-- =========================
-             CARD PRINCIPAL
-        ========================== -->
+        <!-- CARD PRINCIPAL -->
 
         <section class="card-big">
 
@@ -269,41 +257,18 @@
                 <div class="stats">
 
                     <div>
-
-                        <p>
-                            Total investido
-                        </p>
-
-                        <strong>
-                            R$ 41.000,00
-                        </strong>
-
+                        <p>Total investido</p>
+                        <strong>R$ 41.000,00</strong>
                     </div>
 
-
                     <div>
-
-                        <p>
-                            Saldo livre
-                        </p>
-
-                        <strong>
-                            R$ 3.200,00
-                        </strong>
-
+                        <p>Saldo livre</p>
+                        <strong>R$ 3.200,00</strong>
                     </div>
 
-
                     <div>
-
-                        <p>
-                            Rendimento
-                        </p>
-
-                        <strong class="green">
-                            R$ 4.192,17
-                        </strong>
-
+                        <p>Rendimento</p>
+                        <strong class="green">R$ 4.192,17</strong>
                     </div>
 
                 </div>
@@ -318,119 +283,50 @@
         </section>
 
 
-        <!-- =========================
-             CARDS
-        ========================== -->
+        <!-- CARDS -->
 
         <section class="grid">
 
-
-            <!-- RENDA FIXA -->
-
             <div class="card">
-
                 <div class="card-icon">
-
                     <i class="bi bi-shield-check"></i>
-
                 </div>
-
-                <h4>
-                    Renda fixa
-                </h4>
-
-                <p>
-                    R$ 18.400
-                </p>
-
-                <span class="green">
-                    ▲ +0,8% mês
-                </span>
-
+                <h4>Renda fixa</h4>
+                <p>R$ 18.400</p>
+                <span class="green">▲ +0,8% mês</span>
             </div>
 
-
-            <!-- RENDA VARIÁVEL -->
-
             <div class="card">
-
                 <div class="card-icon">
-
                     <i class="bi bi-graph-up-arrow"></i>
-
                 </div>
-
-                <h4>
-                    Renda variável
-                </h4>
-
-                <p>
-                    R$ 21.600
-                </p>
-
-                <span class="green">
-                    ▲ +2,1% mês
-                </span>
-
+                <h4>Renda variável</h4>
+                <p>R$ 21.600</p>
+                <span class="green">▲ +2,1% mês</span>
             </div>
 
-
-            <!-- CRIPTO -->
-
             <div class="card">
-
                 <div class="card-icon">
-
                     <i class="bi bi-currency-bitcoin"></i>
-
                 </div>
-
-                <h4>
-                    Cripto
-                </h4>
-
-                <p>
-                    R$ 5.192
-                </p>
-
-                <span class="green">
-                    ▲ +4,7% mês
-                </span>
-
+                <h4>Cripto</h4>
+                <p>R$ 5.192</p>
+                <span class="green">▲ +4,7% mês</span>
             </div>
-
-
-            <!-- INTERNACIONAL -->
 
             <div class="card">
-
                 <div class="card-icon">
-
                     <i class="bi bi-globe2"></i>
-
                 </div>
-
-                <h4>
-                    Internacional
-                </h4>
-
-                <p>
-                    R$ 3.200
-                </p>
-
-                <span class="red">
-                    ▼ -0,3% mês
-                </span>
-
+                <h4>Internacional</h4>
+                <p>R$ 3.200</p>
+                <span class="red">▼ -0,3% mês</span>
             </div>
-
 
         </section>
 
 
-        <!-- =========================
-             GRÁFICO
-        ========================== -->
+        <!-- GRÁFICO -->
 
         <section class="chart">
 
@@ -438,9 +334,7 @@
 
                 <div>
 
-                    <h3>
-                        Evolução da carteira
-                    </h3>
+                    <h3>Evolução da carteira</h3>
 
                     <p>
                         Acompanhe o crescimento dos seus investimentos
@@ -483,15 +377,7 @@
 </div>
 
 
-<!-- =========================
-     JAVASCRIPT
-========================= -->
-
 <script>
-
-    /* =========================
-       ELEMENTOS
-    ========================== */
 
     const notificationBtn =
         document.getElementById("notificationBtn");
@@ -506,9 +392,7 @@
         document.getElementById("markRead");
 
 
-    /* =========================
-       ABRIR / FECHAR PAINEL
-    ========================== */
+    /* Abrir / fechar painel */
 
     notificationBtn.addEventListener("click", function(event) {
 
@@ -519,10 +403,7 @@
     });
 
 
-    /* =========================
-       NÃO FECHAR AO CLICAR
-       DENTRO DO PAINEL
-    ========================== */
+    /* Não fechar ao clicar dentro do painel */
 
     notificationPanel.addEventListener("click", function(event) {
 
@@ -531,9 +412,7 @@
     });
 
 
-    /* =========================
-       FECHAR AO CLICAR FORA
-    ========================== */
+    /* Fechar ao clicar fora */
 
     document.addEventListener("click", function() {
 
@@ -542,9 +421,7 @@
     });
 
 
-    /* =========================
-       MARCAR COMO LIDAS
-    ========================== */
+    /* Marcar como lidas */
 
     markRead.addEventListener("click", function() {
 
@@ -553,15 +430,12 @@
                 ".notification-item.unread"
             );
 
-
         unreadItems.forEach(function(item) {
 
             item.classList.remove("unread");
 
-
             const unreadDot =
                 item.querySelector(".unread-dot");
-
 
             if (unreadDot) {
 
@@ -570,9 +444,6 @@
             }
 
         });
-
-
-        /* Remove a bolinha verde do sino */
 
         notificationDot.style.display = "none";
 

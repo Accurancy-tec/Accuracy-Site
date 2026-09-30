@@ -11,7 +11,8 @@
     <link rel="stylesheet" href="css/dashboard.css">
     <link rel="stylesheet" href="css/carteira.css">
     <link rel="stylesheet" href="css/carteiras.css">
-
+    <style>.cards .card .red { color: var(--vermelho, #ef4444); }</style>
+    <script src="js/usuario-global.js"></script>
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
         rel="stylesheet"
@@ -231,8 +232,8 @@
 
             <div class="card">
                 <h3>RENDIMENTO TOTAL</h3>
-                <p class="green">R$ 0,00</p>
-                <span>Em breve</span>
+                <p id="totalYield" class="green">R$ 0,00</p>
+                <span id="yieldHint">Sem cotações disponíveis</span>
             </div>
 
         </section>
@@ -252,7 +253,9 @@
                             <th>ATIVO</th>
                             <th>CLASSE</th>
                             <th>APORTES</th>
-                            <th>VALOR TOTAL</th>
+                            <th>INVESTIDO</th>
+                            <th>COTAÇÃO</th>
+                            <th>VALOR ATUAL</th>
                             <th>PARTICIPAÇÃO</th>
                         </tr>
                     </thead>
@@ -316,7 +319,8 @@ markRead.addEventListener("click", function () {
 </script>
 
 <script src="js/carteiras.js"></script>
-<script src="js/carteira.js?v=2"></script>
+<script src="js/cotacoes.js"></script>
+<script src="js/carteira.js?v=3"></script>
 
 </body>
 </html>

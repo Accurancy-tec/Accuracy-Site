@@ -350,11 +350,13 @@ const profileCardEmail = document.querySelector(".profile-email");
 
 function getDefaultProfile() {
 
+    const u = window.usuarioLogado || {};
+
     return {
-        nome: profileCardName ? profileCardName.textContent.trim() : "",
-        email: profileCardEmail ? profileCardEmail.textContent.trim() : "",
-        telefone: "(11) 98765-4321",
-        cpf: "123.456.789-01"
+        nome: u.nome || "",
+        email: u.email || "",
+        telefone: "",
+        cpf: ""
     };
 
 }

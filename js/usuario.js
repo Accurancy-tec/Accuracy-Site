@@ -141,6 +141,10 @@ if (formulario) {
 
                 console.log("Login realizado com sucesso.");
 
+                /* Limpa dados de outra conta que usou este navegador */
+                localStorage.removeItem("accuracy_profile_data");
+                localStorage.removeItem("accuracy_avatar");
+
                 localStorage.setItem(
                     "token",
                     resultado.token

@@ -82,6 +82,10 @@ function percent(value, total) {
 
 }
 
+/* Cotações atuais { PETR4: 38.5, ... } (vem de js/cotacoes.js) */
+
+let quotes = {};
+
 function readContributions() {
 
     try {
@@ -212,17 +216,63 @@ function render() {
             name: item.asset,
             category,
             count: 0,
-            total: 0
+            total: 0,
+            qty: 0,
+            costWithQty: 0
         });
 
         asset.count++;
         asset.total += value;
 
-        classes[category] = (classes[category] || 0) + value;
+        /* Aportes com cotação de compra salva: sabemos a quantidade */
+
+        if (item.unitPrice > 0) {
+            asset.qty += value / item.unitPrice;
+            asset.costWithQty += value;
+        }
 
     });
 
-    const rows = Object.values(assets).sort((a, b) => b.total - a.total);
+    /* Valor atual = quantidade × cotação (o que não tem cotação fica ao custo) */
+
+    let equity = 0;
+    let hasQuote = false;
+
+    Object.values(assets).forEach(asset => {
+
+        asset.price = quotes[asset.name] ?? null;
+
+        asset.current = asset.price && asset.qty > 0
+            ? asset.qty * asset.price + (asset.total - asset.costWithQty)
+            : asset.total;
+
+        if (asset.price && asset.qty > 0) {
+            hasQuote = true;
+        }
+
+        equity += asset.current;
+
+        classes[asset.category] = (classes[asset.category] || 0) + asset.current;
+
+    });
+
+    const rows = Object.values(assets).sort((a, b) => b.current - a.current);
+
+
+    /* Cards */
+
+    const gain = equity - total;
+
+    $("#totalEquity").textContent = money(equity);
+
+    const yieldEl = $("#totalYield");
+
+    yieldEl.textContent = `${gain >= 0 ? "+" : ""}${money(gain)}`;
+    yieldEl.className = gain >= 0 ? "green" : "red";
+
+    $("#yieldHint").textContent = hasQuote
+        ? `${gain >= 0 ? "+" : ""}${percent(gain, total)} sobre o investido`
+        : "Sem cotações disponíveis";
 
 
     /* Tabela */
@@ -236,10 +286,12 @@ function render() {
                 <td>${escapeHtml(asset.category)}</td>
                 <td>${asset.count}</td>
                 <td>${money(asset.total)}</td>
-                <td>${percent(asset.total, total)}</td>
+                <td>${asset.price ? money(asset.price) : "—"}</td>
+                <td>${money(asset.current)}</td>
+                <td>${percent(asset.current, equity)}</td>
             </tr>
         `).join("")
-        : `<tr><td colspan="5" class="table-empty">Nenhum investimento nesta carteira.</td></tr>`;
+        : `<tr><td colspan="7" class="table-empty">Nenhum investimento nesta carteira.</td></tr>`;
 
 
     /* Gráfico de distribuição */
@@ -247,7 +299,7 @@ function render() {
     const circle = $("#distributionChart");
     const legend = $("#distributionLegend");
 
-    if (!total) {
+    if (!equity) {
 
         circle.style.background = "";
 
@@ -263,11 +315,11 @@ function render() {
 
     const stops = entries.map(([category, value]) => {
 
-        const start = (accumulated / total) * 100;
+        const start = (accumulated / equity) * 100;
 
         accumulated += value;
 
-        const end = (accumulated / total) * 100;
+        const end = (accumulated / equity) * 100;
 
         return `${COLORS[category] || COLORS.Outros} ${start}% ${end}%`;
 
@@ -281,7 +333,7 @@ function render() {
                 <span class="legend-dot" style="background:${COLORS[category] || COLORS.Outros}"></span>
                 ${escapeHtml(category)}
             </span>
-            <span>${percent(value, total)}</span>
+            <span>${percent(value, equity)}</span>
         </div>
     `).join("");
 
@@ -355,5 +407,15 @@ window.addEventListener("storage", event => {
 
 
 render();
+
+/* Busca as cotações agora e a cada 60s */
+
+Cotacoes.watch(
+    () => contributionsOf(effectiveActive()).map(item => item.asset),
+    result => {
+        quotes = result;
+        render();
+    }
+);
 
 })();

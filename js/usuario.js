@@ -56,7 +56,7 @@ if (FormularioCadastro) {
                 );
 
                 window.location.href =
-                    "http://localhost/main_front_igor/confirmacodigo.php";
+                    "confirmacodigo.php";
 
             } else {
 
@@ -156,7 +156,7 @@ if (formulario) {
                 );
 
                 window.location.href =
-                    "http://localhost/main_front_igor/dashboard.php";
+                    "dashboard.php";
 
             } else {
 

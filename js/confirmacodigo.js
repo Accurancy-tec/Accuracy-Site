@@ -123,7 +123,7 @@ verifyButton.addEventListener("click", async () => {
             sessionStorage.removeItem("email_verificacao");
 
             window.location.href =
-                "http://localhost/main_front_igor/login.php";
+                "login.php";
 
         } else {
 

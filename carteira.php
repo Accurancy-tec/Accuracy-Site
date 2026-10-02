@@ -321,6 +321,8 @@ markRead.addEventListener("click", function () {
 <script src="js/carteiras.js"></script>
 <script src="js/cotacoes.js"></script>
 <script src="js/carteira.js?v=3"></script>
+<script src="js/resumoCarteiras.js"></script>
+<script src="js/carteira-aportes.js"></script>
 
 </body>
 </html>

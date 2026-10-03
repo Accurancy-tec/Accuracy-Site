@@ -249,7 +249,7 @@
 
                         <select id="type">
                             <option value="Compra">Compra</option>
-                            <option value="Aporte">Aporte</option>
+                            <option value="Venda">Venda</option>
                         </select>
                     </div>
 
@@ -365,11 +365,9 @@
     <i class="bi bi-check-circle-fill"></i>
     <span id="toastMessage"></span>
 </div>
-
-<!-- ?v=2 força o navegador a baixar a versão nova do arquivo -->
 <script src="js/carteiras.js"></script>
 <script src="js/cotacoes.js"></script>
-<script src="js/Aportes.js?v=5"></script>
+<script src="js/Aportes.js?v=6"></script>
 
 <script>
     const notificationBtn = document.getElementById("notificationBtn");
@@ -405,6 +403,7 @@
         notificationDot.style.display = "none";
     });
 </script>
+
 
 </body>
 </html>

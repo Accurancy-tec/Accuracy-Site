@@ -1,3 +1,4 @@
+const API_URL = "https://accuracyappapi.onrender.com/";
 const FormularioCadastro = document.getElementById("formCadastro");
 
 if (FormularioCadastro) {
@@ -14,7 +15,7 @@ if (FormularioCadastro) {
         try {
 
             const resposta = await fetch(
-                "http://localhost/accuracyAppApi/user/registerNewUser.php",
+                `${API_URL}user/registerNewUser.php`,
                 {
                     method: "POST",
                     headers: {
@@ -94,7 +95,7 @@ if (formulario) {
         try {
 
             const resposta = await fetch(
-                "http://localhost/accuracyAppApi/user/loginSite.php",
+                `${API_URL}user/loginSite.php`,
                 {
                     method: "POST",
                     headers: {

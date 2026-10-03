@@ -1,421 +1,461 @@
+/*
+=========================================================
+CARTEIRA
+
+Página responsável por exibir os aportes
+separados por carteira.
+=========================================================
+*/
+
 (function () {
-"use strict";
 
-/* Se o carteiras.js não carregou, avisa na própria página */
+    "use strict";
 
-if (typeof Carteiras === "undefined") {
+    /*
+    =====================================================
+    VERIFICAÇÕES
+    =====================================================
+    */
 
-    console.error(
-        "Carteiras não foi carregado. Confira se js/carteiras.js existe, " +
-        "está completo (sem estar vazio ou duplicado) e foi salvo."
+    if (typeof Carteiras === "undefined") {
+
+        console.error(
+            "Carteiras não foi carregado."
+        );
+
+        return;
+    }
+
+    if (typeof Cotacoes === "undefined") {
+
+        console.error(
+            "Cotacoes não foi carregado."
+        );
+
+        return;
+    }
+
+    /*
+    =====================================================
+    SELECTOR
+    =====================================================
+    */
+
+    const $ = selector =>
+        document.querySelector(selector);
+
+    /*
+    =====================================================
+    STORAGE DOS APORTES
+
+    Mantido temporariamente para compatibilidade
+    com o sistema atual.
+
+    O ID da carteira agora deve ser o ID do banco.
+    =====================================================
+    */
+
+    const STORAGE_KEY =
+        "accuracy_aportes";
+
+    /*
+    =====================================================
+    COTAÇÕES
+    =====================================================
+    */
+
+    let quotes = {};
+
+    /*
+    =====================================================
+    LER APORTES
+    =====================================================
+    */
+
+    function readContributions() {
+
+        try {
+
+            const list =
+                JSON.parse(
+                    localStorage.getItem(
+                        STORAGE_KEY
+                    )
+                );
+
+            return Array.isArray(list)
+                ? list
+                : [];
+
+        } catch {
+
+            return [];
+
+        }
+
+    }
+
+    /*
+    =====================================================
+    CARTEIRA ATIVA
+    =====================================================
+    */
+
+    function effectiveActive() {
+
+        const wallets =
+            Carteiras.list();
+
+        if (wallets.length === 1) {
+
+            return wallets[0].id;
+
+        }
+
+        return Carteiras.getActive();
+
+    }
+
+    /*
+    =====================================================
+    APORTES DA CARTEIRA
+    =====================================================
+    */
+
+    function contributionsOf(walletId) {
+
+        const all =
+            readContributions();
+
+        if (walletId === "all") {
+
+            return all;
+
+        }
+
+        const normalized =
+            Carteiras.normalize(walletId);
+
+        return all.filter(item =>
+            Carteiras.normalize(
+                item.walletId
+            ) === normalized
+        );
+
+    }
+
+    /*
+    =====================================================
+    FORMATAR DINHEIRO
+    =====================================================
+    */
+
+    function money(value) {
+
+        const number =
+            Number(value) || 0;
+
+        return number.toLocaleString(
+            "pt-BR",
+            {
+                style: "currency",
+                currency: "BRL"
+            }
+        );
+
+    }
+
+    /*
+    =====================================================
+    ESCAPAR HTML
+    =====================================================
+    */
+
+    function escapeHtml(text) {
+
+        const div =
+            document.createElement("div");
+
+        div.textContent =
+            text ?? "";
+
+        return div.innerHTML;
+
+    }
+
+    /*
+    =====================================================
+    PORCENTAGEM
+    =====================================================
+    */
+
+    function percent(value, total) {
+
+        if (!total) {
+            return 0;
+        }
+
+        return (
+            Number(value) /
+            Number(total)
+        ) * 100;
+
+    }
+
+    /*
+    =====================================================
+    ABAS DAS CARTEIRAS
+    =====================================================
+    */
+
+    function renderTabs(active) {
+        console.log("RENDERIZANDO ABAS:", Carteiras.list());
+
+        const wallets =
+            Carteiras.list();
+
+        const items =
+            wallets.length > 1
+                ? [
+                    {
+                        id: "all",
+                        name: "Todas"
+                    },
+                    ...wallets
+                ]
+                : wallets;
+
+        const tabs =
+            $("#walletTabs");
+        console.log("ELEMENTO walletTabs:", tabs);
+        console.log("CARTEIRAS QUE SERÃO RENDERIZADAS:", wallets);
+
+        if (!tabs) {
+            return;
+        }
+
+        tabs.innerHTML = "";
+        console.log("LIMPANDO E RECRIANDO walletTabs");
+
+        items.forEach(wallet => {
+
+            const button =
+                document.createElement(
+                    "button"
+                );
+
+            button.type = "button";
+
+            button.className =
+                "wallet-tab" +
+                (
+                    String(wallet.id) ===
+                        String(active)
+                        ? " active"
+                        : ""
+                );
+
+            button.textContent =
+                wallet.name;
+
+            button.addEventListener(
+                "click",
+                () => {
+
+                    Carteiras.setActive(
+                        wallet.id
+                    );
+
+                    render();
+
+                }
+            );
+
+            tabs.appendChild(button);
+
+        });
+
+        /*
+        =================================================
+        BOTÃO EXCLUIR
+
+        Como exclusão ainda não existe na API,
+        deixamos desativado.
+        =================================================
+        */
+
+        const deleteBtn =
+            $("#deleteWalletBtn");
+
+        if (deleteBtn) {
+
+            deleteBtn.hidden = true;
+
+        }
+
+    }
+
+    /*
+    =====================================================
+    RENDERIZAR
+    =====================================================
+    */
+
+    function render() {
+
+        const active =
+            effectiveActive();
+
+        renderTabs(active);
+
+        const contributions =
+            contributionsOf(active);
+
+        /*
+        ================================================
+        AQUI VOCÊ PODE MANTER O RESTANTE DO HTML
+        DA SUA PÁGINA ORIGINAL.
+        ================================================
+        */
+
+        console.log(
+            "Carteira ativa:",
+            active
+        );
+
+        console.log(
+            "Nome:",
+            Carteiras.nameOf(active)
+        );
+
+        console.log(
+            "Aportes:",
+            contributions
+        );
+
+    }
+
+    /*
+    =====================================================
+    NOVA CARTEIRA
+    =====================================================
+    */
+
+    const newWalletBtn =
+        $("#newWalletBtn");
+
+    if (newWalletBtn) {
+        newWalletBtn.addEventListener(
+            "click",
+            async () => {
+
+                await Carteiras.promptNewWallet();
+
+                await Carteiras.load();
+
+                render();
+
+                console.log(
+                    "TELA ATUALIZADA:",
+                    Carteiras.list()
+                );
+            }
+        );
+    }
+    /*
+    =====================================================
+    EXCLUSÃO
+    =====================================================
+    */
+
+    const deleteWalletBtn =
+        $("#deleteWalletBtn");
+
+    if (deleteWalletBtn) {
+
+        deleteWalletBtn.addEventListener(
+            "click",
+            () => {
+
+                console.warn(
+                    "Exclusão de carteira ainda não está disponível na API."
+                );
+
+            }
+        );
+
+    }
+
+    /*
+    =====================================================
+    STORAGE
+    =====================================================
+    */
+
+    window.addEventListener(
+        "storage",
+        event => {
+
+            if (
+                event.key === STORAGE_KEY ||
+                event.key ===
+                "accuracy_carteira_ativa"
+            ) {
+
+                render();
+
+            }
+
+        }
     );
 
-    const bar = document.getElementById("walletTabs");
+    /*
+    =====================================================
+    INICIALIZAR
 
-    if (bar) {
-        bar.textContent =
-            "Erro: o arquivo js/carteiras.js não foi carregado corretamente (veja o Console, F12).";
-        bar.style.color = "var(--vermelho)";
-        bar.style.fontSize = "13px";
-    }
+    IMPORTANTE:
+    primeiro carrega a API,
+    depois renderiza.
+    =====================================================
+    */
 
-    return;
+    Carteiras.load()
+        .then(() => {
 
-}
-
-const $ = (selector) => document.querySelector(selector);
-
-const STORAGE_KEY = "accuracy_aportes";
-
-/* Cores iguais às dos ícones da página de Aportes */
-
-const COLORS = {
-    "Ações": "#22c55e",
-    "Cripto": "#f97316",
-    "Renda Fixa": "#06b6d4",
-    "FIIs": "#eab308",
-    "Outros": "#3b82f6"
-};
-
-const CLASS_OF = {
-    PETR4: "Ações",
-    Bitcoin: "Cripto",
-    "CDB Nubank": "Renda Fixa",
-    XPML11: "FIIs"
-};
-
-
-/* =========================
-   AUXILIARES
-========================= */
-
-function money(value) {
-
-    return new Intl.NumberFormat("pt-BR", {
-        style: "currency",
-        currency: "BRL"
-    }).format(value);
-
-}
-
-function escapeHtml(text) {
-
-    const div = document.createElement("div");
-
-    div.textContent = text ?? "";
-
-    return div.innerHTML;
-
-}
-
-function plural(count, singular, pluralWord) {
-
-    return `${count} ${count === 1 ? singular : pluralWord}`;
-
-}
-
-function percent(value, total) {
-
-    const number = total ? (value / total) * 100 : 0;
-
-    return `${number.toFixed(1).replace(".", ",")}%`;
-
-}
-
-/* Cotações atuais { PETR4: 38.5, ... } (vem de js/cotacoes.js) */
-
-let quotes = {};
-
-function readContributions() {
-
-    try {
-        const list = JSON.parse(localStorage.getItem(STORAGE_KEY));
-        return Array.isArray(list) ? list : [];
-    } catch {
-        return [];
-    }
-
-}
-
-/* Com só a carteira principal, não há o que alternar */
-
-function effectiveActive() {
-
-    return Carteiras.list().length === 1
-        ? Carteiras.MAIN_ID
-        : Carteiras.getActive();
-
-}
-
-function contributionsOf(walletId) {
-
-    const all = readContributions();
-
-    if (walletId === "all") {
-        return all;
-    }
-
-    return all.filter(
-        item => Carteiras.normalize(item.walletId) === walletId
-    );
-
-}
-
-
-/* =========================
-   ABAS DAS CARTEIRAS
-========================= */
-
-function renderTabs(active) {
-
-    const wallets = Carteiras.list();
-
-    const items = wallets.length > 1
-        ? [{ id: "all", name: "Todas" }, ...wallets]
-        : wallets;
-
-    const tabs = $("#walletTabs");
-
-    tabs.innerHTML = "";
-
-    items.forEach(wallet => {
-
-        const button = document.createElement("button");
-
-        button.type = "button";
-        button.className = "wallet-tab" + (wallet.id === active ? " active" : "");
-        button.textContent = wallet.name;
-
-        button.addEventListener("click", () => {
-            Carteiras.setActive(wallet.id);
             render();
+
+            /*
+            =============================================
+            ATUALIZA COTAÇÕES
+            =============================================
+            */
+
+            if (
+                typeof Cotacoes.watch ===
+                "function"
+            ) {
+
+                Cotacoes.watch(
+
+                    () =>
+                        contributionsOf(
+                            effectiveActive()
+                        ).map(
+                            item => item.asset
+                        ),
+
+                    result => {
+
+                        quotes = result;
+
+                        render();
+
+                    }
+
+                );
+
+            }
+
         });
-
-        tabs.appendChild(button);
-
-    });
-
-    const deleteBtn = $("#deleteWalletBtn");
-
-    const custom = active !== "all" && active !== Carteiras.MAIN_ID;
-
-    deleteBtn.hidden = !custom;
-
-    if (custom) {
-
-        const hasContributions = contributionsOf(active).length > 0;
-
-        deleteBtn.disabled = hasContributions;
-
-        deleteBtn.title = hasContributions
-            ? "Só é possível excluir carteiras sem aportes."
-            : "Excluir esta carteira";
-
-    }
-
-}
-
-
-/* =========================
-   RENDERIZAR
-========================= */
-
-function render() {
-
-    const active = effectiveActive();
-
-    renderTabs(active);
-
-    const items = contributionsOf(active);
-
-    const total = items.reduce(
-        (sum, item) => sum + (Number(item.amount) || 0),
-        0
-    );
-
-    $("#totalEquity").textContent = money(total);
-    $("#totalInvested").textContent = money(total);
-
-    $("#equityHint").textContent = active === "all"
-        ? "Soma dos aportes de todas as carteiras"
-        : `Soma dos aportes • ${Carteiras.nameOf(active)}`;
-
-
-    /* Agrupa por ativo e por classe */
-
-    const assets = {};
-    const classes = {};
-
-    items.forEach(item => {
-
-        const category = item.category || CLASS_OF[item.asset] || "Outros";
-
-        const value = Number(item.amount) || 0;
-
-        const asset = assets[item.asset] || (assets[item.asset] = {
-            name: item.asset,
-            category,
-            count: 0,
-            total: 0,
-            qty: 0,
-            costWithQty: 0
-        });
-
-        asset.count++;
-        asset.total += value;
-
-        /* Aportes com cotação de compra salva: sabemos a quantidade */
-
-        if (item.unitPrice > 0) {
-            asset.qty += value / item.unitPrice;
-            asset.costWithQty += value;
-        }
-
-    });
-
-    /* Valor atual = quantidade × cotação (o que não tem cotação fica ao custo) */
-
-    let equity = 0;
-    let hasQuote = false;
-
-    Object.values(assets).forEach(asset => {
-
-        asset.price = quotes[asset.name] ?? null;
-
-        asset.current = asset.price && asset.qty > 0
-            ? asset.qty * asset.price + (asset.total - asset.costWithQty)
-            : asset.total;
-
-        if (asset.price && asset.qty > 0) {
-            hasQuote = true;
-        }
-
-        equity += asset.current;
-
-        classes[asset.category] = (classes[asset.category] || 0) + asset.current;
-
-    });
-
-    const rows = Object.values(assets).sort((a, b) => b.current - a.current);
-
-
-    /* Cards */
-
-    const gain = equity - total;
-
-    $("#totalEquity").textContent = money(equity);
-
-    const yieldEl = $("#totalYield");
-
-    yieldEl.textContent = `${gain >= 0 ? "+" : ""}${money(gain)}`;
-    yieldEl.className = gain >= 0 ? "green" : "red";
-
-    $("#yieldHint").textContent = hasQuote
-        ? `${gain >= 0 ? "+" : ""}${percent(gain, total)} sobre o investido`
-        : "Sem cotações disponíveis";
-
-
-    /* Tabela */
-
-    $("#assetsCount").textContent = plural(rows.length, "ativo", "ativos");
-
-    $("#assetsBody").innerHTML = rows.length
-        ? rows.map(asset => `
-            <tr>
-                <td>${escapeHtml(asset.name)}</td>
-                <td>${escapeHtml(asset.category)}</td>
-                <td>${asset.count}</td>
-                <td>${money(asset.total)}</td>
-                <td>${asset.price ? money(asset.price) : "—"}</td>
-                <td>${money(asset.current)}</td>
-                <td>${percent(asset.current, equity)}</td>
-            </tr>
-        `).join("")
-        : `<tr><td colspan="7" class="table-empty">Nenhum investimento nesta carteira.</td></tr>`;
-
-
-    /* Gráfico de distribuição */
-
-    const circle = $("#distributionChart");
-    const legend = $("#distributionLegend");
-
-    if (!equity) {
-
-        circle.style.background = "";
-
-        legend.innerHTML = `<p class="legend-empty">Sem dados para exibir.</p>`;
-
-        return;
-
-    }
-
-    const entries = Object.entries(classes).sort((a, b) => b[1] - a[1]);
-
-    let accumulated = 0;
-
-    const stops = entries.map(([category, value]) => {
-
-        const start = (accumulated / equity) * 100;
-
-        accumulated += value;
-
-        const end = (accumulated / equity) * 100;
-
-        return `${COLORS[category] || COLORS.Outros} ${start}% ${end}%`;
-
-    });
-
-    circle.style.background = `conic-gradient(${stops.join(", ")})`;
-
-    legend.innerHTML = entries.map(([category, value]) => `
-        <div>
-            <span class="legend-name">
-                <span class="legend-dot" style="background:${COLORS[category] || COLORS.Outros}"></span>
-                ${escapeHtml(category)}
-            </span>
-            <span>${percent(value, equity)}</span>
-        </div>
-    `).join("");
-
-}
-
-
-/* =========================
-   NOVA CARTEIRA / EXCLUIR
-========================= */
-
-$("#newWalletBtn").addEventListener("click", async () => {
-
-    const wallet = await Carteiras.promptNewWallet();
-
-    if (wallet) {
-
-        Carteiras.setActive(wallet.id);
-
-        render();
-
-    }
-
-});
-
-$("#deleteWalletBtn").addEventListener("click", () => {
-
-    const id = Carteiras.getActive();
-
-    if (id === "all" || id === Carteiras.MAIN_ID) {
-        return;
-    }
-
-    if (!confirm(`Excluir a carteira "${Carteiras.nameOf(id)}"?`)) {
-        return;
-    }
-
-    Carteiras.remove(id);
-
-    render();
-
-});
-
-
-/* =========================
-   DATA NO TOPO
-========================= */
-
-$("#currentDate").textContent =
-    new Date().toLocaleDateString("pt-BR", {
-        weekday: "long",
-        day: "2-digit",
-        month: "long",
-        year: "numeric"
-    });
-
-
-/* =========================
-   ATUALIZA SE OUTRA ABA MEXER
-========================= */
-
-window.addEventListener("storage", event => {
-
-    if (
-        event.key === STORAGE_KEY ||
-        event.key === "accuracy_carteiras"
-    ) {
-        render();
-    }
-
-});
-
-
-render();
-
-/* Busca as cotações agora e a cada 60s */
-
-Cotacoes.watch(
-    () => contributionsOf(effectiveActive()).map(item => item.asset),
-    result => {
-        quotes = result;
-        render();
-    }
-);
 
 })();

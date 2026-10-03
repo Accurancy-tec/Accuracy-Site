@@ -447,6 +447,9 @@
     });
 
 </script>
+<script src="js/cotacoes.js"></script>
+<script src="js/resumoCarteiras.js"></script>
+<script src="js/dashboard-total.js"></script>
 
 
 </body>

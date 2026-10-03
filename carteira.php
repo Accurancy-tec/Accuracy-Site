@@ -67,10 +67,7 @@
                     <span>Aportes</span>
                 </a>
 
-                <a href="#">
-                    <i class="bi bi-bar-chart-line"></i>
-                    <span>Relatórios</span>
-                </a>
+               
 
                 <a href="Cursos.php">
                     <i class="bi bi-mortarboard"></i>

@@ -60,9 +60,77 @@
 
         </div>
 
+        <div class="benefits">
+
+            <h4>O que você vai ter</h4>
+
+            <ul>
+                <li style="--d:1.5s;">
+                    <span class="check-icon">
+                        <svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></svg>
+                    </span>
+                    Carteira ilimitada
+                </li>
+
+                <li style="--d:2.1s;">
+                    <span class="check-icon">
+                        <svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></svg>
+                    </span>
+                    Alertas de preço
+                </li>
+
+                <li style="--d:2.7s;">
+                    <span class="check-icon">
+                        <svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></svg>
+                    </span>
+                    Cotações em tempo real
+                </li>
+            </ul>
+
+        </div>
+
     </aside>
 
     <main class="content">
+
+        <div class="floaters" aria-hidden="true">
+
+            <span class="floater up" style="--x:52%; --y:12%; --dur:9s; --delay:0s; --in:.4s;">
+                <i>BTC</i> <b>+2,1%</b>
+            </span>
+
+            <span class="floater down" style="--x:74%; --y:20%; --dur:11s; --delay:-3s; --in:.6s;">
+                <i>USD</i> <b>-0,4%</b>
+            </span>
+
+            <span class="floater up" style="--x:60%; --y:38%; --dur:10s; --delay:-5s; --in:.8s;">
+                <i>PETR4</i> <b>+1,3%</b>
+            </span>
+
+            <span class="floater up" style="--x:82%; --y:46%; --dur:12s; --delay:-2s; --in:1s;">
+                <i>IBOV</i> <b>+0,8%</b>
+            </span>
+
+            <span class="floater down" style="--x:50%; --y:62%; --dur:9.5s; --delay:-6s; --in:1.2s;">
+                <i>ETH</i> <b>-1,2%</b>
+            </span>
+
+            <span class="floater up" style="--x:72%; --y:72%; --dur:11s; --delay:-1s; --in:1.4s;">
+                <i>VALE3</i> <b>+0,6%</b>
+            </span>
+
+            <span class="floater up" style="--x:88%; --y:82%; --dur:10s; --delay:-4s; --in:1.6s;">
+                <i>EUR</i> <b>+0,2%</b>
+            </span>
+
+            <!-- itens distantes (menores e desfocados) -->
+            <span class="floater far" style="--x:66%; --y:6%; --dur:13s; --delay:-7s; --in:.5s;"><i>SOL</i></span>
+            <span class="floater far" style="--x:90%; --y:30%; --dur:14s; --delay:-2s; --in:.7s;"><i>ITUB4</i></span>
+            <span class="floater far" style="--x:56%; --y:52%; --dur:12s; --delay:-9s; --in:.9s;"><i>S&amp;P</i></span>
+            <span class="floater far" style="--x:80%; --y:62%; --dur:15s; --delay:-5s; --in:1.1s;"><i>BBAS3</i></span>
+            <span class="floater far" style="--x:62%; --y:88%; --dur:13s; --delay:-3s; --in:1.3s;"><i>XRP</i></span>
+
+        </div>
 
         <form class="register" method="POST" action="cadastro.php" id="formCadastro">
 

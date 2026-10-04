@@ -15,7 +15,7 @@ if (FormularioCadastro) {
         try {
 
             const resposta = await fetch(
-                `${API_URL}user/registerNewUser.php`,
+                `${API_URL}auth/registrarNovoUsuario`,
                 {
                     method: "POST",
                     headers: {
@@ -95,7 +95,7 @@ if (formulario) {
         try {
 
             const resposta = await fetch(
-                `${API_URL}user/loginSite.php`,
+                `${API_URL}auth/loginSite`,
                 {
                     method: "POST",
                     headers: {

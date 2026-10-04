@@ -55,7 +55,7 @@ inputs.forEach(
                 if (
                     input.value &&
                     index <
-                        inputs.length - 1
+                    inputs.length - 1
                 ) {
 
                     inputs[
@@ -74,10 +74,10 @@ inputs.forEach(
 
                 if (
                     event.key ===
-                        "Backspace" &&
+                    "Backspace" &&
 
                     input.value ===
-                        "" &&
+                    "" &&
 
                     index > 0
                 ) {
@@ -137,7 +137,7 @@ inputs.forEach(
 
                 if (
                     inputs[
-                        codigo.length - 1
+                    codigo.length - 1
                     ]
                 ) {
 
@@ -268,7 +268,7 @@ verifyButton.addEventListener(
 
             const resposta =
                 await fetch(
-                    `${API_BASE_URL}/user/verifyEmail.php`,
+                    `${API_BASE_URL}/auth/verify-email`,
                     {
 
                         method:
@@ -373,7 +373,7 @@ resendLink.addEventListener(
 
             const resposta =
                 await fetch(
-                    `${API_BASE_URL}/user/resendVerification.php`,
+                    `${API_BASE_URL}/auth/resend-verification`,
                     {
 
                         method:

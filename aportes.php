@@ -367,7 +367,7 @@
 </div>
 <script src="js/carteiras.js"></script>
 <script src="js/cotacoes.js"></script>
-<script src="js/Aportes.js?v=6"></script>
+<script src="js/Aportes.js?v=7"></script>
 
 <script>
     const notificationBtn = document.getElementById("notificationBtn");

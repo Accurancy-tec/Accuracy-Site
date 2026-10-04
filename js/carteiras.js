@@ -18,18 +18,16 @@ const Carteiras = (function () {
 
     "use strict";
 
-    const API_BASE_URL = "https://accuracyappapi.onrender.com";
+    const API_BASE_URL =
+        "https://accuracyappapi.onrender.com";
 
-    const ACTIVE_KEY = "accuracy_carteira_ativa";
+    const ACTIVE_KEY =
+        "accuracy_carteira_ativa";
 
-    /*
-    Não existe mais uma carteira fictícia "principal".
-    Quando o usuário não possui carteiras no banco,
-    o array fica vazio.
-    */
     const MAIN_ID = null;
 
     let wallets = [];
+
 
     /*
     =====================================================
@@ -38,8 +36,10 @@ const Carteiras = (function () {
     */
 
     function getToken() {
+
         return localStorage.getItem("token");
     }
+
 
     /*
     =====================================================
@@ -49,12 +49,17 @@ const Carteiras = (function () {
 
     function normalizeId(id) {
 
-        if (id === null || id === undefined) {
+        if (
+            id === null ||
+            id === undefined
+        ) {
+
             return null;
         }
 
         return String(id);
     }
+
 
     /*
     =====================================================
@@ -64,44 +69,75 @@ const Carteiras = (function () {
 
     async function load() {
 
-        const token = getToken();
+        const token =
+            getToken();
+
 
         if (!token) {
 
-            console.error("Token não encontrado.");
+            console.error(
+                "Token não encontrado."
+            );
 
             wallets = [];
 
             return wallets;
         }
 
+
         try {
 
-            const response = await fetch(
-                `${API_BASE_URL}/user/carteira.php`,
-                {
-                    method: "GET",
+            const response =
+                await fetch(
+                    `${API_BASE_URL}/carteiras/buscar-carteiras`,
+                    {
+                        method: "GET",
 
-                    headers: {
-                        "Authorization": `Bearer ${token}`,
-                        "Content-Type": "application/json"
+                        headers: {
+                            "Authorization":
+                                `Bearer ${token}`,
+
+                            "Content-Type":
+                                "application/json"
+                        }
                     }
-                }
+                );
+
+
+            const data =
+                await response.json();
+
+
+            console.log(
+                "Resposta das carteiras:",
+                data
             );
 
-            const data = await response.json();
 
-            console.log("Resposta das carteiras:", data);
+            /*
+            A API atual utiliza "success".
+            Também aceitamos "sucesso" para
+            manter compatibilidade.
+            */
 
-            if (!response.ok || (!data.success && !data.sucesso)) {
+            if (
+                !response.ok ||
+                (
+                    data.success !== true &&
+                    data.sucesso !== true
+                )
+            ) {
 
                 console.error(
+
                     "Erro ao buscar carteiras:",
+
                     data.mensagem ||
                     data.message ||
                     data.erro ||
                     data.detalhe ||
                     "Erro desconhecido"
+
                 );
 
                 wallets = [];
@@ -109,8 +145,17 @@ const Carteiras = (function () {
                 return wallets;
             }
 
+
+            const apiWallets =
+                Array.isArray(
+                    data.carteiras
+                )
+                    ? data.carteiras
+                    : [];
+
+
             /*
-            A API retorna:
+            A API agora precisa retornar:
 
             {
                 id_carteira,
@@ -119,40 +164,41 @@ const Carteiras = (function () {
             }
             */
 
-            const apiWallets = Array.isArray(data.carteiras)
-                ? data.carteiras
-                : [];
+            wallets =
+                apiWallets.map(
+                    wallet => ({
 
-            /*
-            SOMENTE carteiras que realmente vieram
-            do banco entram aqui.
+                        id:
+                            normalizeId(
+                                wallet.id_carteira
+                            ),
 
-            Se a API retornar []:
+                        name:
+                            wallet.nome_carteira,
 
-            wallets = []
+                        type:
+                            wallet.tipo_carteira
 
-            Não criamos mais uma carteira falsa.
-            */
+                    })
+                );
 
-            wallets = apiWallets.map(wallet => ({
 
-                id: normalizeId(wallet.id_carteira),
+            console.log(
+                "Carteiras carregadas:",
+                wallets
+            );
 
-                name: wallet.nome_carteira,
-
-                type: wallet.tipo_carteira
-
-            }));
-
-            console.log("Carteiras carregadas:", wallets);
 
             return wallets;
 
         } catch (error) {
 
             console.error(
+
                 "Erro ao conectar com a API de carteiras:",
+
                 error
+
             );
 
             wallets = [];
@@ -160,6 +206,7 @@ const Carteiras = (function () {
             return wallets;
         }
     }
+
 
     /*
     =====================================================
@@ -172,6 +219,7 @@ const Carteiras = (function () {
         return wallets;
     }
 
+
     /*
     =====================================================
     NOME DA CARTEIRA
@@ -180,16 +228,27 @@ const Carteiras = (function () {
 
     function nameOf(id) {
 
-        const normalized = normalizeId(id);
+        const normalized =
+            normalizeId(id);
 
-        const wallet = wallets.find(
-            wallet => normalizeId(wallet.id) === normalized
-        );
+
+        const wallet =
+            wallets.find(
+
+                wallet =>
+                    normalizeId(wallet.id)
+                    === normalized
+
+            );
+
 
         return wallet
+
             ? wallet.name
+
             : "Nenhuma carteira";
     }
+
 
     /*
     =====================================================
@@ -199,33 +258,37 @@ const Carteiras = (function () {
 
     function normalize(id) {
 
-        const normalized = normalizeId(id);
+        const normalized =
+            normalizeId(id);
 
-        const exists = wallets.some(
-            wallet => normalizeId(wallet.id) === normalized
-        );
+
+        const exists =
+            wallets.some(
+
+                wallet =>
+                    normalizeId(wallet.id)
+                    === normalized
+
+            );
+
 
         if (exists) {
 
             return normalized;
         }
 
-        /*
-        Se não existir uma carteira com esse ID,
-        usamos a primeira carteira REAL disponível.
-        */
 
         if (wallets.length > 0) {
 
-            return normalizeId(wallets[0].id);
+            return normalizeId(
+                wallets[0].id
+            );
         }
 
-        /*
-        Não existe nenhuma carteira.
-        */
 
         return null;
     }
+
 
     /*
     =====================================================
@@ -235,40 +298,49 @@ const Carteiras = (function () {
 
     function getActive() {
 
-        const id = localStorage.getItem(ACTIVE_KEY);
+        const id =
+            localStorage.getItem(
+                ACTIVE_KEY
+            );
+
 
         if (id === "all") {
 
             return "all";
         }
 
-        const normalized = normalizeId(id);
 
-        const exists = wallets.some(
-            wallet => normalizeId(wallet.id) === normalized
-        );
+        const normalized =
+            normalizeId(id);
+
+
+        const exists =
+            wallets.some(
+
+                wallet =>
+                    normalizeId(wallet.id)
+                    === normalized
+
+            );
+
 
         if (exists) {
 
             return normalized;
         }
 
-        /*
-        Se não houver carteira selecionada,
-        usamos a primeira carteira REAL da API.
-        */
 
         if (wallets.length > 0) {
 
-            return normalizeId(wallets[0].id);
+            return normalizeId(
+                wallets[0].id
+            );
         }
 
-        /*
-        Não existe nenhuma carteira.
-        */
 
         return null;
     }
+
 
     /*
     =====================================================
@@ -278,18 +350,28 @@ const Carteiras = (function () {
 
     function setActive(id) {
 
-        if (id === null || id === undefined) {
+        if (
+            id === null ||
+            id === undefined
+        ) {
 
-            localStorage.removeItem(ACTIVE_KEY);
+            localStorage.removeItem(
+                ACTIVE_KEY
+            );
 
             return;
         }
 
+
         localStorage.setItem(
+
             ACTIVE_KEY,
+
             normalizeId(id)
+
         );
     }
+
 
     /*
     =====================================================
@@ -299,98 +381,156 @@ const Carteiras = (function () {
 
     async function add(rawName) {
 
-        const name = String(rawName || "").trim();
+        const name =
+            String(
+                rawName || ""
+            ).trim();
+
 
         if (!name) {
 
             return {
-                error: "Digite um nome para a carteira."
+                error:
+                    "Digite um nome para a carteira."
             };
         }
+
 
         if (name.length > 30) {
 
             return {
-                error: "Use no máximo 30 caracteres."
+                error:
+                    "Use no máximo 30 caracteres."
             };
         }
 
-        const exists = list().some(
-            w => w.name.toLowerCase() === name.toLowerCase()
-        );
+
+        const exists =
+            list().some(
+
+                w =>
+                    w.name.toLowerCase()
+                    ===
+                    name.toLowerCase()
+
+            );
+
 
         if (exists) {
 
             return {
-                error: "Já existe uma carteira com esse nome."
+                error:
+                    "Já existe uma carteira com esse nome."
             };
         }
 
-        const token = getToken();
+
+        const token =
+            getToken();
+
 
         if (!token) {
 
             return {
-                error: "Usuário não autenticado."
+                error:
+                    "Usuário não autenticado."
             };
         }
 
+
         try {
 
-            const response = await fetch(
-                `${API_BASE_URL}/user/carteira.php`,
-                {
-                    method: "POST",
+            const response =
+                await fetch(
 
-                    headers: {
-                        "Authorization": `Bearer ${token}`,
-                        "Content-Type": "application/json"
-                    },
+                    `${API_BASE_URL}/carteiras/criar-carteira`,
 
-                    body: JSON.stringify({
+                    {
 
-                        nome_carteira: name,
+                        method: "POST",
 
-                        tipo_carteira: "Real",
+                        headers: {
 
-                        saldo_livre_carteira: 0
+                            "Authorization":
+                                `Bearer ${token}`,
 
-                    })
-                }
-            );
+                            "Content-Type":
+                                "application/json"
 
-            const texto = await response.text();
+                        },
+
+                        body:
+                            JSON.stringify({
+
+                                nome_carteira:
+                                    name,
+
+                                tipo_carteira:
+                                    "Real",
+
+                                saldo_livre_carteira:
+                                    0
+
+                            })
+
+                    }
+                );
+
+
+            const texto =
+                await response.text();
+
 
             console.log(
                 "Resposta bruta da API:",
                 texto
             );
 
+
             let data;
+
 
             try {
 
-                data = JSON.parse(texto);
+                data =
+                    JSON.parse(texto);
 
             } catch (error) {
 
                 console.error(
+
                     "A API não retornou JSON:",
                     texto
+
                 );
 
                 return {
+
                     error:
                         "A API retornou uma resposta inválida."
+
                 };
             }
 
+
             console.log(
+
                 "Resposta criação carteira:",
                 data
+
             );
 
-            if (!response.ok || !data.sucesso) {
+
+            if (
+
+                !response.ok ||
+
+                (
+                    data.success !== true &&
+                    data.sucesso !== true
+                )
+
+            ) {
 
                 return {
 
@@ -403,25 +543,39 @@ const Carteiras = (function () {
                 };
             }
 
+
             /*
-            Depois de criar a carteira,
-            buscamos novamente as carteiras do banco.
+            Busca novamente para obter
+            o ID REAL criado no banco.
             */
 
             await load();
-            window.dispatchEvent(new Event("carteirasAtualizadas"));
-            console.log("Carteiras após criar:", wallets);
 
-            /*
-            Procuramos a carteira recém-criada
-            pelo nome.
-            */
 
-            const wallet = wallets.find(
-                wallet =>
-                    wallet.name.toLowerCase() ===
-                    name.toLowerCase()
+            window.dispatchEvent(
+                new Event(
+                    "carteirasAtualizadas"
+                )
             );
+
+
+            console.log(
+                "Carteiras após criar:",
+                wallets
+            );
+
+
+            const wallet =
+                wallets.find(
+
+                    wallet =>
+
+                        wallet.name.toLowerCase()
+                        ===
+                        name.toLowerCase()
+
+                );
+
 
             if (!wallet) {
 
@@ -433,15 +587,16 @@ const Carteiras = (function () {
                 };
             }
 
-            /*
-            Agora usamos o ID REAL retornado pelo banco.
-            */
 
-            setActive(wallet.id);
+            setActive(
+                wallet.id
+            );
+
 
             return {
                 wallet
             };
+
 
         } catch (error) {
 
@@ -449,6 +604,7 @@ const Carteiras = (function () {
                 "Erro ao criar carteira:",
                 error
             );
+
 
             return {
 
@@ -459,6 +615,7 @@ const Carteiras = (function () {
         }
     }
 
+
     /*
     =====================================================
     REMOVER CARTEIRA
@@ -468,9 +625,13 @@ const Carteiras = (function () {
     function remove(id) {
 
         console.warn(
+
             "A exclusão de carteiras precisa ser feita pela API.",
+
             id
+
         );
+
 
         return {
 
@@ -480,28 +641,48 @@ const Carteiras = (function () {
         };
     }
 
+
+    /*
+    =====================================================
+    ELEMENTO
+    =====================================================
+    */
+
+    function el(
+        tag,
+        className,
+        text
+    ) {
+
+        const element =
+            document.createElement(tag);
+
+
+        if (className) {
+
+            element.className =
+                className;
+        }
+
+
+        if (
+            text !== undefined
+        ) {
+
+            element.textContent =
+                text;
+        }
+
+
+        return element;
+    }
+
+
     /*
     =====================================================
     MODAL
     =====================================================
     */
-
-    function el(tag, className, text) {
-
-        const element = document.createElement(tag);
-
-        if (className) {
-
-            element.className = className;
-        }
-
-        if (text !== undefined) {
-
-            element.textContent = text;
-        }
-
-        return element;
-    }
 
     function modal({
         title,
@@ -511,167 +692,246 @@ const Carteiras = (function () {
         validate
     }) {
 
-        return new Promise(resolve => {
+        return new Promise(
+            resolve => {
 
-            const overlay = el(
-                "div",
-                "cw-overlay"
-            );
+                const overlay =
+                    el(
+                        "div",
+                        "cw-overlay"
+                    );
 
-            const box = el(
-                "div",
-                "cw-modal"
-            );
 
-            box.setAttribute(
-                "role",
-                "dialog"
-            );
+                const box =
+                    el(
+                        "div",
+                        "cw-modal"
+                    );
 
-            box.setAttribute(
-                "aria-modal",
-                "true"
-            );
 
-            box.append(
-                el(
-                    "h3",
-                    "",
-                    title
-                )
-            );
+                box.setAttribute(
+                    "role",
+                    "dialog"
+                );
 
-            if (text) {
+
+                box.setAttribute(
+                    "aria-modal",
+                    "true"
+                );
+
 
                 box.append(
+
                     el(
-                        "p",
-                        "cw-text",
-                        text
+                        "h3",
+                        "",
+                        title
                     )
-                );
-            }
 
-            const control = build(box);
-
-            const error = el(
-                "div",
-                "cw-error"
-            );
-
-            const actions = el(
-                "div",
-                "cw-actions"
-            );
-
-            const cancel = el(
-                "button",
-                "cw-btn",
-                "Cancelar"
-            );
-
-            const ok = el(
-                "button",
-                "cw-btn primary",
-                okLabel
-            );
-
-            cancel.type = "button";
-
-            ok.type = "button";
-
-            actions.append(
-                cancel,
-                ok
-            );
-
-            box.append(
-                error,
-                actions
-            );
-
-            overlay.append(box);
-
-            document.body.append(overlay);
-
-            function close(result) {
-
-                document.removeEventListener(
-                    "keydown",
-                    onKey
                 );
 
-                overlay.remove();
 
-                resolve(result);
-            }
+                if (text) {
 
-            async function submit() {
+                    box.append(
 
-                const value = control.getValue();
+                        el(
+                            "p",
+                            "cw-text",
+                            text
+                        )
 
-                const result = validate
-                    ? await validate(value)
-                    : { value };
-
-                if (result.error) {
-
-                    error.textContent =
-                        result.error;
-
-                    return;
+                    );
                 }
 
-                close(result.value);
-            }
 
-            function onKey(event) {
+                const control =
+                    build(box);
 
-                if (event.key === "Escape") {
 
-                    close(null);
+                const error =
+                    el(
+                        "div",
+                        "cw-error"
+                    );
+
+
+                const actions =
+                    el(
+                        "div",
+                        "cw-actions"
+                    );
+
+
+                const cancel =
+                    el(
+                        "button",
+                        "cw-btn",
+                        "Cancelar"
+                    );
+
+
+                const ok =
+                    el(
+                        "button",
+                        "cw-btn primary",
+                        okLabel
+                    );
+
+
+                cancel.type =
+                    "button";
+
+
+                ok.type =
+                    "button";
+
+
+                actions.append(
+                    cancel,
+                    ok
+                );
+
+
+                box.append(
+                    error,
+                    actions
+                );
+
+
+                overlay.append(box);
+
+
+                document.body.append(
+                    overlay
+                );
+
+
+                function close(result) {
+
+                    document.removeEventListener(
+                        "keydown",
+                        onKey
+                    );
+
+
+                    overlay.remove();
+
+
+                    resolve(result);
                 }
 
-                if (
-                    event.key === "Enter" &&
-                    event.target.tagName !== "BUTTON"
-                ) {
 
-                    event.preventDefault();
+                async function submit() {
 
-                    submit();
+                    const value =
+                        control.getValue();
+
+
+                    const result =
+                        validate
+
+                            ? await validate(value)
+
+                            : { value };
+
+
+                    if (result.error) {
+
+                        error.textContent =
+                            result.error;
+
+                        return;
+                    }
+
+
+                    close(
+                        result.value
+                    );
                 }
-            }
 
-            cancel.addEventListener(
-                "click",
-                () => close(null)
-            );
 
-            ok.addEventListener(
-                "click",
-                submit
-            );
+                function onKey(event) {
 
-            overlay.addEventListener(
-                "mousedown",
-                event => {
-
-                    if (event.target === overlay) {
+                    if (
+                        event.key ===
+                        "Escape"
+                    ) {
 
                         close(null);
                     }
+
+
+                    if (
+
+                        event.key ===
+                        "Enter" &&
+
+                        event.target.tagName
+                        !== "BUTTON"
+
+                    ) {
+
+                        event.preventDefault();
+
+                        submit();
+                    }
                 }
-            );
 
-            document.addEventListener(
-                "keydown",
-                onKey
-            );
 
-            control.focus();
-        });
+                cancel.addEventListener(
+
+                    "click",
+
+                    () =>
+                        close(null)
+
+                );
+
+
+                ok.addEventListener(
+
+                    "click",
+
+                    submit
+
+                );
+
+
+                overlay.addEventListener(
+
+                    "mousedown",
+
+                    event => {
+
+                        if (
+                            event.target
+                            === overlay
+                        ) {
+
+                            close(null);
+                        }
+
+                    }
+
+                );
+
+
+                document.addEventListener(
+
+                    "keydown",
+
+                    onKey
+
+                );
+
+
+                control.focus();
+            }
+        );
     }
+
 
     /*
     =====================================================
@@ -679,35 +939,54 @@ const Carteiras = (function () {
     =====================================================
     */
 
-    function askWallet({ selected } = {}) {
+    function askWallet(
+        { selected } = {}
+    ) {
 
-        const availableWallets = list();
+        const availableWallets =
+            list();
 
-        /*
-        Se não existem carteiras reais,
-        não abrimos um modal vazio.
-        */
 
-        if (availableWallets.length === 0) {
+        if (
+            availableWallets.length
+            === 0
+        ) {
 
             console.warn(
+
                 "Nenhuma carteira disponível para receber o aporte."
+
             );
 
-            return Promise.resolve(null);
+
+            return Promise.resolve(
+                null
+            );
         }
 
-        const selectedId =
-            normalizeId(selected);
 
-        const pick = availableWallets.some(
-            wallet =>
-                normalizeId(wallet.id) === selectedId
-        )
-            ? selectedId
-            : normalizeId(
-                availableWallets[0]?.id
+        const selectedId =
+            normalizeId(
+                selected
             );
+
+
+        const pick =
+            availableWallets.some(
+
+                wallet =>
+                    normalizeId(
+                        wallet.id
+                    ) === selectedId
+
+            )
+
+                ? selectedId
+
+                : normalizeId(
+                    availableWallets[0]?.id
+                );
+
 
         return modal({
 
@@ -720,6 +999,7 @@ const Carteiras = (function () {
             okLabel:
                 "Confirmar aporte",
 
+
             build(box) {
 
                 const group =
@@ -728,71 +1008,105 @@ const Carteiras = (function () {
                         "cw-options"
                     );
 
+
                 function sync() {
 
                     group
+
                         .querySelectorAll(
                             ".cw-option"
                         )
-                        .forEach(label => {
 
-                            label.classList.toggle(
-                                "selected",
-                                label
-                                    .querySelector("input")
-                                    .checked
-                            );
+                        .forEach(
+                            label => {
 
-                        });
+                                label.classList.toggle(
+
+                                    "selected",
+
+                                    label
+                                        .querySelector(
+                                            "input"
+                                        )
+                                        .checked
+
+                                );
+
+                            }
+                        );
                 }
 
-                availableWallets.forEach(wallet => {
 
-                    const label =
-                        el(
-                            "label",
-                            "cw-option"
+                availableWallets.forEach(
+                    wallet => {
+
+                        const label =
+                            el(
+                                "label",
+                                "cw-option"
+                            );
+
+
+                        const input =
+                            document.createElement(
+                                "input"
+                            );
+
+
+                        input.type =
+                            "radio";
+
+
+                        input.name =
+                            "cw-wallet";
+
+
+                        input.value =
+                            normalizeId(
+                                wallet.id
+                            );
+
+
+                        input.checked =
+                            normalizeId(
+                                wallet.id
+                            ) === pick;
+
+
+                        input.addEventListener(
+
+                            "change",
+
+                            sync
+
                         );
 
-                    const input =
-                        document.createElement(
-                            "input"
+
+                        label.append(
+
+                            input,
+
+                            el(
+                                "span",
+                                "",
+                                wallet.name
+                            )
+
                         );
 
-                    input.type = "radio";
 
-                    input.name = "cw-wallet";
+                        group.append(
+                            label
+                        );
+                    }
+                );
 
-                    input.value =
-                        normalizeId(wallet.id);
-
-                    input.checked =
-                        normalizeId(wallet.id) ===
-                        pick;
-
-                    input.addEventListener(
-                        "change",
-                        sync
-                    );
-
-                    label.append(
-
-                        input,
-
-                        el(
-                            "span",
-                            "",
-                            wallet.name
-                        )
-
-                    );
-
-                    group.append(label);
-                });
 
                 box.append(group);
 
+
                 sync();
+
 
                 return {
 
@@ -800,6 +1114,7 @@ const Carteiras = (function () {
                         group.querySelector(
                             "input:checked"
                         )?.value,
+
 
                     focus: () =>
                         group.querySelector(
@@ -810,6 +1125,7 @@ const Carteiras = (function () {
             }
         });
     }
+
 
     /*
     =====================================================
@@ -830,6 +1146,7 @@ const Carteiras = (function () {
             okLabel:
                 "Criar carteira",
 
+
             build(box) {
 
                 const input =
@@ -838,19 +1155,27 @@ const Carteiras = (function () {
                         "cw-input"
                     );
 
-                input.type = "text";
 
-                input.maxLength = 30;
+                input.type =
+                    "text";
+
+
+                input.maxLength =
+                    30;
+
 
                 input.placeholder =
                     "Ex: Aposentadoria";
 
+
                 box.append(input);
+
 
                 return {
 
                     getValue: () =>
                         input.value,
+
 
                     focus: () =>
                         input.focus()
@@ -858,23 +1183,29 @@ const Carteiras = (function () {
                 };
             },
 
-            validate: async function (value) {
 
-                const result =
-                    await add(value);
+            validate:
+                async function (value) {
 
-                return result.error
-                    ? {
-                        error:
-                            result.error
-                    }
-                    : {
-                        value:
-                            result.wallet
-                    };
-            }
+                    const result =
+                        await add(value);
+
+
+                    return result.error
+
+                        ? {
+                            error:
+                                result.error
+                        }
+
+                        : {
+                            value:
+                                result.wallet
+                        };
+                }
         });
     }
+
 
     /*
     =====================================================
@@ -883,6 +1214,7 @@ const Carteiras = (function () {
     */
 
     load();
+
 
     /*
     =====================================================

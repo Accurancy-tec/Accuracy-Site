@@ -15,7 +15,7 @@ const Cotacoes = (function () {
      * API hospedada
      */
     const API_URL =
-        "https://accuracyappapi.onrender.com/quotes/getQuote.php";
+        "https://accuracyappapi.onrender.com/brapi/get-quote";
 
 
     /*

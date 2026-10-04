@@ -19,123 +19,76 @@ const monthlyAverage = $("#monthlyAverage");
 const nextContribution = $("#nextContribution");
 
 const API_BASE_URL = "https://accuracyappapi.onrender.com";
+
 const STORAGE_KEY = "accuracy_aportes_cache";
 const HISTORY_KEY = "accuracy_historico";
 
-let contributions =
-    JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+let contributions = [];
 
-/* Cotações atuais { PETR4: 38.5, ... } (vem de js/cotacoes.js) */
+/* Cotações atuais { PETR4: 38.5, ... } */
 let quotes = {};
 
 
 /* =========================
    HISTÓRICO
-   (registra cada aporte
-   adicionado ou removido)
 ========================= */
 
-function historyEntry(action, item, timestamp = new Date().toISOString()) {
-
+function historyEntry(
+    action,
+    item,
+    timestamp = new Date().toISOString()
+) {
     return {
-
         id: `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
-
         action,
-
         contributionId: item.id,
-
         asset: item.asset,
-
         category: item.category,
-
         type: item.type,
-
         amount: item.amount,
-
         date: item.date,
-
         recurrence: item.recurrence,
-
         recurrenceDay: item.recurrenceDay,
-
         observation: item.observation,
-
         timestamp
-
     };
-
 }
 
-
 function logHistory(action, item) {
-
     let history;
 
     try {
-        history = JSON.parse(localStorage.getItem(HISTORY_KEY)) || [];
+        history = JSON.parse(
+            localStorage.getItem(HISTORY_KEY)
+        ) || [];
     } catch {
         history = [];
     }
 
-    history.push(historyEntry(action, item));
+    history.push(
+        historyEntry(action, item)
+    );
 
     localStorage.setItem(
         HISTORY_KEY,
         JSON.stringify(history)
     );
-
-}
-
-
-/* Aportes que já existiam antes do histórico */
-
-if (
-    localStorage.getItem(HISTORY_KEY) === null &&
-    contributions.length
-) {
-
-    localStorage.setItem(
-        HISTORY_KEY,
-        JSON.stringify(
-            contributions.map(item =>
-                historyEntry(
-                    "added",
-                    item,
-                    /^\d+$/.test(String(item.id))
-                        ? new Date(Number(item.id)).toISOString()
-                        : new Date().toISOString()
-                )
-            )
-        )
-    );
-
 }
 
 
 /* =========================
    CLASSE DE CADA ATIVO
-   (usado pelo gráfico de
-   distribuição da Carteira)
 ========================= */
 
 const ASSET_CLASS = {
-
     PETR4: "Ações",
-
     Bitcoin: "Cripto",
-
     "CDB Nubank": "Renda Fixa",
-
     XPML11: "FIIs"
-
 };
 
-
 function classOf(assetName) {
-
     return ASSET_CLASS[assetName] || "Outros";
-
 }
 
 
@@ -144,12 +97,10 @@ function classOf(assetName) {
 ========================= */
 
 function money(value) {
-
     return new Intl.NumberFormat("pt-BR", {
         style: "currency",
         currency: "BRL"
     }).format(value);
-
 }
 
 
@@ -158,7 +109,6 @@ function money(value) {
 ========================= */
 
 function getAmount() {
-
     return Number(
         amount.value
             .replace("R$", "")
@@ -166,7 +116,6 @@ function getAmount() {
             .replace(",", ".")
             .trim()
     ) || 0;
-
 }
 
 
@@ -175,11 +124,13 @@ function getAmount() {
 ========================= */
 
 function getToken() {
-
     return localStorage.getItem("token");
-
 }
 
+
+/* =========================
+   CADASTRAR APORTE
+========================= */
 
 async function cadastrarAporteAPI(dados) {
 
@@ -194,11 +145,77 @@ async function cadastrarAporteAPI(dados) {
     }
 
     const response = await fetch(
-        `${API_BASE_URL}/user/aportes.php`,
+        `${API_BASE_URL}/aportes/registrar-aporte`,
         {
             method: "POST",
             headers,
             body: JSON.stringify(dados)
+        }
+    );
+
+    const text = await response.text();
+
+    console.log("=== RESPOSTA BRUTA DA API ===");
+    console.log("HTTP:", response.status);
+    console.log("Resposta:", text);
+
+    let data;
+
+    try {
+        data = JSON.parse(text);
+    } catch {
+        console.error("A resposta NÃO é JSON válido.");
+        throw new Error(
+            `A API retornou uma resposta inválida (HTTP ${response.status}).`
+        );
+    }
+
+    if (response.status === 401) {
+
+        localStorage.removeItem("token");
+        localStorage.removeItem("usuario");
+
+        setTimeout(() => {
+            window.location.href = "login.php";
+        }, 1500);
+
+        throw new Error(
+            "Sessão expirada. Faça login novamente."
+        );
+    }
+
+    if (!response.ok || data.sucesso !== true) {
+        throw new Error(
+            data.mensagem ||
+            data.message ||
+            `Erro HTTP ${response.status}.`
+        );
+    }
+
+    return data;
+}
+
+
+/* =========================
+   CARREGAR APORTES
+========================= */
+
+async function carregarAportesAPI() {
+
+    const token = getToken();
+
+    if (!token) {
+        console.error("Token não encontrado.");
+        return;
+    }
+
+    const response = await fetch(
+        `${API_BASE_URL}/aportes/buscar-aportes`,
+        {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
         }
     );
 
@@ -219,14 +236,9 @@ async function cadastrarAporteAPI(dados) {
         localStorage.removeItem("token");
         localStorage.removeItem("usuario");
 
-        setTimeout(() => {
-            window.location.href = "login.php";
-        }, 1500);
+        window.location.href = "login.php";
 
-        throw new Error(
-            "Sessão expirada. Faça login novamente."
-        );
-
+        return;
     }
 
     if (!response.ok || data.sucesso !== true) {
@@ -237,8 +249,52 @@ async function cadastrarAporteAPI(dados) {
         );
     }
 
-    return data;
+    /*
+     * Converte os dados da API
+     * para o formato utilizado pelo render().
+     */
 
+    contributions = (data.ativos || []).map(item => ({
+        id: item.id_aporte,
+
+        asset: item.ativo_aporte,
+
+        category: item.categoria_ativo,
+
+        walletId: null,
+
+        amount: Number(item.valor_aporte),
+
+        type: item.tipo_aporte,
+
+        date: item.data_aporte || null,
+
+        recurrence:
+            item.recorrencia_aporte === "Semanal"
+                ? "weekly"
+                : item.recorrencia_aporte === "Mensal"
+                    ? "monthly"
+                    : "none",
+
+        recurrenceDay: null,
+
+        observation: "",
+
+        active: true,
+
+        unitPrice:
+            Number(item.quantidade_aporte) > 0
+                ? Number(item.valor_aporte) /
+                Number(item.quantidade_aporte)
+                : 0
+    }));
+
+    console.log(
+        "Aportes convertidos para a tela:",
+        contributions
+    );
+
+    return data;
 }
 
 
@@ -252,7 +308,6 @@ function save() {
         STORAGE_KEY,
         JSON.stringify(contributions)
     );
-
 }
 
 
@@ -272,84 +327,89 @@ function toast(message) {
     setTimeout(() => {
         box.classList.remove("show");
     }, 2500);
-
 }
 
 
 /* =========================
    CHUVA DE DINHEIRO
-   (animação ao confirmar
-   um aporte)
 ========================= */
 
 function randomBetween(min, max) {
 
     return Math.random() * (max - min) + min;
-
 }
-
 
 function moneyRain(count = 26) {
 
-    const container = document.createElement("div");
+    const container =
+        document.createElement("div");
 
     container.className = "money-rain";
 
     document.body.appendChild(container);
 
-
     for (let i = 0; i < count; i++) {
 
-        const note = document.createElement("div");
+        const note =
+            document.createElement("div");
 
         note.className = "money-note";
 
         note.textContent = "R$";
 
+        const left =
+            randomBetween(0, 100);
 
-        const left = randomBetween(0, 100);
+        const duration =
+            randomBetween(2.2, 3.6);
 
-        const duration = randomBetween(2.2, 3.6);
+        const delay =
+            randomBetween(0, 0.5);
 
-        const delay = randomBetween(0, 0.5);
+        const drift =
+            randomBetween(-120, 120);
 
-        const drift = randomBetween(-120, 120);
+        const rotateStart =
+            randomBetween(-40, 40);
 
-        const rotateStart = randomBetween(-40, 40);
+        const rotateEnd =
+            randomBetween(180, 540);
 
-        const rotateEnd = randomBetween(180, 540);
-
-        const size = randomBetween(0.8, 1.3);
-
+        const size =
+            randomBetween(0.8, 1.3);
 
         note.style.left = `${left}vw`;
 
-        note.style.animationDuration = `${duration}s`;
+        note.style.animationDuration =
+            `${duration}s`;
 
-        note.style.animationDelay = `${delay}s`;
+        note.style.animationDelay =
+            `${delay}s`;
 
-        note.style.setProperty("--drift", `${drift}px`);
+        note.style.setProperty(
+            "--drift",
+            `${drift}px`
+        );
 
-        note.style.setProperty("--rot-start", `${rotateStart}deg`);
+        note.style.setProperty(
+            "--rot-start",
+            `${rotateStart}deg`
+        );
 
-        note.style.setProperty("--rot-end", `${rotateEnd}deg`);
+        note.style.setProperty(
+            "--rot-end",
+            `${rotateEnd}deg`
+        );
 
-        note.style.transform = `scale(${size})`;
-
+        note.style.transform =
+            `scale(${size})`;
 
         container.appendChild(note);
-
     }
 
-
-    const cleanupDelay = 4200;
-
     setTimeout(() => {
-
         container.remove();
-
-    }, cleanupDelay);
-
+    }, 4200);
 }
 
 
@@ -366,9 +426,7 @@ function today() {
     ).padStart(2, "0")}-${String(
         d.getDate()
     ).padStart(2, "0")}`;
-
 }
-
 
 date.value = today();
 
@@ -378,40 +436,48 @@ date.value = today();
 ========================= */
 
 $("#currentDate").textContent =
-    new Date().toLocaleDateString("pt-BR", {
-
-        weekday: "long",
-        day: "2-digit",
-        month: "long",
-        year: "numeric"
-
-    });
+    new Date().toLocaleDateString(
+        "pt-BR",
+        {
+            weekday: "long",
+            day: "2-digit",
+            month: "long",
+            year: "numeric"
+        }
+    );
 
 
 /* =========================
    VALORES RÁPIDOS
 ========================= */
 
-document.querySelectorAll("[data-value]")
+document
+    .querySelectorAll("[data-value]")
     .forEach(button => {
 
-        button.addEventListener("click", () => {
+        button.addEventListener(
+            "click",
+            () => {
 
-            const value =
-                Number(button.dataset.value);
+                const value =
+                    Number(button.dataset.value);
 
-            amount.value = money(value);
+                amount.value =
+                    money(value);
 
-            document
-                .querySelectorAll("[data-value]")
-                .forEach(btn =>
-                    btn.classList.remove("selected")
+                document
+                    .querySelectorAll("[data-value]")
+                    .forEach(btn =>
+                        btn.classList.remove(
+                            "selected"
+                        )
+                    );
+
+                button.classList.add(
+                    "selected"
                 );
-
-            button.classList.add("selected");
-
-        });
-
+            }
+        );
     });
 
 
@@ -424,14 +490,16 @@ $("#otherValue").addEventListener(
     () => {
 
         amount.focus();
+
         amount.select();
 
         document
             .querySelectorAll("[data-value]")
             .forEach(btn =>
-                btn.classList.remove("selected")
+                btn.classList.remove(
+                    "selected"
+                )
             );
-
     }
 );
 
@@ -440,22 +508,22 @@ $("#otherValue").addEventListener(
    FORMATAÇÃO DO VALOR
 ========================= */
 
-amount.addEventListener("input", () => {
+amount.addEventListener(
+    "input",
+    () => {
 
-    let value =
-        amount.value.replace(/\D/g, "");
+        let value =
+            amount.value.replace(/\D/g, "");
 
-    if (!value) {
+        if (!value) {
+            amount.value = "";
+            return;
+        }
 
-        amount.value = "";
-
-        return;
+        amount.value =
+            money(Number(value) / 100);
     }
-
-    amount.value =
-        money(Number(value) / 100);
-
-});
+);
 
 
 /* =========================
@@ -477,7 +545,6 @@ recurrence.addEventListener(
         if (!isRecurring) {
             recurrenceDay.value = "";
         }
-
     }
 );
 
@@ -490,8 +557,8 @@ $("#confirmBtn").addEventListener(
     "click",
     async () => {
 
-        const value = getAmount();
-
+        const value =
+            getAmount();
 
         if (value <= 0) {
 
@@ -504,7 +571,6 @@ $("#confirmBtn").addEventListener(
             return;
         }
 
-
         if (!date.value) {
 
             toast(
@@ -513,7 +579,6 @@ $("#confirmBtn").addEventListener(
 
             return;
         }
-
 
         if (
             recurrence.value !== "none" &&
@@ -534,72 +599,102 @@ $("#confirmBtn").addEventListener(
         }
 
 
-        /*
-           Se existir mais de uma carteira,
-           pergunta em qual colocar o aporte
-        */
-        console.log("=== DEBUG CARTEIRA ===");
-        console.log("Carteiras.list():", Carteiras.list());
-        console.log("Carteira ativa:", Carteiras.getActive());
+        /* =========================
+           CARTEIRA
+        ========================= */
+
+        console.log(
+            "=== DEBUG CARTEIRA ==="
+        );
+
+        if (
+            typeof Carteiras === "undefined"
+        ) {
+
+            console.error(
+                "Carteiras não está disponível."
+            );
+
+            toast(
+                "Sistema de carteiras não carregado."
+            );
+
+            return;
+        }
+
+        console.log(
+            "Carteiras.list():",
+            Carteiras.list()
+        );
+
+        console.log(
+            "Carteira ativa:",
+            Carteiras.getActive()
+        );
+
         let walletId = null;
 
-        if (typeof Carteiras !== "undefined") {
-            await Carteiras.load();
+        await Carteiras.load();
 
-            const carteiras = Carteiras.list();
+        const carteiras =
+            Carteiras.list();
 
-            console.log("Carteiras disponíveis:", carteiras);
+        console.log(
+            "Carteiras disponíveis:",
+            carteiras
+        );
 
-            if (!carteiras || carteiras.length === 0) {
+        if (
+            !carteiras ||
+            carteiras.length === 0
+        ) {
 
-                toast("Nenhuma carteira encontrada.");
+            toast(
+                "Nenhuma carteira encontrada."
+            );
 
-                return;
-            }
+            return;
+        }
 
-            /*
-             * Se houver apenas uma carteira,
-             * usa diretamente o ID dela.
-             */
-            if (carteiras.length === 1) {
-                walletId = carteiras[0].id;
-            }
+        if (
+            carteiras.length === 1
+        ) {
 
-            else {
+            walletId =
+                carteiras[0].id;
 
-                /*
-                 * Se houver mais de uma carteira,
-                 * abre o seletor.
-                 */
+        } else {
 
-                const active = Carteiras.getActive();
+            const active =
+                Carteiras.getActive();
 
-                const chosen = await Carteiras.askWallet({
+            const chosen =
+                await Carteiras.askWallet({
                     selected:
                         active === "all"
                             ? Carteiras.MAIN_ID
                             : active
                 });
 
-                if (!chosen) {
-                    return;
-                }
-
-                walletId = chosen;
+            if (!chosen) {
+                return;
             }
 
+            walletId = chosen;
         }
 
 
-        /*
-         * Garante que o ID enviado para a API
-         * seja realmente numérico.
-         */
+        /* =========================
+           VALIDAR ID DA CARTEIRA
+        ========================= */
 
-        walletId = Number(walletId);
+        walletId =
+            Number(walletId);
 
-
-        if (!Number.isInteger(walletId) || walletId <= 0) {
+        if (
+            !Number.isInteger(walletId) ||
+            walletId <= 0
+        ) {
 
             console.error(
                 "ID da carteira inválido:",
@@ -613,14 +708,16 @@ $("#confirmBtn").addEventListener(
             return;
         }
 
-
         console.log(
             "ID DA CARTEIRA QUE SERÁ ENVIADO PARA A API:",
             walletId
         );
 
 
-        /* Cotação no momento da compra */
+        /* =========================
+           COTAÇÃO NO MOMENTO DA COMPRA
+        ========================= */
+
         let buyQuote = {};
 
         try {
@@ -634,7 +731,6 @@ $("#confirmBtn").addEventListener(
                     await Cotacoes.fetch([
                         asset.value
                     ]);
-
             }
 
         } catch (error) {
@@ -643,12 +739,17 @@ $("#confirmBtn").addEventListener(
                 "Erro ao buscar cotação:",
                 error
             );
-
         }
 
 
-        /* Ativos que não têm cotação (CDB, Outro) são salvos mesmo assim */
-        const SEM_COTACAO = ["CDB Nubank", "Outro"];
+        /* =========================
+           ATIVOS SEM COTAÇÃO
+        ========================= */
+
+        const SEM_COTACAO = [
+            "CDB Nubank",
+            "Outro"
+        ];
 
         let unitPrice =
             buyQuote[asset.value] ?? null;
@@ -658,7 +759,11 @@ $("#confirmBtn").addEventListener(
             Number(unitPrice) <= 0
         ) {
 
-            if (SEM_COTACAO.includes(asset.value)) {
+            if (
+                SEM_COTACAO.includes(
+                    asset.value
+                )
+            ) {
 
                 unitPrice = null;
 
@@ -669,24 +774,28 @@ $("#confirmBtn").addEventListener(
                 );
 
                 return;
-
             }
-
         }
 
 
-        /* Sem cotação: 1 unidade = R$ 1,00 */
+        /* =========================
+           QUANTIDADE
+        ========================= */
+
         const quantity =
             unitPrice
                 ? value / Number(unitPrice)
                 : value;
 
 
+        /* =========================
+           NOME DO ATIVO
+        ========================= */
+
         const selectedOption =
             asset.options[
             asset.selectedIndex
             ];
-
 
         const nameAsset =
             selectedOption
@@ -696,37 +805,51 @@ $("#confirmBtn").addEventListener(
                 : asset.value;
 
 
-        /*
-         * Dados enviados para a API hospedada.
-         */
+        /* =========================
+           RECORRÊNCIA PARA API
+        ========================= */
 
         const recorrenciaAPI = {
-
             none: "Único",
-
             weekly: "Semanal",
-
             monthly: "Mensal"
-
         };
 
 
+        /* =========================
+           DADOS PARA API
+        ========================= */
+
         const dadosAPI = {
-            id_carteira: Number(walletId),
 
-            ativo_aporte: asset.value,
-            name_ativo: nameAsset,
-            categoria_ativo: classOf(asset.value),
+            id_carteira:
+                Number(walletId),
 
-            tipo_aporte: type.value,
+            ativo_aporte:
+                asset.value,
 
-            quantidade_aporte: quantity,
-            valor_aporte: value,
+            name_ativo:
+                nameAsset,
 
-            data_aporte: date.value,
+            categoria_ativo:
+                classOf(asset.value),
+
+            tipo_aporte:
+                type.value,
+
+            quantidade_aporte:
+                quantity,
+
+            valor_aporte:
+                value,
+
+            data_aporte:
+                date.value,
 
             recorrencia_aporte:
-                recorrenciaAPI[recurrence.value] || "Único",
+                recorrenciaAPI[
+                recurrence.value
+                ] || "Único",
 
             observacao_aporte:
                 observation.value.trim()
@@ -738,17 +861,16 @@ $("#confirmBtn").addEventListener(
         );
 
 
-        try {
+        /* =========================
+           SALVAR NA API
+        ========================= */
 
-            /*
-             * PRIMEIRO salva no banco.
-             */
+        try {
 
             const resultado =
                 await cadastrarAporteAPI(
                     dadosAPI
                 );
-
 
             console.log(
                 "Aporte salvo na API:",
@@ -757,94 +879,25 @@ $("#confirmBtn").addEventListener(
 
 
             /*
-             * O endpoint atual não devolve
-             * o id_aporte.
-             *
-             * Criamos um identificador local
-             * apenas para controlar a interface.
+             * Recarrega os aportes diretamente
+             * do banco.
              */
-
-            const contribution = {
-
-                id:
-                    `local-${Date.now()}-${Math.random()
-                        .toString(36)
-                        .slice(2, 7)}`,
-
-                unitPrice,
-
-                asset:
-                    asset.value,
-
-                category:
-                    classOf(asset.value),
-
-                walletId,
-
-                amount:
-                    value,
-
-                type:
-                    type.value,
-
-                date:
-                    date.value,
-
-                recurrence:
-                    recurrence.value,
-
-                recurrenceDay:
-                    recurrenceDay.value || null,
-
-                observation:
-                    observation.value.trim(),
-
-                active:
-                    true
-
-            };
-
-
-            contributions.push(
-                contribution
-            );
-
-
-            logHistory(
-                "added",
-                contribution
-            );
-
-
-            /*
-             * Guarda apenas o cache da interface.
-             * O cadastro real já foi feito na API.
-             */
-
-            save();
-
-
-            render();
+            await carregarAportesAPI();
 
 
             clearForm();
 
+            render();
 
-            /*
-             * MANTÉM A ANIMAÇÃO ORIGINAL
-             */
 
+            /* Animação original */
             moneyRain();
 
 
-            /*
-             * MANTÉM A NOTIFICAÇÃO ORIGINAL
-             */
-
+            /* Notificação original */
             toast(
                 "Aporte feito com sucesso!"
             );
-
 
         } catch (error) {
 
@@ -853,14 +906,11 @@ $("#confirmBtn").addEventListener(
                 error
             );
 
-
             toast(
                 error.message ||
                 "Não foi possível salvar o aporte."
             );
-
         }
-
     }
 );
 
@@ -873,9 +923,11 @@ function clearForm() {
 
     observation.value = "";
 
-    recurrence.value = "none";
+    recurrence.value =
+        "none";
 
-    recurrenceDay.value = "";
+    recurrenceDay.value =
+        "";
 
     recurrenceDayBox.classList.add(
         "hidden"
@@ -884,9 +936,10 @@ function clearForm() {
     document
         .querySelectorAll("[data-value]")
         .forEach(btn =>
-            btn.classList.remove("selected")
+            btn.classList.remove(
+                "selected"
+            )
         );
-
 }
 
 
@@ -898,22 +951,34 @@ function assetIcon(name) {
 
     const icons = {
 
-        PETR4: ["P4", "green-bg"],
+        PETR4: [
+            "P4",
+            "green-bg"
+        ],
 
-        Bitcoin: ["₿", "orange-bg"],
+        Bitcoin: [
+            "₿",
+            "orange-bg"
+        ],
 
-        "CDB Nubank": ["CDB", "cyan-bg"],
+        "CDB Nubank": [
+            "CDB",
+            "cyan-bg"
+        ],
 
-        XPML11: ["FII", "yellow-bg"]
-
+        XPML11: [
+            "FII",
+            "yellow-bg"
+        ]
     };
-
 
     return (
         icons[name] ||
-        ["AT", "blue-bg"]
+        [
+            "AT",
+            "blue-bg"
+        ]
     );
-
 }
 
 
@@ -927,11 +992,13 @@ function formatDate(dateString) {
         return "-";
     }
 
-    const [year, month, day] =
-        dateString.split("-");
+    const [
+        year,
+        month,
+        day
+    ] = dateString.split("-");
 
     return `${day}/${month}/${year}`;
-
 }
 
 
@@ -941,39 +1008,38 @@ function formatDate(dateString) {
 
 function recurrenceText(item) {
 
-    if (item.recurrence === "weekly") {
+    if (
+        item.recurrence === "weekly"
+    ) {
 
         return "Semanal";
-
     }
 
-
-    if (item.recurrence === "monthly") {
+    if (
+        item.recurrence === "monthly"
+    ) {
 
         return `Mensal - dia ${item.recurrenceDay}`;
-
     }
 
-
     return "Único";
-
 }
 
 
 /* =========================
-   NOME DA CARTEIRA NA LISTA
+   NOME DA CARTEIRA
 ========================= */
 
 function escapeHtml(text) {
 
-    const div = document.createElement("div");
+    const div =
+        document.createElement("div");
 
-    div.textContent = text ?? "";
+    div.textContent =
+        text ?? "";
 
     return div.innerHTML;
-
 }
-
 
 function walletLabel(item) {
 
@@ -981,15 +1047,18 @@ function walletLabel(item) {
         typeof Carteiras === "undefined" ||
         Carteiras.list().length < 2
     ) {
+
         return "";
     }
 
-    const name = Carteiras.nameOf(
-        Carteiras.normalize(item.walletId)
-    );
+    const name =
+        Carteiras.nameOf(
+            Carteiras.normalize(
+                item.walletId
+            )
+        );
 
     return ` • ${escapeHtml(name)}`;
-
 }
 
 
@@ -999,30 +1068,42 @@ function walletLabel(item) {
 
 function updateAssetPrice() {
 
-    const box = $("#assetPrice");
+    const box =
+        $("#assetPrice");
 
-    const price = quotes[asset.value];
+    const price =
+        quotes[asset.value];
 
-    box.className = "asset-price";
+    box.className =
+        "asset-price";
 
-    box.textContent = price
-        ? `Cotação atual: ${money(price)}`
-        : "";
-
+    box.textContent =
+        price
+            ? `Cotação atual: ${money(price)}`
+            : "";
 }
 
 
-/* Quanto o aporte vale hoje */
+/* =========================
+   QUANTO VALE HOJE
+========================= */
+
 function nowInfo(item) {
 
-    const price = quotes[item.asset];
+    const price =
+        quotes[item.asset];
 
     if (!price) {
         return "";
     }
 
     if (!item.unitPrice) {
-        return `<span class="aporte-now">Cotação: ${money(price)}</span>`;
+
+        return `
+            <span class="aporte-now">
+                Cotação: ${money(price)}
+            </span>
+        `;
     }
 
     const value =
@@ -1030,27 +1111,29 @@ function nowInfo(item) {
         price;
 
     const diff =
-        value -
-        item.amount;
+        value - item.amount;
 
     const pct =
-        (diff / item.amount) *
-        100;
+        (diff / item.amount) * 100;
 
     const sign =
         diff >= 0
             ? "+"
             : "";
 
-    return `<span class="aporte-now ${diff >= 0 ? "up" : "down"}">
-        Hoje: ${money(value)} (${sign}${pct
-            .toFixed(2)
-            .replace(".", ",")}%)
-        • Cotação: ${money(price)}
-    </span>`;
-
+    return `
+        <span class="aporte-now ${diff >= 0 ? "up" : "down"}">
+            Hoje: ${money(value)}
+            (${sign}${pct.toFixed(2).replace(".", ",")}%)
+            • Cotação: ${money(price)}
+        </span>
+    `;
 }
 
+
+/* =========================
+   ALTERAÇÃO DO ATIVO
+========================= */
 
 asset.addEventListener(
     "change",
@@ -1063,12 +1146,12 @@ asset.addEventListener(
             updateAssetPrice();
 
             return;
-
         }
 
-
         Cotacoes
-            .fetch([asset.value])
+            .fetch([
+                asset.value
+            ])
             .then(q => {
 
                 Object.assign(
@@ -1077,12 +1160,9 @@ asset.addEventListener(
                 );
 
                 updateAssetPrice();
-
             });
 
-
         updateAssetPrice();
-
     }
 );
 
@@ -1095,8 +1175,9 @@ function render() {
 
     contributionList.innerHTML = "";
 
-
-    if (contributions.length === 0) {
+    if (
+        contributions.length === 0
+    ) {
 
         emptyState.style.display =
             "block";
@@ -1107,18 +1188,15 @@ function render() {
         updateCards();
 
         return;
-
     }
-
 
     emptyState.style.display =
         "none";
 
 
     /*
-       Mostra o mais recente
-       primeiro
-    */
+     * Mostra o mais recente primeiro.
+     */
 
     const sorted =
         [...contributions].sort(
@@ -1130,26 +1208,25 @@ function render() {
 
     sorted.forEach(item => {
 
-        const [icon, color] =
+        const [
+            icon,
+            color
+        ] =
             assetIcon(item.asset);
-
 
         const element =
             document.createElement("div");
-
 
         element.className =
             "aporte-item";
 
 
         element.innerHTML = `
-
             <div class="left">
 
                 <div class="asset-icon ${color}">
                     ${icon}
                 </div>
-
 
                 <div class="aporte-info">
 
@@ -1159,11 +1236,13 @@ function render() {
 
                     <p>
                         ${item.type}
-                        • ${formatDate(item.date)}${walletLabel(item)}
+                        • ${formatDate(item.date)}
+                        ${walletLabel(item)}
                     </p>
 
                     <small>
                         ${recurrenceText(item)}
+
                         ${item.observation
                 ? ` • ${item.observation}`
                 : ""
@@ -1189,29 +1268,23 @@ function render() {
 
 
                 ${item.recurrence !== "none"
+                ? `
+                            <label
+                                class="switch"
+                                title="Ativar/desativar recorrência"
+                            >
 
-                ?
+                                <input
+                                    type="checkbox"
+                                    data-id="${String(item.id)}"
+                                    ${item.active ? "checked" : ""}
+                                >
 
-                `
-                    <label
-                        class="switch"
-                        title="Ativar/desativar recorrência"
-                    >
+                                <span></span>
 
-                        <input
-                            type="checkbox"
-                            data-id="${String(item.id)}"
-                            ${item.active ? "checked" : ""}
-                        >
-
-                        <span></span>
-
-                    </label>
-                    `
-
-                :
-
-                ""
+                            </label>
+                        `
+                : ""
             }
 
 
@@ -1220,20 +1293,16 @@ function render() {
                     data-delete="${String(item.id)}"
                     title="Excluir aporte"
                 >
-
                     <i class="bi bi-trash"></i>
-
                 </button>
 
             </div>
-
         `;
 
 
         contributionList.appendChild(
             element
         );
-
     });
 
 
@@ -1245,7 +1314,6 @@ function render() {
 
 
     updateCards();
-
 }
 
 
@@ -1264,27 +1332,23 @@ contributionList.addEventListener(
             return;
         }
 
-
         const id =
             event.target.dataset.id;
-
 
         const item =
             contributions.find(
                 contribution =>
-                    String(contribution.id) ===
-                    String(id)
+                    String(
+                        contribution.id
+                    ) === String(id)
             );
-
 
         if (!item) {
             return;
         }
 
-
         item.active =
             event.target.checked;
-
 
         save();
 
@@ -1295,24 +1359,22 @@ contributionList.addEventListener(
                 ? "Aporte recorrente ativado."
                 : "Aporte recorrente desativado."
         );
-
     }
 );
 
 
 /* =========================
-   EXCLUIR
+   EXCLUIR APORTE
 ========================= */
 
 contributionList.addEventListener(
     "click",
-    event => {
+    async event => {
 
         const button =
             event.target.closest(
                 "[data-delete]"
             );
-
 
         if (!button) {
             return;
@@ -1326,8 +1388,9 @@ contributionList.addEventListener(
         const item =
             contributions.find(
                 contribution =>
-                    String(contribution.id) ===
-                    String(id)
+                    String(
+                        contribution.id
+                    ) === String(id)
             );
 
 
@@ -1349,30 +1412,172 @@ contributionList.addEventListener(
         }
 
 
-        contributions =
-            contributions.filter(
-                contribution =>
-                    String(contribution.id) !==
-                    String(id)
+        /* =========================
+           TOKEN
+        ========================= */
+
+        const token =
+            getToken();
+
+
+        if (!token) {
+
+            toast(
+                "Sessão expirada. Faça login novamente."
+            );
+
+            return;
+        }
+
+
+        /* =========================
+           EXCLUIR NO BANCO
+        ========================= */
+
+        try {
+
+            const response =
+                await fetch(
+                    `${API_BASE_URL}/aportes/excluir-aporte`,
+                    {
+                        method: "DELETE",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json",
+
+                            "Authorization":
+                                `Bearer ${token}`
+                        },
+
+                        body: JSON.stringify({
+                            id_aporte: id
+                        })
+                    }
+                );
+
+
+            const text =
+                await response.text();
+
+
+            let data;
+
+
+            try {
+
+                data =
+                    JSON.parse(text);
+
+            } catch {
+
+                throw new Error(
+                    `A API retornou uma resposta inválida (HTTP ${response.status}).`
+                );
+            }
+
+
+            /* =========================
+               TOKEN EXPIRADO
+            ========================= */
+
+            if (
+                response.status === 401
+            ) {
+
+                localStorage.removeItem(
+                    "token"
+                );
+
+                localStorage.removeItem(
+                    "usuario"
+                );
+
+                window.location.href =
+                    "login.php";
+
+                return;
+            }
+
+
+            /* =========================
+               ERRO DA API
+            ========================= */
+
+            if (
+                !response.ok ||
+                data.sucesso !== true
+            ) {
+
+                throw new Error(
+                    data.mensagem ||
+                    data.message ||
+                    `Erro HTTP ${response.status}.`
+                );
+            }
+
+
+            /* =========================
+               BANCO CONFIRMOU
+            ========================= */
+
+            console.log(
+                "Aporte excluído da API:",
+                data
             );
 
 
-        logHistory(
-            "removed",
-            item
-        );
+            /*
+             * Só remove da tela depois
+             * que a API confirmar.
+             */
+
+            contributions =
+                contributions.filter(
+                    contribution =>
+                        String(
+                            contribution.id
+                        ) !== String(id)
+                );
 
 
-        save();
+            /* Histórico */
+
+            logHistory(
+                "removed",
+                item
+            );
 
 
-        render();
+            /* Cache */
+
+            save();
 
 
-        toast(
-            "Aporte excluído."
-        );
+            /* Atualiza tela */
 
+            render();
+
+
+            /* Mensagem */
+
+            toast(
+                "Aporte excluído."
+            );
+
+
+        } catch (error) {
+
+            console.error(
+                "Erro ao excluir aporte:",
+                error
+            );
+
+            toast(
+                error.message ||
+                "Não foi possível excluir o aporte."
+            );
+        }
     }
 );
 
@@ -1385,7 +1590,9 @@ $("#clearAllBtn").addEventListener(
     "click",
     () => {
 
-        if (contributions.length === 0) {
+        if (
+            contributions.length === 0
+        ) {
 
             toast(
                 "Não há aportes para excluir."
@@ -1406,6 +1613,14 @@ $("#clearAllBtn").addEventListener(
         }
 
 
+        /*
+         * ATENÇÃO:
+         * Este botão ainda remove apenas da tela/cache.
+         *
+         * A exclusão individual acima
+         * já está integrada com a API.
+         */
+
         contributions.forEach(
             item => {
 
@@ -1413,7 +1628,6 @@ $("#clearAllBtn").addEventListener(
                     "removed",
                     item
                 );
-
             }
         );
 
@@ -1423,14 +1637,12 @@ $("#clearAllBtn").addEventListener(
 
         save();
 
-
         render();
 
 
         toast(
             "Todos os aportes foram excluídos."
         );
-
     }
 );
 
@@ -1444,30 +1656,28 @@ function updateCards() {
     const now =
         new Date();
 
-
     const month =
         now.getMonth();
-
 
     const year =
         now.getFullYear();
 
 
-    /*
-       Aportes realizados
-       neste mês
-    */
+    /* Aportes deste mês */
 
     const monthContributions =
         contributions.filter(
             item => {
+
+                if (!item.date) {
+                    return false;
+                }
 
                 const d =
                     new Date(
                         item.date +
                         "T00:00:00"
                     );
-
 
                 return (
                     d.getMonth() ===
@@ -1476,7 +1686,6 @@ function updateCards() {
                     d.getFullYear() ===
                     year
                 );
-
             }
         );
 
@@ -1493,16 +1702,13 @@ function updateCards() {
         money(total);
 
 
-    /*
-       Aportes recorrentes ativos
-    */
+    /* Aportes recorrentes ativos */
 
     const recurring =
         contributions.filter(
             item =>
                 item.recurrence !==
                 "none" &&
-
                 item.active
         );
 
@@ -1514,9 +1720,7 @@ function updateCards() {
         }`;
 
 
-    /*
-       Média
-    */
+    /* Média */
 
     const values =
         contributions.map(
@@ -1527,13 +1731,11 @@ function updateCards() {
 
     const average =
         values.length
-
             ? values.reduce(
                 (a, b) =>
                     a + b,
                 0
             ) / values.length
-
             : 0;
 
 
@@ -1541,9 +1743,7 @@ function updateCards() {
         money(average);
 
 
-    /*
-       Próximo aporte
-    */
+    /* Próximo aporte */
 
     const monthly =
         recurring.find(
@@ -1569,9 +1769,7 @@ function updateCards() {
 
         nextContribution.textContent =
             "Nenhum aporte programado";
-
     }
-
 }
 
 
@@ -1586,7 +1784,6 @@ $("#notificationBtn").addEventListener(
         toast(
             "Você não possui novas notificações."
         );
-
     }
 );
 
@@ -1598,18 +1795,19 @@ $("#notificationBtn").addEventListener(
 render();
 
 
-/* Busca as cotações agora
-   e a cada 60s */
+/* =========================
+   COTAÇÕES
+========================= */
 
 if (
-    typeof Cotacoes !==
-    "undefined"
+    typeof Cotacoes !== "undefined"
 ) {
 
     Cotacoes.watch(
-
         () => [
+
             asset.value,
+
             ...contributions.map(
                 item =>
                     item.asset
@@ -1623,10 +1821,22 @@ if (
 
             updateAssetPrice();
 
-            render();
 
+            carregarAportesAPI()
+                .then(() => {
+
+                    render();
+
+                })
+                .catch(error => {
+
+                    console.error(
+                        "Erro ao carregar aportes:",
+                        error
+                    );
+
+                    render();
+                });
         }
-
     );
-
 }

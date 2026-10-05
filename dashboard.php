@@ -10,447 +10,441 @@
 
     <script src="js/usuario-global.js"></script>
 
+    <link rel="stylesheet" href="css/Loading.css">
     <link rel="stylesheet" href="css/dashboard.css">
     <script src="js/avatar-global.js"></script>
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet"
-    >
-
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/Loading.css">
     <link
         rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
-    >
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link
-        rel="stylesheet" href="css/tema.css"
-    >
+        rel="stylesheet" href="css/tema.css">
     <script src="js/tema.js"></script>
 </head>
 
 <body>
 
-<div class="app">
+    <div class="app">
 
-    <!-- =========================
+        <!-- =========================
          NAVBAR SUPERIOR
     ========================== -->
 
-    <aside class="sidebar">
+        <aside class="sidebar">
 
-        <div class="top">
+            <div class="top">
 
-            <!-- LOGO -->
+                <!-- LOGO -->
 
-            <a href="dashboard.php" class="logo">
+                <a href="dashboard.php" class="logo">
 
-                <div class="logo-box">
-                    <i class="bi bi-graph-up"></i>
-                </div>
-
-                <span>Accuracy</span>
-
-            </a>
-
-
-            <!-- DIVISOR -->
-
-            <div class="divider"></div>
-
-
-            <!-- MENU -->
-
-            <nav class="menu">
-
-                <a href="dashboard.php" class="active">
-                    <i class="bi bi-grid"></i>
-                    <span>Dashboard</span>
-                </a>
-
-                <a href="carteira.php">
-                    <i class="bi bi-wallet2"></i>
-                    <span>Carteira</span>
-                </a>
-
-                <a href="historico.php">
-                    <i class="bi bi-clock-history"></i>
-                    <span>Histórico</span>
-                </a>
-
-                <a href="aportes.php">
-                    <i class="bi bi-plus-circle"></i>
-                    <span>Aportes</span>
-                </a>
-
-                
-
-                <a href="Cursos.php">
-                    <i class="bi bi-mortarboard"></i>
-                    <span>Cursos</span>
-                </a>
-
-                <a href="perfil.php">
-                    <i class="bi bi-person"></i>
-                    <span>Perfil</span>
-                </a>
-
-            </nav>
-
-        </div>
-
-
-        <!-- =========================
-             ÁREA DO USUÁRIO
-        ========================== -->
-
-        <div class="user-area">
-
-
-            <!-- NOTIFICAÇÕES -->
-
-            <div class="icons">
-
-                <div class="notification-container">
-
-                    <button
-                        class="notification-btn"
-                        type="button"
-                        aria-label="Notificações"
-                        id="notificationBtn"
-                    >
-
-                        <i class="bi bi-bell"></i>
-
-                        <span
-                            class="notification-dot"
-                            id="notificationDot"
-                        ></span>
-
-                    </button>
-
-
-                    <!-- PAINEL DE NOTIFICAÇÕES -->
-
-                    <div
-                        class="notification-panel"
-                        id="notificationPanel"
-                    >
-
-                        <div class="notification-header">
-
-                            <h3>Notificações</h3>
-
-                            <button
-                                type="button"
-                                id="markRead"
-                            >
-                                Marcar como lidas
-                            </button>
-
-                        </div>
-
-
-                        <div class="notification-list">
-
-                            <div class="empty-notifications">
-                                <i class="bi bi-bell-slash"></i>
-                                <strong>Nenhuma notificação</strong>
-                                <p>Você não possui novas notificações.</p>
-                            </div>
-
-                        </div>
-
-
-                        <div class="notification-footer">
-
-                            <a href="historico.php">
-                                Ver todas as notificações
-                            </a>
-
-                        </div>
-
+                    <div class="logo-box">
+                        <i class="bi bi-graph-up"></i>
                     </div>
 
-                </div>
+                    <span>Accuracy</span>
+
+                </a>
+
+
+                <!-- DIVISOR -->
+
+                <div class="divider"></div>
+
+
+                <!-- MENU -->
+
+                <nav class="menu">
+
+                    <a href="dashboard.php" class="active">
+                        <i class="bi bi-grid"></i>
+                        <span>Dashboard</span>
+                    </a>
+
+                    <a href="carteira.php">
+                        <i class="bi bi-wallet2"></i>
+                        <span>Carteira</span>
+                    </a>
+
+                    <a href="historico.php">
+                        <i class="bi bi-clock-history"></i>
+                        <span>Histórico</span>
+                    </a>
+
+                    <a href="aportes.php">
+                        <i class="bi bi-plus-circle"></i>
+                        <span>Aportes</span>
+                    </a>
+
+
+
+                    <a href="Cursos.php">
+                        <i class="bi bi-mortarboard"></i>
+                        <span>Cursos</span>
+                    </a>
+
+                    <a href="perfil.php">
+                        <i class="bi bi-person"></i>
+                        <span>Perfil</span>
+                    </a>
+
+                </nav>
 
             </div>
 
 
             <!-- =========================
+             ÁREA DO USUÁRIO
+        ========================== -->
+
+            <div class="user-area">
+
+
+                <!-- NOTIFICAÇÕES -->
+
+                <div class="icons">
+
+                    <div class="notification-container">
+
+                        <button
+                            class="notification-btn"
+                            type="button"
+                            aria-label="Notificações"
+                            id="notificationBtn">
+
+                            <i class="bi bi-bell"></i>
+
+                            <span
+                                class="notification-dot"
+                                id="notificationDot"></span>
+
+                        </button>
+
+
+                        <!-- PAINEL DE NOTIFICAÇÕES -->
+
+                        <div
+                            class="notification-panel"
+                            id="notificationPanel">
+
+                            <div class="notification-header">
+
+                                <h3>Notificações</h3>
+
+                                <button
+                                    type="button"
+                                    id="markRead">
+                                    Marcar como lidas
+                                </button>
+
+                            </div>
+
+
+                            <div class="notification-list">
+
+                                <div class="empty-notifications">
+                                    <i class="bi bi-bell-slash"></i>
+                                    <strong>Nenhuma notificação</strong>
+                                    <p>Você não possui novas notificações.</p>
+                                </div>
+
+                            </div>
+
+
+                            <div class="notification-footer">
+
+                                <a href="historico.php">
+                                    Ver todas as notificações
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =========================
                  USUÁRIO
             ========================== -->
 
-            <div class="user">
-
-                <a href="perfil.php">
-
-                    <div class="avatar">
-                        N
-                    </div>
-
-                </a>
-
-                <div class="user-info">
+                <div class="user">
 
                     <a href="perfil.php">
 
-                        <strong>
-                            Nome da pessoa
-                        </strong>
+                        <div class="avatar">
+                            N
+                        </div>
 
                     </a>
 
-                    <p>
-                        Perfil do usuário
-                    </p>
+                    <div class="user-info">
+
+                        <a href="perfil.php">
+
+                            <strong>
+                                Nome da pessoa
+                            </strong>
+
+                        </a>
+
+                        <p>
+                            Perfil do usuário
+                        </p>
+
+                    </div>
 
                 </div>
 
             </div>
 
-        </div>
-
-    </aside>
+        </aside>
 
 
-    <!-- =========================
+        <!-- =========================
          MAIN
     ========================== -->
 
-    <main class="main">
+        <main class="main">
 
 
-        <header class="topbar">
-
-            <div>
-
-                <h1>
-                    Dashboard
-                </h1>
-
-                <p>
-                    Quinta-feira, 18 de junho de 2026
-                </p>
-
-            </div>
-
-        </header>
-
-
-        <!-- CARD PRINCIPAL -->
-
-        <section class="card-big">
-
-            <div>
-
-                <span class="card-label">
-                    SALDO TOTAL DA CARTEIRA
-                </span>
-
-                <h2>
-                    R$ 48.392,17
-                </h2>
-
-
-                <div class="stats">
-
-                    <div>
-                        <p>Total investido</p>
-                        <strong>R$ 41.000,00</strong>
-                    </div>
-
-                    <div>
-                        <p>Saldo livre</p>
-                        <strong>R$ 3.200,00</strong>
-                    </div>
-
-                    <div>
-                        <p>Rendimento</p>
-                        <strong class="green">R$ 4.192,17</strong>
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <div class="badge">
-                ▲ +10,2% total
-            </div>
-
-        </section>
-
-
-        <!-- CARDS -->
-
-        <section class="grid">
-
-            <div class="card">
-                <div class="card-icon">
-                    <i class="bi bi-shield-check"></i>
-                </div>
-                <h4>Renda fixa</h4>
-                <p>R$ 18.400</p>
-                <span class="green">▲ +0,8% mês</span>
-            </div>
-
-            <div class="card">
-                <div class="card-icon">
-                    <i class="bi bi-graph-up-arrow"></i>
-                </div>
-                <h4>Renda variável</h4>
-                <p>R$ 21.600</p>
-                <span class="green">▲ +2,1% mês</span>
-            </div>
-
-            <div class="card">
-                <div class="card-icon">
-                    <i class="bi bi-currency-bitcoin"></i>
-                </div>
-                <h4>Cripto</h4>
-                <p>R$ 5.192</p>
-                <span class="green">▲ +4,7% mês</span>
-            </div>
-
-            <div class="card">
-                <div class="card-icon">
-                    <i class="bi bi-globe2"></i>
-                </div>
-                <h4>Internacional</h4>
-                <p>R$ 3.200</p>
-                <span class="red">▼ -0,3% mês</span>
-            </div>
-
-        </section>
-
-
-        <!-- GRÁFICO -->
-
-        <section class="chart">
-
-            <div class="chart-header">
+            <header class="topbar">
 
                 <div>
 
-                    <h3>Evolução da carteira</h3>
+                    <h1>
+                        Dashboard
+                    </h1>
 
                     <p>
-                        Acompanhe o crescimento dos seus investimentos
+                        Quinta-feira, 18 de junho de 2026
                     </p>
 
                 </div>
 
-
-                <button class="chart-filter">
-
-                    Últimos 6 meses
-
-                    <i class="bi bi-chevron-down"></i>
-
-                </button>
-
-            </div>
+            </header>
 
 
-            <div class="chart-box">
+            <!-- CARD PRINCIPAL -->
 
-                <div class="chart-placeholder">
+            <section class="card-big">
 
-                    <i class="bi bi-bar-chart-line"></i>
+                <div>
 
-                    <span>
-                        Gráfico da evolução da carteira
+                    <span class="card-label">
+                        SALDO TOTAL DA CARTEIRA
                     </span>
+
+                    <h2>
+                        R$ 48.392,17
+                    </h2>
+
+
+                    <div class="stats">
+
+                        <div>
+                            <p>Total investido</p>
+                            <strong>R$ 41.000,00</strong>
+                        </div>
+
+                        <div>
+                            <p>Saldo livre</p>
+                            <strong>R$ 3.200,00</strong>
+                        </div>
+
+                        <div>
+                            <p>Rendimento</p>
+                            <strong class="green">R$ 4.192,17</strong>
+                        </div>
+
+                    </div>
 
                 </div>
 
-            </div>
 
-        </section>
+                <div class="badge">
+                    ▲ +10,2% total
+                </div>
 
-
-    </main>
-
-
-</div>
+            </section>
 
 
-<script>
+            <!-- CARDS -->
 
-    const notificationBtn =
-        document.getElementById("notificationBtn");
+            <section class="grid">
 
-    const notificationPanel =
-        document.getElementById("notificationPanel");
+                <div class="card">
+                    <div class="card-icon">
+                        <i class="bi bi-shield-check"></i>
+                    </div>
+                    <h4>Renda fixa</h4>
+                    <p>R$ 18.400</p>
+                    <span class="green">▲ +0,8% mês</span>
+                </div>
 
-    const notificationDot =
-        document.getElementById("notificationDot");
+                <div class="card">
+                    <div class="card-icon">
+                        <i class="bi bi-graph-up-arrow"></i>
+                    </div>
+                    <h4>Renda variável</h4>
+                    <p>R$ 21.600</p>
+                    <span class="green">▲ +2,1% mês</span>
+                </div>
 
-    const markRead =
-        document.getElementById("markRead");
+                <div class="card">
+                    <div class="card-icon">
+                        <i class="bi bi-currency-bitcoin"></i>
+                    </div>
+                    <h4>Cripto</h4>
+                    <p>R$ 5.192</p>
+                    <span class="green">▲ +4,7% mês</span>
+                </div>
 
+                <div class="card">
+                    <div class="card-icon">
+                        <i class="bi bi-globe2"></i>
+                    </div>
+                    <h4>Internacional</h4>
+                    <p>R$ 3.200</p>
+                    <span class="red">▼ -0,3% mês</span>
+                </div>
 
-    /* Abrir / fechar painel */
-
-    notificationBtn.addEventListener("click", function(event) {
-
-        event.stopPropagation();
-
-        notificationPanel.classList.toggle("show");
-
-    });
-
-
-    /* Não fechar ao clicar dentro do painel */
-
-    notificationPanel.addEventListener("click", function(event) {
-
-        event.stopPropagation();
-
-    });
-
-
-    /* Fechar ao clicar fora */
-
-    document.addEventListener("click", function() {
-
-        notificationPanel.classList.remove("show");
-
-    });
+            </section>
 
 
-    /* Marcar como lidas */
+            <!-- GRÁFICO -->
 
-    markRead.addEventListener("click", function() {
+            <section class="chart">
 
-        const unreadItems =
-            document.querySelectorAll(
-                ".notification-item.unread"
-            );
+                <div class="chart-header">
 
-        unreadItems.forEach(function(item) {
+                    <div>
 
-            item.classList.remove("unread");
+                        <h3>Evolução da carteira</h3>
 
-            const unreadDot =
-                item.querySelector(".unread-dot");
+                        <p>
+                            Acompanhe o crescimento dos seus investimentos
+                        </p>
 
-            if (unreadDot) {
+                    </div>
 
-                unreadDot.remove();
 
-            }
+                    <button class="chart-filter">
+
+                        Últimos 6 meses
+
+                        <i class="bi bi-chevron-down"></i>
+
+                    </button>
+
+                </div>
+
+
+                <div class="chart-box">
+
+                    <div class="chart-placeholder">
+
+                        <i class="bi bi-bar-chart-line"></i>
+
+                        <span>
+                            Gráfico da evolução da carteira
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+        </main>
+
+
+    </div>
+
+
+    <script>
+        const notificationBtn =
+            document.getElementById("notificationBtn");
+
+        const notificationPanel =
+            document.getElementById("notificationPanel");
+
+        const notificationDot =
+            document.getElementById("notificationDot");
+
+        const markRead =
+            document.getElementById("markRead");
+
+
+        /* Abrir / fechar painel */
+
+        notificationBtn.addEventListener("click", function(event) {
+
+            event.stopPropagation();
+
+            notificationPanel.classList.toggle("show");
 
         });
 
-        notificationDot.style.display = "none";
 
-    });
+        /* Não fechar ao clicar dentro do painel */
 
-</script>
-<script src="js/cotacoes.js"></script>
-<script src="js/resumoCarteiras.js"></script>
-<script src="js/dashboard-total.js"></script>
+        notificationPanel.addEventListener("click", function(event) {
 
+            event.stopPropagation();
+
+        });
+
+
+        /* Fechar ao clicar fora */
+
+        document.addEventListener("click", function() {
+
+            notificationPanel.classList.remove("show");
+
+        });
+
+
+        /* Marcar como lidas */
+
+        markRead.addEventListener("click", function() {
+
+            const unreadItems =
+                document.querySelectorAll(
+                    ".notification-item.unread"
+                );
+
+            unreadItems.forEach(function(item) {
+
+                item.classList.remove("unread");
+
+                const unreadDot =
+                    item.querySelector(".unread-dot");
+
+                if (unreadDot) {
+
+                    unreadDot.remove();
+
+                }
+
+            });
+
+            notificationDot.style.display = "none";
+
+        });
+    </script>
+    <script src="js/cotacoes.js"></script>
+    <script src="js/resumoCarteiras.js"></script>
+    <script src="js/loading.js"></script>
+    <script src="js/dashboard-extra.js"></script>
+    <script src="js/dashboard-total.js"></script>
 
 </body>
+
 </html>

@@ -532,3 +532,14 @@ input:focus{
         transition:none !important;
     }
 }
+.mensagem-erro {
+    display: flex;
+    color: #ff4d4d;
+    font-size: 13px;
+    margin-top: -15px;
+    margin-bottom: 5px;
+}
+
+.input-erro {
+    border: 1px solid #ff4d4d !important;
+}

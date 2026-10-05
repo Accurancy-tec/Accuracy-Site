@@ -665,3 +665,14 @@ button:active{
         transition:none !important;
     }
 }
+.mensagem-erro {
+    display: block;
+    color: #ff4d4d;
+    font-size: 13px;
+    margin-top: 3px;
+    margin-bottom: 5px;
+}
+
+.input-erro {
+    border: 1px solid #ff4d4d !important;
+}

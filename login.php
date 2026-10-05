@@ -74,9 +74,11 @@
 
                     <label>E-mail</label>
                     <input type="email" placeholder="seu@email.com" name="email_usuario" id="email_usuario">
+                    <small id="erroEmail" class="mensagem-erro"></small>
 
                     <label>Senha</label>
                     <input type="password" placeholder="••••••••" name="senha_usuario" id="senha_usuario">
+                    <small id="erroSenha" class="mensagem-erro"></small>
 
                     <a href="#">Esqueci minha senha</a>
 

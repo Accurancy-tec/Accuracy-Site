@@ -532,3 +532,62 @@ profileEditForm.addEventListener("submit", event => {
     closeProfileEditModal();
 
 });
+/* =========================
+   NOME DO USUÁRIO VINDO DO BANCO
+========================= */
+
+(async function carregarNomeDoBanco() {
+
+    try {
+
+        const resposta = await fetch(
+            "https://accuracyappapi.onrender.com/user/perfil.php",
+            {
+                method: "POST",
+                headers: {
+                    "Authorization": "Bearer " + localStorage.getItem("token")
+                }
+            }
+        );
+
+        const dados = await resposta.json();
+
+        if (!dados.sucesso || !dados.nome_usuario) {
+            return;
+        }
+
+        const nome = dados.nome_usuario;
+
+        /* Nome no menu, no card do perfil e na linha "Nome" */
+        if (navUserName) navUserName.textContent = nome;
+        if (profileCardName) profileCardName.textContent = nome;
+
+        document.querySelectorAll(".info-row .info-content").forEach(content => {
+
+            const label = content.querySelector("span");
+            const value = content.querySelector("p");
+
+            if (label && value && label.textContent.trim() === "Nome") {
+                value.textContent = nome;
+            }
+
+        });
+
+        /* Mantém o nome atualizado para as outras páginas */
+        const salvo = JSON.parse(localStorage.getItem("usuario") || "{}");
+        salvo.nome_usuario = nome;
+        localStorage.setItem("usuario", JSON.stringify(salvo));
+
+        const editado = JSON.parse(localStorage.getItem(PROFILE_KEY) || "null");
+        if (editado) {
+            editado.nome = nome;
+            localStorage.setItem(PROFILE_KEY, JSON.stringify(editado));
+        }
+
+        if (editNome) editNome.value = nome;
+
+    } catch (erro) {
+        console.error("Erro ao buscar o nome do usuário:", erro);
+    }
+
+})();

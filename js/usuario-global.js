@@ -1,6 +1,6 @@
 (function () {
 
-    const LOGIN_URL = "http://localhost/main_front_igor/login.php";
+    const LOGIN_URL = "login.php";
 
     const token = localStorage.getItem("token");
 

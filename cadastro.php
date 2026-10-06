@@ -217,7 +217,7 @@
 
 </div>
 
-<script src="js/usuario.js"></script>
-<script src="js/mascara.js"></script>
+<script src="js/usuario.js?v=3"></script>
+<script src="js/mascara.js?v=3"></script>
 </body>
 </html>

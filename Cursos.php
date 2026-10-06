@@ -17,7 +17,7 @@
 
     <link
         rel="stylesheet"
-        href="css/tema.css"
+        href="css/Tema.css"
     >
 
     <link
@@ -48,7 +48,7 @@
 
     <script src="js/avatar-global.js"></script>
 
-    <script src="js/tema.js"></script>
+    <script src="js/Tema.js"></script>
 
 </head>
 
@@ -148,7 +148,7 @@
                 
 
                 <a
-                    href="cursos.php"
+                    href="Cursos.php"
                     class="active"
                 >
 

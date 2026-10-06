@@ -441,7 +441,7 @@
     </script>
     <script src="js/cotacoes.js"></script>
     <script src="js/resumoCarteiras.js"></script>
-    <script src="js/loading.js"></script>
+    <script src="js/Loading.js"></script>
     <script src="js/dashboard-extra.js"></script>
     <script src="js/dashboard-total.js"></script>
 

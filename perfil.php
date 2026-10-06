@@ -10,7 +10,7 @@
 
     <script src="js/usuario-global.js"></script>
 
-    <link rel="stylesheet" href="css/tema.css">
+    <link rel="stylesheet" href="css/Tema.css">
     <link rel="stylesheet" href="css/perfil.css">
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
@@ -19,7 +19,7 @@
     <link rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
-    <script src="js/tema.js"></script>
+    <script src="js/Tema.js"></script>
 
 </head>
 

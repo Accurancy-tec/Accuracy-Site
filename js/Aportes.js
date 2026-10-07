@@ -876,6 +876,19 @@ $("#confirmBtn").addEventListener(
                 "Aporte salvo na API:",
                 resultado
             );
+            logHistory("added", {
+                id: Date.now(),
+                asset: asset.value,
+                category: classOf(asset.value),
+                type: type.value,
+                amount: value,
+                date: date.value,
+                recurrence: recurrence.value,
+                recurrenceDay: recurrenceDay.value
+                    ? Number(recurrenceDay.value)
+                    : null,
+                observation: observation.value.trim()
+            });
 
 
             /*

@@ -283,12 +283,9 @@
                 0
             );
 
-            const limite = k === 0
-                ? chaveData(agora)
-                : chaveData(fimDoMes);
-
+            const limite = chaveData(fimDoMes);
             const acumulado = dadosGrafico.aportes
-                .filter(a => a.data_aporte && a.data_aporte <= limite)
+                .filter(a => a.data_aporte && String(a.data_aporte).slice(0, 10) <= limite)
                 .reduce((soma, a) => {
 
                     const valor = Number(a.valor_aporte) || 0;
@@ -475,6 +472,7 @@
                 ResumoCarteiras.load(),
                 carregarHistorico()
             ]);
+            console.log("aportes do gráfico:", aportes);
 
             const simbolos = [
                 ...new Set(resumo.flatMap(c => c.ativos.map(a => a.simbolo_ativo)))

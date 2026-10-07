@@ -388,6 +388,7 @@
     <script src="js/carteiras.js"></script>
     <script src="js/cotacoes.js"></script>
     <script src="js/Aportes.js?v=7"></script>
+    <script src="js/ajuste-remocoes.js?v=1"></script>
     <script src="js/Loading.js"></script>
     <script src="js/aportesExtra.js"></script>
 

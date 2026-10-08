@@ -44,6 +44,7 @@
             opacity: .85;
         }
     </style>
+    <script src="js/auth.js?v=1"></script>
     <script src="js/usuario-global.js"></script>
 
     <link rel="stylesheet"

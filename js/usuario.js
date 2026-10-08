@@ -266,7 +266,17 @@ if (formulario) {
                     "token",
                     resultado.token
                 );
-
+                
+                if (resultado.refreshToken) {
+                    localStorage.setItem(
+                        "refreshToken",
+                        resultado.refreshToken
+                    );
+                } else {
+                    localStorage.removeItem(
+                        "refreshToken"
+                    );
+                }
 
                 localStorage.setItem(
                     "usuario",

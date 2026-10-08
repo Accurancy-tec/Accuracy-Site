@@ -52,6 +52,7 @@
             logout.style.cursor = "pointer";
             logout.addEventListener("click", function () {
                 localStorage.removeItem("token");
+                localStorage.removeItem("refreshToken");
                 localStorage.removeItem("usuario");
                 localStorage.removeItem("accuracy_profile_data");
                 window.location.href = LOGIN_URL;

@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Dashboard - Accuracy</title>
-
+    <script src="js/auth.js?v=1"></script>
     <script src="js/usuario-global.js"></script>
 
     <link rel="stylesheet" href="css/Loading.css">

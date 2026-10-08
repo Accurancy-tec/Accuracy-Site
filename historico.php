@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 <script src="js/Tema.js"></script>
 <script src="js/avatar-global.js"></script>
+<script src="js/auth.js?v=1"></script>
 <script src="js/usuario-global.js"></script>
 </head>
 

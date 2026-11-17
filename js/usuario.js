@@ -1,4 +1,4 @@
-const API_URL = "https://accuracyappapi.onrender.com/";
+const API_URL = "http://localhost:8080/";
 
 
 /* =========================================================
@@ -158,7 +158,12 @@ if (FormularioCadastro) {
 
 
 /* =========================================================
-   LOGIN
+   LOGIN COM AUTH 2.0
+========================================================= */
+
+
+/* =========================================================
+   LOGIN COM AUTH 2.0
 ========================================================= */
 
 const formulario = document.getElementById("formLogin");
@@ -169,19 +174,8 @@ if (formulario) {
 
         event.preventDefault();
 
-
-        const DadosForm =
-            new FormData(formulario);
-
-        const dados =
-            Object.fromEntries(DadosForm.entries());
-
-
-        console.log(
-            "Dados de login enviados:",
-            dados
-        );
-
+        const DadosForm = new FormData(formulario);
+        const dados = Object.fromEntries(DadosForm.entries());
 
         try {
 
@@ -189,116 +183,30 @@ if (formulario) {
                 `${API_URL}auth/loginSite`,
                 {
                     method: "POST",
-
                     headers: {
                         "Content-Type": "application/json"
                     },
-
                     body: JSON.stringify(dados)
                 }
             );
 
+            const resultado = await resposta.json();
 
-            console.log(
-                "Status HTTP:",
-                resposta.status
-            );
+            console.log("STATUS HTTP:", resposta.status);
+            console.log("RESPOSTA COMPLETA DA API:", resultado);
+            console.log("TOKEN EXISTE:", !!resultado.token);
+            console.log("REFRESH TOKEN EXISTE:", !!resultado.refreshToken);
 
-
-            const texto =
-                await resposta.text();
-
-
-            console.log(
-                "Resposta bruta do login:",
-                texto
-            );
-
-
-            let resultado;
-
-
-            try {
-
-                resultado =
-                    JSON.parse(texto);
-
-            } catch (erro) {
-
-                throw new Error(
-                    "A API de login não retornou JSON. Resposta: " +
-                    texto
-                );
-
-            }
-
-
-            console.log(
-                "Resultado da API:",
-                resultado
-            );
-
-
-            console.log(
-                "JSON:",
-                JSON.stringify(resultado, null, 2)
-            );
-
-
-            if (resultado.success === true) {
-
-                console.log(
-                    "Login realizado com sucesso."
-                );
-
-
-                localStorage.removeItem(
-                    "accuracy_profile_data"
-                );
-
-
-                localStorage.removeItem(
-                    "accuracy_avatar"
-                );
-
-
-                localStorage.setItem(
-                    "token",
-                    resultado.token
-                );
-
-
-                localStorage.setItem(
-                    "usuario",
-                    JSON.stringify(resultado.user)
-                );
-
-
-                window.location.href =
-                    "dashboard.php";
-
-
-            } else {
+            if (!resposta.ok || resultado.success !== true) {
 
                 const mensagem =
                     resultado.message ||
                     resultado.mensagem ||
                     "E-mail ou senha incorretos.";
 
+                const mensagemUsuario = tratarErroLogin(mensagem);
 
-                console.error(
-                    "LOGIN RECUSADO:",
-                    mensagem
-                );
-
-
-                const mensagemUsuario =
-                    tratarErroLogin(mensagem);
-
-
-                if (
-                    mensagem.toLowerCase().includes("senha")
-                ) {
+                if (mensagem.toLowerCase().includes("senha")) {
 
                     mostrarErroInput(
                         "senha_usuario",
@@ -316,14 +224,49 @@ if (formulario) {
 
                 }
 
+                return;
             }
 
+            // Verifica se a API retornou o token.
+            if (!resultado.token) {
+                throw new Error(
+                    "A API não retornou o token de autenticação."
+                );
+            }
+
+            // Limpa dados antigos do perfil.
+            localStorage.removeItem("accuracy_profile_data");
+            localStorage.removeItem("accuracy_avatar");
+
+            // Salva o token de autenticação.
+            localStorage.setItem("token", resultado.token);
+
+            // Salva refreshToken somente se existir.
+            if (resultado.refreshToken) {
+                localStorage.setItem(
+                    "refreshToken",
+                    resultado.refreshToken
+                );
+            } else {
+                localStorage.removeItem("refreshToken");
+            }
+
+            // Salva os dados do usuário.
+            localStorage.setItem(
+                "usuario",
+                JSON.stringify(resultado.user)
+            );
+
+            console.log("LOGIN REALIZADO COM SUCESSO!");
+
+            window.location.href = "dashboard.php";
 
         } catch (erro) {
 
-            console.error(
-                "ERRO NO LOGIN:",
-                erro
+            console.error("ERRO NO LOGIN:", erro);
+
+            alert(
+                "Não foi possível realizar o login. Tente novamente."
             );
 
         }
@@ -331,6 +274,7 @@ if (formulario) {
     });
 
 }
+
 
 
 /* =========================================================

@@ -1,3 +1,4 @@
+
 (function () {
 
     const LOGIN_URL = "login.php";
@@ -213,12 +214,21 @@
 
     }
 
-    if (!token || !user) {
+    // O token é o dado obrigatório para manter a sessão.
+    // O objeto "usuario" é apenas um cache local e pode estar ausente
+    // ou desatualizado; isso, sozinho, não deve expulsar o usuário.
+    if (!token) {
 
         encerrarSessao();
 
         return;
 
+    }
+
+    // Mantém a página funcionando enquanto os dados do usuário
+    // são carregados novamente pela API.
+    if (!user || typeof user !== "object") {
+        user = {};
     }
 
 

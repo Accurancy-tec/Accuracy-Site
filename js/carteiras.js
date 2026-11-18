@@ -26,6 +26,18 @@ const Carteiras = (function () {
 
     const MAIN_ID = null;
 
+    /*
+    Valores padrão enviados ao criar uma carteira.
+    O back-end agora exige estilo_carteira e meta_carteira
+    (o campo saldo_livre_carteira deixou de ser usado).
+    Quando existir uma tela para escolher o estilo e a meta,
+    é só trocar estes valores pelos escolhidos pelo usuário.
+    */
+
+    const DEFAULT_WALLET_STYLE = "Moderado";
+
+    const DEFAULT_WALLET_GOAL = 0;
+
     let wallets = [];
 
 
@@ -58,6 +70,23 @@ const Carteiras = (function () {
         }
 
         return String(id);
+    }
+
+
+    /*
+    =====================================================
+    SESSÃO EXPIRADA (401)
+    =====================================================
+    */
+
+    function sessaoExpirada() {
+
+        localStorage.removeItem("token");
+        localStorage.removeItem("usuario");
+
+        if (!window.location.pathname.endsWith("login.php")) {
+            window.location.href = "login.php";
+        }
     }
 
 
@@ -112,6 +141,16 @@ const Carteiras = (function () {
                 "Resposta das carteiras:",
                 data
             );
+
+
+            if (response.status === 401) {
+
+                sessaoExpirada();
+
+                wallets = [];
+
+                return wallets;
+            }
 
 
             /*
@@ -468,8 +507,11 @@ const Carteiras = (function () {
                                 tipo_carteira:
                                     "Real",
 
-                                saldo_livre_carteira:
-                                    0
+                                estilo_carteira:
+                                    DEFAULT_WALLET_STYLE,
+
+                                meta_carteira:
+                                    DEFAULT_WALLET_GOAL
 
                             })
 
@@ -519,6 +561,17 @@ const Carteiras = (function () {
                 data
 
             );
+
+
+            if (response.status === 401) {
+
+                sessaoExpirada();
+
+                return {
+                    error:
+                        "Sessão expirada. Faça login novamente."
+                };
+            }
 
 
             if (

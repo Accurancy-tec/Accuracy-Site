@@ -289,7 +289,7 @@
             <div class="user">
 
 
-                <a href="perfil.html">
+                <a href="perfil.php">
 
                     <div class="avatar">
                         N
@@ -301,7 +301,7 @@
                 <div class="user-info">
 
 
-                    <a href="perfil.html">
+                    <a href="perfil.php">
 
                         <strong>
                             Nome da pessoa

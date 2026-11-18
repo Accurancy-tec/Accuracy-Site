@@ -643,6 +643,148 @@
 
 </script>
 
+<!-- =========================
+     MODAL - ALTERAR SENHA (código por e-mail)
+========================= -->
+
+<div class="profile-edit-modal-overlay" id="senhaModalOverlay">
+
+    <div class="profile-edit-modal">
+
+        <div class="avatar-modal-header">
+            <h3>Alterar senha</h3>
+            <button class="avatar-modal-close" id="senhaModalClose" type="button" aria-label="Fechar">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+
+        <div class="profile-edit-modal-body">
+
+            <p class="avatar-modal-hint" id="senhaHint">
+                Para sua segurança, vamos enviar um código de 6 dígitos para o seu e-mail.
+            </p>
+
+            <div id="senhaPasso1" class="avatar-modal-actions">
+                <button class="avatar-action-btn primary" id="senhaEnviarBtn" type="button">
+                    <i class="bi bi-envelope"></i>
+                    Enviar código
+                </button>
+            </div>
+
+            <div id="senhaPasso2" class="hidden">
+
+                <div class="profile-edit-field">
+                    <label for="senhaCodigo">Código recebido</label>
+                    <input type="text" id="senhaCodigo" inputmode="numeric" maxlength="6" placeholder="000000" autocomplete="one-time-code">
+                </div>
+
+                <div class="profile-edit-field">
+                    <label for="senhaNova">Nova senha</label>
+                    <input type="password" id="senhaNova" autocomplete="new-password" placeholder="Mínimo de 8 caracteres">
+                </div>
+
+                <div class="profile-edit-field">
+                    <label for="senhaConfirma">Confirmar nova senha</label>
+                    <input type="password" id="senhaConfirma" autocomplete="new-password">
+                </div>
+
+                <div class="avatar-modal-actions">
+                    <button class="avatar-action-btn primary" id="senhaConfirmarBtn" type="button">
+                        <i class="bi bi-check-circle"></i>
+                        Alterar senha
+                    </button>
+                    <button class="avatar-action-btn" id="senhaReenviarBtn" type="button">
+                        Reenviar código
+                    </button>
+                </div>
+
+            </div>
+
+            <p class="avatar-modal-hint" id="senhaMsg"></p>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     MODAL - ALTERAR E-MAIL (3 passos)
+========================= -->
+
+<div class="profile-edit-modal-overlay" id="emailModalOverlay">
+
+    <div class="profile-edit-modal">
+
+        <div class="avatar-modal-header">
+            <h3>Alterar e-mail</h3>
+            <button class="avatar-modal-close" id="emailModalClose" type="button" aria-label="Fechar">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+
+        <div class="profile-edit-modal-body">
+
+            <p class="avatar-modal-hint" id="emailHint"></p>
+
+            <div id="emailPasso1">
+
+                <div class="profile-edit-field">
+                    <label for="emailNovo">Novo e-mail</label>
+                    <input type="email" id="emailNovo" autocomplete="email">
+                </div>
+
+                <div class="avatar-modal-actions">
+                    <button class="avatar-action-btn primary" id="emailSolicitarBtn" type="button">
+                        <i class="bi bi-envelope"></i>
+                        Enviar código ao e-mail atual
+                    </button>
+                </div>
+
+            </div>
+
+            <div id="emailPasso2" class="hidden">
+
+                <div class="profile-edit-field">
+                    <label for="emailCodigoAntigo">Código enviado ao e-mail atual</label>
+                    <input type="text" id="emailCodigoAntigo" inputmode="numeric" maxlength="6" placeholder="000000" autocomplete="one-time-code">
+                </div>
+
+                <div class="avatar-modal-actions">
+                    <button class="avatar-action-btn primary" id="emailAutorizarBtn" type="button">
+                        <i class="bi bi-check-circle"></i>
+                        Autorizar mudança
+                    </button>
+                </div>
+
+            </div>
+
+            <div id="emailPasso3" class="hidden">
+
+                <div class="profile-edit-field">
+                    <label for="emailCodigoNovo">Código enviado ao novo e-mail</label>
+                    <input type="text" id="emailCodigoNovo" inputmode="numeric" maxlength="6" placeholder="000000" autocomplete="one-time-code">
+                </div>
+
+                <div class="avatar-modal-actions">
+                    <button class="avatar-action-btn primary" id="emailConfirmarBtn" type="button">
+                        <i class="bi bi-check-circle"></i>
+                        Confirmar novo e-mail
+                    </button>
+                </div>
+
+            </div>
+
+            <p class="avatar-modal-hint" id="emailMsg"></p>
+
+        </div>
+
+    </div>
+
+</div>
+
+
 <script src="js/perfil.js"></script>
 
 </body>

@@ -385,9 +385,9 @@
         <i class="bi bi-check-circle-fill"></i>
         <span id="toastMessage"></span>
     </div>
-    <script src="js/carteiras.js"></script>
+    <script src="js/carteiras.js?v=2"></script>
     <script src="js/cotacoes.js"></script>
-    <script src="js/Aportes.js?v=7"></script>
+    <script src="js/Aportes.js?v=8"></script>
     <script src="js/Loading.js"></script>
     <script src="js/aportesExtra.js"></script>
 

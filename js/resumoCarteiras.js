@@ -83,6 +83,15 @@ const ResumoCarteiras = (function () {
         const texto =
             await response.text();
 
+        /* Token expirado: volta para o login */
+        if (response.status === 401) {
+
+            localStorage.removeItem("token");
+            localStorage.removeItem("usuario");
+
+            window.location.href = "login.php";
+        }
+
 
         let data;
 

@@ -539,7 +539,7 @@ profileEditForm.addEventListener("submit", event => {
    Código acrescentado: nada acima foi alterado.
 ========================================================== */
 
-const PERFIL_API = "http://localhost:8080/auth/";
+const PERFIL_API = "https://accuracyappapi.onrender.com/auth/";
 
 
 /* ---------- chamada genérica à API ---------- */

@@ -156,6 +156,7 @@
 
         renderCards({ assets, invested, yieldValue, yieldPercent, equity, freeBalance });
         renderTable(assets, current);
+        renderAssetCards(assets);
         renderChart(assets, current);
     }
 
@@ -242,6 +243,228 @@
                 </tr>`)
             .join("");
     }
+
+
+    /* =====================================================
+       CARDS DOS ATIVOS
+       Um card por ativo que tem aporte na carteira
+       selecionada (na aba "Todas" soma as carteiras).
+    ===================================================== */
+
+    const TONS = {
+        "Ações": "var(--verde)",
+        "FIIs": "var(--amarelo)",
+        "Cripto": "#f59e0b",
+        "Renda Fixa": "var(--primaria)",
+        "Internacional": "#a855f7"
+    };
+
+    // PETR4 -> "P4"; BTC -> "BT"
+    function iniciais(symbol) {
+
+        const text = String(symbol || "?").toUpperCase();
+
+        return /\d$/.test(text) && text.length > 1
+            ? text[0] + text[text.length - 1]
+            : text.slice(0, 2);
+    }
+
+    let cardAssets = {};          // ativos dos cards: { PETR4: {...} }
+    let cardsJaAnimados = false;  // a animação de entrada toca só na 1ª vez
+
+    function percent2(value) {
+        return (Number(value) || 0).toLocaleString("pt-BR", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        }) + "%";
+    }
+
+    function renderAssetCards(assets) {
+
+        const box = $("#assetCards");
+
+        if (!box) return;
+
+        if (!assets.length) {
+            box.innerHTML = `
+                <div class="asset-cards-empty">
+                    Nenhum aporte nesta carteira ainda.
+                </div>`;
+            return;
+        }
+
+        cardAssets = Object.fromEntries(assets.map(asset => [asset.symbol, asset]));
+
+        const animar = !cardsJaAnimados;
+
+        cardsJaAnimados = true;
+
+        box.innerHTML = [...assets]
+            .sort((a, b) => b.current - a.current)
+            .map((asset, index) => {
+
+                const avgPrice = asset.quantity > 0
+                    ? asset.invested / asset.quantity
+                    : 0;
+
+                const yieldValue = asset.current - asset.invested;
+                const yieldPct = asset.invested > 0
+                    ? (yieldValue / asset.invested) * 100
+                    : 0;
+
+                // sem cotação o rendimento não existe: fica neutro
+                const trend = !asset.hasQuote || Math.abs(yieldValue) < 0.005
+                    ? ""
+                    : yieldValue > 0 ? "up" : "down";
+
+                const arrow = trend === "up" ? "▲ " : trend === "down" ? "▼ " : "";
+
+                const tone = TONS[asset.category] || "var(--primaria)";
+
+                return `
+                    <article class="asset-card${animar ? " is-new" : ""}" data-symbol="${escapeHtml(asset.symbol)}"
+                             style="--i:${Math.min(index, 10)};--tone:${tone}">
+
+                        <div class="asset-card-top">
+                            <div class="asset-card-icon">${escapeHtml(iniciais(asset.symbol))}</div>
+
+                            <div class="asset-card-title">
+                                <strong>${escapeHtml(asset.symbol)}</strong>
+                                <small>${escapeHtml(asset.category)} · ${escapeHtml(asset.name)}</small>
+                            </div>
+
+                            <div class="asset-card-total">${money(asset.current)}</div>
+                        </div>
+
+                        <div class="asset-card-rows">
+                            <div class="asset-card-row">
+                                <span>Quantidade</span>
+                                <b>${quantityText(asset.quantity)}</b>
+                            </div>
+
+                            <div class="asset-card-row">
+                                <span>Preço médio</span>
+                                <b>${money(avgPrice)}</b>
+                            </div>
+
+                            <div class="asset-card-row">
+                                <span>Preço atual</span>
+                                <b>${asset.hasQuote ? money(asset.unitPrice) : "—"}</b>
+                            </div>
+
+                            <div class="asset-card-row">
+                                <span>Rentabilidade</span>
+                                <span class="asset-card-yield">
+                                    <span class="pill ${trend}">${arrow}${percent2(Math.abs(yieldPct))}</span>
+                                    <b>${money(yieldValue)}</b>
+                                </span>
+                            </div>
+                        </div>
+
+                        <button type="button" class="asset-card-chart"
+                                aria-label="Ver gráfico do aporte em ${escapeHtml(asset.symbol)}">
+                            <i class="bi bi-graph-up" aria-hidden="true"></i>Ver gráfico
+                        </button>
+
+                        <div class="asset-card-actions">
+                            <a class="sell" href="aportes.php">Vender</a>
+                            <a class="buy" href="aportes.php">Comprar</a>
+                        </div>
+
+                    </article>`;
+            })
+            .join("");
+    }
+
+
+    /* =====================================================
+       ALTERNAR CARDS / TABELA
+    ===================================================== */
+
+    const VIEW_KEY = "accuracy_carteira_visao";
+
+    function applyView(view) {
+
+        const cards = $("#assetCards");
+        const table = $("#assetsTableWrap");
+
+        if (!cards || !table) return;
+
+        cards.hidden = view === "table";
+        table.hidden = view !== "table";
+
+        document.querySelectorAll("#viewToggle [data-view]").forEach(button => {
+            button.classList.toggle("active", button.dataset.view === view);
+        });
+    }
+
+    (function initViewToggle() {
+
+        const toggle = $("#viewToggle");
+
+        if (!toggle) return;
+
+        let saved = "cards";
+
+        try {
+            saved = localStorage.getItem(VIEW_KEY) === "table" ? "table" : "cards";
+        } catch { /* sem storage: fica em cards */ }
+
+        applyView(saved);
+
+        toggle.addEventListener("click", event => {
+
+            const button = event.target.closest("[data-view]");
+
+            if (!button) return;
+
+            applyView(button.dataset.view);
+
+            try {
+                localStorage.setItem(VIEW_KEY, button.dataset.view);
+            } catch { /* ignora */ }
+        });
+    })();
+
+
+    /* =====================================================
+       CLIQUE NO CARD -> GRÁFICO DO APORTE
+       (clicar em Vender/Comprar continua indo para Aportes)
+    ===================================================== */
+
+    function abrirGrafico(symbol) {
+
+        const asset = cardAssets[symbol];
+
+        if (!asset || typeof CarteiraGrafico === "undefined") return;
+
+        const active = activeId();
+
+        CarteiraGrafico.abrir({
+            symbol: asset.symbol,
+            name: asset.name,
+            category: asset.category,
+            iniciais: iniciais(asset.symbol),
+            tone: TONS[asset.category] || "var(--primaria)",
+            carteiraIds: active === "all" ? null : [String(active)]
+        });
+    }
+
+    (function initCardClick() {
+
+        const box = $("#assetCards");
+
+        if (!box) return;
+
+        box.addEventListener("click", event => {
+
+            if (event.target.closest("a")) return;
+
+            const card = event.target.closest(".asset-card");
+
+            if (card) abrirGrafico(card.dataset.symbol);
+        });
+    })();
 
 
     function renderChart(assets, current) {

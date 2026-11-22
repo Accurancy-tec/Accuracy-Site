@@ -1,0 +1,443 @@
+/* =========================================================
+   ANIMAÇÕES DA PÁGINA CARTEIRA
+
+   Arquivo próprio da página (junto com js/carteira-animacoes.js).
+   Incluir DEPOIS de carteira.css e carteiras.css.
+
+   Tudo é desligado para quem pede "reduzir movimento" no
+   sistema (acessibilidade).
+========================================================= */
+
+/* variável animável usada para "desenhar" o gráfico de pizza */
+@property --ca-rev {
+    syntax: "<percentage>";
+    inherits: false;
+    initial-value: 100%;
+}
+
+/* variáveis animáveis do destaque da fatia (início e fim, em %).
+   inherits: true é necessário: o valor é definido no .circle e lido
+   pela camada ::after (com false ela enxergava 0% e cobria tudo). */
+@property --ca-s {
+    syntax: "<percentage>";
+    inherits: true;
+    initial-value: 0%;
+}
+
+@property --ca-e {
+    syntax: "<percentage>";
+    inherits: true;
+    initial-value: 0%;
+}
+
+@keyframes ca-sobe {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes ca-desce {
+    from { opacity: 0; transform: translateY(-12px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes ca-entra-esq {
+    from { opacity: 0; transform: translateX(-14px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes ca-pop {
+    0%   { opacity: 0; transform: scale(.9); }
+    60%  { opacity: 1; transform: scale(1.04); }
+    100% { transform: scale(1); }
+}
+
+@keyframes ca-modal {
+    from { opacity: 0; transform: translateY(18px) scale(.95); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes ca-fade {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+@keyframes ca-donut {
+    from { --ca-rev: 0%; }
+    to   { --ca-rev: 100%; }
+}
+
+@keyframes ca-gira-entra {
+    from { transform: rotate(-50deg) scale(.82); }
+    to   { transform: rotate(0) scale(1); }
+}
+
+@keyframes ca-onda {
+    to { transform: scale(2.8); opacity: 0; }
+}
+
+
+/* =========================
+   ENTRADA DA PÁGINA
+   (fill-mode "backwards": depois de terminar, o elemento
+    volta ao normal e o hover continua funcionando)
+========================= */
+
+.sidebar .menu a {
+    animation: ca-entra-esq .7s ease backwards;
+}
+
+.sidebar .menu a:nth-child(1) { animation-delay: .06s; }
+.sidebar .menu a:nth-child(2) { animation-delay: .12s; }
+.sidebar .menu a:nth-child(3) { animation-delay: .18s; }
+.sidebar .menu a:nth-child(4) { animation-delay: .24s; }
+.sidebar .menu a:nth-child(5) { animation-delay: .30s; }
+.sidebar .menu a:nth-child(6) { animation-delay: .36s; }
+
+.main > .topbar {
+    animation: ca-desce .7s ease backwards;
+}
+
+.main > .wallet-bar {
+    animation: ca-desce .7s ease .12s backwards;
+}
+
+.cards .card {
+    animation: ca-sobe .85s cubic-bezier(.2, .8, .2, 1) backwards;
+    transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+}
+
+.cards .card:nth-child(1) { animation-delay: .22s; }
+.cards .card:nth-child(2) { animation-delay: .36s; }
+.cards .card:nth-child(3) { animation-delay: .50s; }
+
+.cards .card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(255, 255, 255, .22);
+    box-shadow: 0 12px 26px var(--sombra);
+}
+
+.content > .table-container {
+    animation: ca-sobe .85s cubic-bezier(.2, .8, .2, 1) .62s backwards;
+}
+
+.content > .chart {
+    animation: ca-sobe .85s cubic-bezier(.2, .8, .2, 1) .76s backwards;
+}
+
+
+/* =========================
+   ABAS DAS CARTEIRAS
+   (classes colocadas pelo JS: a entrada só roda na primeira
+    vez, senão as abas piscariam a cada clique)
+========================= */
+
+.wallet-tab {
+    position: relative;
+    overflow: hidden;
+    transition: transform .18s ease, background .25s ease, border-color .25s ease, color .25s ease, box-shadow .25s ease;
+}
+
+.wallet-tab:hover {
+    transform: translateY(-2px);
+}
+
+.wallet-tab:active {
+    transform: scale(.96);
+}
+
+.wallet-tab.anim-tab {
+    animation: ca-sobe .6s cubic-bezier(.2, .8, .2, 1) backwards;
+    animation-delay: calc(var(--i, 0) * 80ms + .25s);
+}
+
+.wallet-tab.anim-ativa {
+    animation: ca-pop .5s ease;
+}
+
+.wallet-tab.active {
+    box-shadow: 0 4px 14px var(--sombra);
+}
+
+.wallet-btn {
+    position: relative;
+    overflow: hidden;
+    transition: transform .18s ease, background .25s ease, border-color .25s ease, box-shadow .25s ease, color .25s ease;
+}
+
+.wallet-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+}
+
+.wallet-btn.primary:hover {
+    box-shadow: 0 8px 20px rgba(37, 99, 235, .35);
+}
+
+.wallet-btn:active:not(:disabled) {
+    transform: scale(.96);
+}
+
+.wallet-btn i {
+    display: inline-block;
+    transition: transform .3s ease;
+}
+
+.wallet-btn.primary:hover i {
+    transform: rotate(90deg);
+}
+
+
+/* =========================
+   TABELA DE INVESTIMENTOS
+========================= */
+
+#assetsBody tr.anim-linha {
+    animation: ca-sobe .7s cubic-bezier(.2, .8, .2, 1) backwards;
+    animation-delay: calc(var(--i, 0) * 80ms);
+}
+
+#assetsBody tr td {
+    transition: background .2s ease;
+}
+
+#assetsBody tr:hover td:not(.table-empty) {
+    background: var(--surface-hover);
+}
+
+#assetsCount.anim-pop {
+    display: inline-block;
+    animation: ca-pop .5s ease;
+}
+
+
+/* =========================
+   GRÁFICO DE DISTRIBUIÇÃO
+========================= */
+
+.circle.anim-donut {
+    -webkit-mask: conic-gradient(#000 var(--ca-rev), transparent 0);
+    mask: conic-gradient(#000 var(--ca-rev), transparent 0);
+    animation:
+        ca-donut 1.1s cubic-bezier(.3, .7, .2, 1) both,
+        ca-gira-entra 1.1s cubic-bezier(.3, .7, .2, 1) both;
+}
+
+.legend > div.anim-legenda {
+    animation: ca-entra-esq .6s cubic-bezier(.2, .8, .2, 1) backwards;
+    animation-delay: calc(var(--i, 0) * 90ms + .3s);
+}
+
+.legend > div {
+    transition: transform .2s ease;
+}
+
+.legend > div:hover {
+    transform: translateX(4px);
+}
+
+.legend-dot {
+    transition: transform .2s ease;
+}
+
+.legend > div:hover .legend-dot {
+    transform: scale(1.35);
+}
+
+
+/* =========================
+   DESTAQUE DA FATIA (hover no gráfico ou na legenda)
+   A fatia sob o mouse fica em evidência e as outras escurecem
+   (uma camada por cima do gráfico, com a fatia "recortada").
+========================= */
+
+.circle {
+    position: relative;
+    transition: transform .3s cubic-bezier(.2, .8, .2, 1);
+}
+
+.circle::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    pointer-events: none;
+    background: conic-gradient(
+        var(--surface-2) 0 var(--ca-s),
+        transparent var(--ca-s) var(--ca-e),
+        var(--surface-2) var(--ca-e) 100%
+    );
+    opacity: 0;
+    transition: opacity .25s ease, --ca-s .3s ease, --ca-e .3s ease;
+}
+
+.circle.ca-hover {
+    transform: scale(1.07);
+    cursor: pointer;
+}
+
+.circle.ca-hover::after {
+    opacity: .78;
+}
+
+.legend > div {
+    border-radius: 6px;
+    transition: transform .2s ease, opacity .25s ease, background .2s ease;
+}
+
+.legend.ca-tem-ativo > div:not(.ca-ativo) {
+    opacity: .45;
+}
+
+.legend > div.ca-ativo {
+    transform: translateX(4px);
+    background: var(--surface-hover);
+}
+
+.legend > div.ca-ativo .legend-dot {
+    transform: scale(1.35);
+}
+
+.legend > div.ca-ativo .legend-name {
+    font-weight: 600;
+}
+
+/* balão que acompanha o mouse */
+.ca-dica {
+    position: fixed;
+    z-index: 4000;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 11px;
+    border: 1px solid var(--borda);
+    border-radius: 8px;
+    background: var(--surface);
+    color: var(--texto);
+    box-shadow: 0 8px 22px var(--sombra);
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity .15s ease, transform .15s ease;
+}
+
+.ca-dica.ca-mostra {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.ca-dica i {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.ca-dica b {
+    font-weight: 600;
+}
+
+.ca-dica span {
+    color: var(--texto-suave);
+}
+
+
+/* =========================
+   JANELAS (MODAL)
+========================= */
+
+.cw-overlay {
+    animation: ca-fade .25s ease both;
+}
+
+.cw-modal {
+    animation: ca-modal .4s cubic-bezier(.2, .8, .2, 1) both;
+}
+
+.cw-btn {
+    position: relative;
+    overflow: hidden;
+    transition: transform .18s ease, background .25s ease, border-color .25s ease;
+}
+
+.cw-btn:active {
+    transform: scale(.96);
+}
+
+.cw-option {
+    transition: transform .18s ease, background .25s ease, border-color .25s ease;
+}
+
+.cw-option:hover {
+    transform: translateX(3px);
+}
+
+
+/* =========================
+   EFEITO DE ONDA NO CLIQUE
+========================= */
+
+.ca-onda {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    margin: -20px 0 0 -20px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, .3);
+    pointer-events: none;
+    animation: ca-onda .6s ease-out forwards;
+}
+
+
+/* =========================
+   ACESSIBILIDADE
+========================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .sidebar .menu a,
+    .main > .topbar,
+    .main > .wallet-bar,
+    .cards .card,
+    .content > .table-container,
+    .content > .chart,
+    .wallet-tab,
+    .wallet-tab.anim-tab,
+    .wallet-tab.anim-ativa,
+    #assetsBody tr.anim-linha,
+    #assetsCount.anim-pop,
+    .circle.anim-donut,
+    .legend > div.anim-legenda,
+    .cw-overlay,
+    .cw-modal,
+    .ca-onda {
+        animation: none !important;
+    }
+
+    .circle.anim-donut {
+        -webkit-mask: none !important;
+        mask: none !important;
+    }
+
+    .circle,
+    .circle::after,
+    .ca-dica,
+    .cards .card,
+    .wallet-tab,
+    .wallet-btn,
+    .wallet-btn i,
+    .legend > div,
+    .legend-dot,
+    .cw-btn,
+    .cw-option {
+        transition: none !important;
+        transform: none !important;
+    }
+
+    .circle.ca-hover,
+    .legend > div.ca-ativo,
+    .legend > div.ca-ativo .legend-dot {
+        transform: none !important;
+    }
+}

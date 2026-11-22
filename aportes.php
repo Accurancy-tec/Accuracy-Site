@@ -12,14 +12,23 @@
     <!-- Tema (precisa vir antes de tudo) -->
     <link rel="stylesheet" href="css/Tema.css">
 
-    <!-- Primeiro o CSS principal do Dashboard -->
+    <!-- Base do site (reset, avatar) -->
     <link rel="stylesheet" href="css/dashboard.css">
 
-    <!-- Depois o CSS específico desta página -->
+    <!-- CSS do formulário, da lista e do detalhe do ativo -->
     <link rel="stylesheet" href="css/aportes.css?v=2">
+    <link rel="stylesheet" href="css/Aportesprodutos.css">
+    <link rel="stylesheet" href="css/Aportesdetalhe.css">
 
-    <!-- Estilos das janelas de carteira -->
-    <link rel="stylesheet" href="css/carteiras.css">
+    <!-- Animações -->
+    <link rel="stylesheet" href="css/Animacoes.css">
+
+    <!-- Janelas de carteira -->
+    <link rel="stylesheet" href="css/carteiras.css?v=2">
+
+    <!-- Novo layout (precisa vir por último) -->
+    <link rel="stylesheet" href="css/layout-v2.css?v=4">
+
     <style>
         .asset-price {
             display: block;
@@ -44,10 +53,14 @@
             opacity: .85;
         }
     </style>
+
     <script src="js/usuario-global.js"></script>
 
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Manrope:wght@600;700;800&display=swap"
+        rel="stylesheet">
 
     <link rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
@@ -56,180 +69,86 @@
     <script src="js/avatar-global.js"></script>
 </head>
 
-<body>
+<body class="v2">
 
-    <div class="app">
+    <div class="v2-app">
 
-        <aside class="sidebar">
+        <!-- =========================
+             SIDEBAR
+        ========================== -->
 
-            <div class="top">
+        <aside class="v2-sidebar">
 
-                <a href="dashboard.php" class="logo">
-                    <div class="logo-box">
-                        <i class="bi bi-graph-up"></i>
-                    </div>
+            <a href="dashboard.php" class="v2-logo">Accuracy</a>
 
-                    <span>Accuracy</span>
-                </a>
+            <nav class="v2-nav">
+                <a href="dashboard.php">Início</a>
+                <a href="carteira.php">Carteira</a>
+                <a href="aportes.php" class="active">Aportes</a>
+                <a href="historico.php">Histórico</a>
+                <a href="Cursos.php">Cursos</a>
+                <a href="perfil.php">Perfil</a>
+            </nav>
 
-                <div class="divider"></div>
-
-                <nav class="menu">
-
-                    <a href="dashboard.php">
-                        <i class="bi bi-grid"></i>
-                        <span>Dashboard</span>
-                    </a>
-
-                    <a href="carteira.php">
-                        <i class="bi bi-wallet2"></i>
-                        <span>Carteira</span>
-                    </a>
-
-                    <a href="historico.php">
-                        <i class="bi bi-clock-history"></i>
-                        <span>Histórico</span>
-                    </a>
-
-                    <a href="aportes.php" class="active">
-                        <i class="bi bi-plus-circle"></i>
-                        <span>Aportes</span>
-                    </a>
-
-
-
-                    <a href="Cursos.php">
-                        <i class="bi bi-mortarboard"></i>
-                        <span>Cursos</span>
-                    </a>
-
-                    <a href="perfil.php">
-                        <i class="bi bi-person"></i>
-                        <span>Perfil</span>
-                    </a>
-
-                </nav>
-
-            </div>
-
-            <div class="user-area">
-
-                <div class="icons">
-
-                    <div class="notification-container">
-
-                        <button class="notification-btn"
-                            type="button"
-                            id="notificationBtn"
-                            aria-label="Notificações">
-
-                            <i class="bi bi-bell"></i>
-                            <span class="notification-dot" id="notificationDot"></span>
-
-                        </button>
-
-                        <div class="notification-panel" id="notificationPanel">
-
-                            <div class="notification-header">
-                                <h3>Notificações</h3>
-
-                                <button type="button" id="markRead">
-                                    Marcar como lidas
-                                </button>
-                            </div>
-
-                            <div class="notification-list">
-
-                                <div class="empty-notifications">
-                                    <i class="bi bi-bell-slash"></i>
-                                    <strong>Nenhuma notificação</strong>
-                                    <p>Você não possui novas notificações.</p>
-                                </div>
-
-                            </div>
-
-                            <div class="notification-footer">
-                                <a href="historico.php">
-                                    Ver todas as notificações
-                                </a>
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-                <div class="user">
-
-                    <a href="perfil.php">
-                        <div class="avatar">N</div>
-                    </a>
-
-                    <div class="user-info">
-                        <a href="perfil.php">
-                            <strong>Nome da pessoa</strong>
-                        </a>
-
-                        <p>Perfil do usuário</p>
-                    </div>
-
-                </div>
-
+            <div class="v2-balance">
+                <span>Saldo disponível</span>
+                <strong id="v2Saldo">—</strong>
+                <button type="button" id="v2AddSaldo">Adicionar saldo</button>
             </div>
 
         </aside>
 
-        <main class="main">
 
-            <header class="topbar">
+        <div class="v2-main">
 
-                <div>
-                    <h1>Aportes</h1>
-                    <p id="currentDate">Quinta-feira, 18 de junho de 2026</p>
+            <!-- =========================
+                 TOPO
+            ========================== -->
+
+            <header class="v2-topbar">
+
+                <div class="v2-search">
+                    <input type="text"
+                           id="v2Search"
+                           placeholder="Buscar empresa ou código do ativo"
+                           autocomplete="off"
+                           aria-label="Buscar empresa ou código do ativo">
+                </div>
+
+                <div class="v2-topbar-right">
+                    <div class="v2-total"><span>Total</span> <strong id="v2Total">—</strong></div>
+
+                    <a href="perfil.php" aria-label="Perfil">
+                        <div class="avatar">U</div>
+                    </a>
                 </div>
 
             </header>
 
-            <section class="cards-top">
 
-                <div class="info-card">
-                    <span>TOTAL APORTADO ESTE MÊS</span>
+            <main class="v2-content">
 
-                    <h3 id="totalMonth">R$ 0,00</h3>
-
-                    <small class="green">
-                        ▲ Aportes realizados
-                    </small>
+                <div class="v2-page-head">
+                    <div>
+                        <h1>Aportes</h1>
+                        <p>Escolha onde investir.</p>
+                        <span id="currentDate" hidden></span>
+                    </div>
                 </div>
 
-                <div class="info-card">
-                    <span>APORTES RECORRENTES ATIVOS</span>
 
-                    <h3 id="activeRecurring">0 ativos</h3>
+                <!-- Seletor de produtos / detalhe / formulário -->
 
-                    <small class="blue" id="nextContribution">
-                        Nenhum aporte programado
-                    </small>
-                </div>
+                <div class="v2-picker">
 
-                <div class="info-card">
-                    <span>MÉDIA MENSAL</span>
+                    <!-- preenchido por js/Aportesprodutos.js -->
+                    <div id="ppRoot"></div>
 
-                    <h3 id="monthlyAverage">R$ 0,00</h3>
-
-                    <small class="green">
-                        Média dos aportes
-                    </small>
-                </div>
-
-            </section>
-
-            <section class="content-grid">
-
-                <div class="aporte-form">
+                    <div id="formStep" class="aporte-form hidden">
 
                     <h3>Novo aporte</h3>
+
+                    <div class="pp-selected" id="ppSelected"></div>
 
                     <label for="asset">Ativo</label>
 
@@ -322,62 +241,105 @@
 
                     </button>
 
+                    </div>
+
                 </div>
 
-                <div class="aporte-list">
 
-                    <div class="list-header">
+                <!-- Resumo e histórico dos aportes -->
 
-                        <div>
-                            <h3>Meus aportes</h3>
+                <div class="v2-mine">
 
-                            <p class="list-subtitle">
-                                Histórico dos aportes realizados
+                    <section class="cards-top">
+
+                        <div class="info-card">
+                            <span>TOTAL APORTADO ESTE MÊS</span>
+
+                            <h3 id="totalMonth">R$ 0,00</h3>
+
+                            <small class="green">
+                                ▲ Aportes realizados
+                            </small>
+                        </div>
+
+                        <div class="info-card">
+                            <span>APORTES RECORRENTES ATIVOS</span>
+
+                            <h3 id="activeRecurring">0 ativos</h3>
+
+                            <small class="blue" id="nextContribution">
+                                Nenhum aporte programado
+                            </small>
+                        </div>
+
+                        <div class="info-card">
+                            <span>MÉDIA MENSAL</span>
+
+                            <h3 id="monthlyAverage">R$ 0,00</h3>
+
+                            <small class="green">
+                                Média dos aportes
+                            </small>
+                        </div>
+
+                    </section>
+
+                    <div class="aporte-list">
+
+                        <div class="list-header">
+
+                            <div>
+                                <h3>Meus aportes</h3>
+
+                                <p class="list-subtitle">
+                                    Histórico dos aportes realizados
+                                </p>
+                            </div>
+
+                            <div class="list-header-actions">
+
+                                <span id="contributionCount">
+                                    0 aportes
+                                </span>
+
+                                <button
+                                    class="clear-btn"
+                                    id="clearAllBtn"
+                                    type="button"
+                                    title="Excluir todos os aportes">
+
+                                    <i class="bi bi-trash3"></i>
+                                    Excluir aportes
+
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                        <div id="contributionList"></div>
+
+                        <div class="empty-state" id="emptyState">
+
+                            <i class="bi bi-wallet2"></i>
+
+                            <strong>
+                                Nenhum aporte realizado
+                            </strong>
+
+                            <p>
+                                Seus aportes aparecerão aqui.
                             </p>
-                        </div>
-
-                        <div class="list-header-actions">
-
-                            <span id="contributionCount">
-                                0 aportes
-                            </span>
-
-                            <button
-                                class="clear-btn"
-                                id="clearAllBtn"
-                                type="button"
-                                title="Excluir todos os aportes">
-
-                                <i class="bi bi-trash3"></i>
-                                Excluir aportes
-
-                            </button>
 
                         </div>
-
-                    </div>
-
-                    <div id="contributionList"></div>
-
-                    <div class="empty-state" id="emptyState">
-
-                        <i class="bi bi-wallet2"></i>
-
-                        <strong>
-                            Nenhum aporte realizado
-                        </strong>
-
-                        <p>
-                            Seus aportes aparecerão aqui.
-                        </p>
 
                     </div>
 
                 </div>
 
-            </section>
+            </main>
 
-        </main>
+        </div>
 
     </div>
 
@@ -385,47 +347,17 @@
         <i class="bi bi-check-circle-fill"></i>
         <span id="toastMessage"></span>
     </div>
+
     <script src="js/carteiras.js?v=2"></script>
-    <script src="js/cotacoes.js"></script>
-    <script src="js/Aportes.js?v=8"></script>
+    <script src="js/cotacoes.js?v=3"></script>
+    <script src="js/Aportes.js?v=9"></script>
     <script src="js/Loading.js"></script>
     <script src="js/aportesExtra.js"></script>
-
-    <script>
-        const notificationBtn = document.getElementById("notificationBtn");
-        const notificationPanel = document.getElementById("notificationPanel");
-        const notificationDot = document.getElementById("notificationDot");
-        const markRead = document.getElementById("markRead");
-
-        notificationBtn.addEventListener("click", function(event) {
-            event.stopPropagation();
-            notificationPanel.classList.toggle("show");
-        });
-
-        notificationPanel.addEventListener("click", function(event) {
-            event.stopPropagation();
-        });
-
-        document.addEventListener("click", function() {
-            notificationPanel.classList.remove("show");
-        });
-
-        markRead.addEventListener("click", function() {
-            document.querySelectorAll(".notification-item.unread")
-                .forEach(item => {
-                    item.classList.remove("unread");
-
-                    const dot = item.querySelector(".unread-dot");
-
-                    if (dot) {
-                        dot.remove();
-                    }
-                });
-
-            notificationDot.style.display = "none";
-        });
-    </script>
-
+    <script src="js/resumoCarteiras.js?v=2"></script>
+    <script src="js/Aportesdetalhe.js?v=2"></script>
+    <script src="js/shell-v2.js?v=4"></script>
+    <script src="js/Aportesprodutos.js?v=4"></script>
+    <script src="js/Animacoes.js"></script>
 
 </body>
 

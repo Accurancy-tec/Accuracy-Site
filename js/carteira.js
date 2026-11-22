@@ -279,8 +279,8 @@ separados por carteira.
         =================================================
         BOTÃO EXCLUIR
 
-        Como exclusão ainda não existe na API,
-        deixamos desativado.
+        Só aparece quando uma carteira específica está
+        selecionada (não na aba "Todas").
         =================================================
         */
 
@@ -289,7 +289,10 @@ separados por carteira.
 
         if (deleteBtn) {
 
-            deleteBtn.hidden = true;
+            deleteBtn.hidden =
+                active === "all" ||
+                active === null ||
+                active === undefined;
 
         }
 
@@ -375,11 +378,43 @@ separados por carteira.
 
         deleteWalletBtn.addEventListener(
             "click",
-            () => {
+            async () => {
 
-                console.warn(
-                    "Exclusão de carteira ainda não está disponível na API."
-                );
+                const id =
+                    effectiveActive();
+
+                if (!id || id === "all") {
+                    return;
+                }
+
+                const nome =
+                    Carteiras.nameOf(id);
+
+                const confirmou =
+                    window.confirm(
+                        `Excluir a carteira "${nome}"? ` +
+                        "Todos os aportes e posições dela " +
+                        "serão apagados. Essa ação não pode " +
+                        "ser desfeita."
+                    );
+
+                if (!confirmou) {
+                    return;
+                }
+
+                deleteWalletBtn.disabled = true;
+
+                const resultado =
+                    await Carteiras.remove(id);
+
+                deleteWalletBtn.disabled = false;
+
+                if (resultado && resultado.error) {
+                    window.alert(resultado.error);
+                    return;
+                }
+
+                render();
 
             }
         );

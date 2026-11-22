@@ -26,18 +26,6 @@ const Carteiras = (function () {
 
     const MAIN_ID = null;
 
-    /*
-    Valores padrão enviados ao criar uma carteira.
-    O back-end agora exige estilo_carteira e meta_carteira
-    (o campo saldo_livre_carteira deixou de ser usado).
-    Quando existir uma tela para escolher o estilo e a meta,
-    é só trocar estes valores pelos escolhidos pelo usuário.
-    */
-
-    const DEFAULT_WALLET_STYLE = "Moderado";
-
-    const DEFAULT_WALLET_GOAL = 0;
-
     let wallets = [];
 
 
@@ -70,23 +58,6 @@ const Carteiras = (function () {
         }
 
         return String(id);
-    }
-
-
-    /*
-    =====================================================
-    SESSÃO EXPIRADA (401)
-    =====================================================
-    */
-
-    function sessaoExpirada() {
-
-        localStorage.removeItem("token");
-        localStorage.removeItem("usuario");
-
-        if (!window.location.pathname.endsWith("login.php")) {
-            window.location.href = "login.php";
-        }
     }
 
 
@@ -133,24 +104,17 @@ const Carteiras = (function () {
                 );
 
 
-            const data =
-                await response.json();
+            const texto = await response.text();
+            let data;
 
-
-            console.log(
-                "Resposta das carteiras:",
-                data
-            );
-
-
-            if (response.status === 401) {
-
-                sessaoExpirada();
-
-                wallets = [];
-
-                return wallets;
+            try {
+                data = JSON.parse(texto);
+            } catch (erro) {
+                console.error("Resposta inválida da API de carteiras:", texto);
+                throw new Error("A API não retornou JSON válido.");
             }
+
+            console.log("Resposta das carteiras:", data);
 
 
             /*
@@ -216,7 +180,13 @@ const Carteiras = (function () {
                             wallet.nome_carteira,
 
                         type:
-                            wallet.tipo_carteira
+                            wallet.tipo_carteira,
+
+                        style:
+                            wallet.estilo_carteira,
+
+                        goal:
+                            Number(wallet.meta_carteira) || 0
 
                     })
                 );
@@ -418,13 +388,29 @@ const Carteiras = (function () {
     =====================================================
     */
 
-    async function add(rawName) {
+    async function add(rawName, rawGoal, rawStyle, rawKind) {
 
         const name =
             String(
                 rawName || ""
             ).trim();
 
+        const goal = Number(rawGoal) || 0;
+        const style = String(rawStyle || "").trim();
+
+        /* "Real" ou "Simulada" (coluna tipo_carteira da API) */
+        const kind = String(rawKind || "Real").trim();
+
+        if (!["Real", "Simulada"].includes(kind)) {
+            return { error: "Escolha se a carteira é Simulada ou Real." };
+        }
+
+        const allowedStyles = [
+            "Cripto",
+            "Internacional",
+            "Renda Fixa",
+            "Renda Variavel"
+        ];
 
         if (!name) {
 
@@ -432,6 +418,10 @@ const Carteiras = (function () {
                 error:
                     "Digite um nome para a carteira."
             };
+        }
+
+        if (!allowedStyles.includes(style)) {
+            return { error: "Selecione o tipo da carteira." };
         }
 
 
@@ -448,7 +438,7 @@ const Carteiras = (function () {
             list().some(
 
                 w =>
-                    w.name.toLowerCase()
+                    String(w.name || "").toLowerCase()
                     ===
                     name.toLowerCase()
 
@@ -505,13 +495,13 @@ const Carteiras = (function () {
                                     name,
 
                                 tipo_carteira:
-                                    "Real",
+                                    kind,
 
                                 estilo_carteira:
-                                    DEFAULT_WALLET_STYLE,
+                                    style,
 
                                 meta_carteira:
-                                    DEFAULT_WALLET_GOAL
+                                    goal > 0 ? goal : null
 
                             })
 
@@ -561,17 +551,6 @@ const Carteiras = (function () {
                 data
 
             );
-
-
-            if (response.status === 401) {
-
-                sessaoExpirada();
-
-                return {
-                    error:
-                        "Sessão expirada. Faça login novamente."
-                };
-            }
 
 
             if (
@@ -675,23 +654,65 @@ const Carteiras = (function () {
     =====================================================
     */
 
-    function remove(id) {
+    async function remove(id) {
 
-        console.warn(
+        const token =
+            getToken();
 
-            "A exclusão de carteiras precisa ser feita pela API.",
+        if (!token) {
+            return { error: "Token não encontrado." };
+        }
 
-            id
+        try {
 
-        );
+            /* A API lê o id pela query string (?id_carteira=) e responde
+               { success, message } */
+            const response =
+                await fetch(
+                    `${API_BASE_URL}/carteiras/excluir-carteira?id_carteira=${encodeURIComponent(Number(id))}`,
+                    {
+                        method: "POST",
 
+                        headers: {
+                            "Authorization":
+                                `Bearer ${token}`
+                        }
+                    }
+                );
 
-        return {
+            const data =
+                await response.json();
 
-            error:
-                "A exclusão de carteiras precisa ser implementada na API."
+            if (
+                !response.ok ||
+                (data.success !== true && data.sucesso !== true)
+            ) {
 
-        };
+                return {
+                    error:
+                        data.message ||
+                        data.mensagem ||
+                        "Não foi possível excluir a carteira."
+                };
+            }
+
+            if (getActive() === normalizeId(id)) {
+                setActive(null);
+            }
+
+            await load();
+
+            return { ok: true };
+
+        } catch (erro) {
+
+            console.error(erro);
+
+            return {
+                error:
+                    "Erro de conexão ao excluir a carteira."
+            };
+        }
     }
 
 
@@ -876,18 +897,43 @@ const Carteiras = (function () {
                 }
 
 
+                let busy = false;
+
+
                 async function submit() {
+
+                    if (busy) {
+
+                        return;
+                    }
+
+
+                    busy = true;
+
+                    ok.disabled = true;
+
 
                     const value =
                         control.getValue();
 
 
-                    const result =
-                        validate
+                    let result;
 
-                            ? await validate(value)
+                    try {
 
-                            : { value };
+                        result =
+                            validate
+
+                                ? await validate(value)
+
+                                : { value };
+
+                    } finally {
+
+                        busy = false;
+
+                        ok.disabled = false;
+                    }
 
 
                     if (result.error) {
@@ -1188,75 +1234,221 @@ const Carteiras = (function () {
 
     async function promptNewWallet() {
 
+        /* valores aceitos pela API (estilo_carteira) */
+        const TYPES = [
+            ["Renda Fixa", "Renda Fixa"],
+            ["Renda Variavel", "Renda Variável"],
+            ["Cripto", "Cripto"],
+            ["Internacional", "Internacional"]
+        ];
+
+        /* valores aceitos pela API (tipo_carteira) */
+        const KINDS = [
+            ["Simulada", "Simulada", "Teste estratégias sem usar dinheiro de verdade", "M9 3h6M10 3v6.2L5.4 17.6A2 2 0 0 0 7.1 20.5h9.8a2 2 0 0 0 1.7-2.9L14 9.2V3M7.5 14h9"],
+            ["Real", "Real", "Acompanhe os seus investimentos reais", "M12 3l7 3v5.5c0 4.4-3 8.2-7 9.5-4-1.3-7-5.1-7-9.5V6l7-3z"]
+        ];
+
+        const brlFmt = new Intl.NumberFormat("pt-BR", {
+            style: "currency",
+            currency: "BRL"
+        });
+
         return modal({
 
             title:
                 "Nova carteira",
 
             text:
-                "Dê um nome para a nova carteira.",
+                "",
 
             okLabel:
                 "Criar carteira",
 
-
             build(box) {
 
-                const input =
-                    el(
-                        "input",
-                        "cw-input"
+                box.classList.add("cw-new");
+
+                let type = "Renda Variavel";
+                let kind = "Simulada";
+                let cents = 0;
+
+
+                /* ---- Nome ---- */
+
+                const nameLabel = el("label", "cw-field-label", "Nome da carteira");
+                const nameInput = el("input", "cw-input");
+
+                nameInput.type = "text";
+                nameInput.maxLength = 30;
+                nameInput.placeholder = "Ex.: Reserva de emergência";
+                nameInput.autocomplete = "off";
+                nameInput.setAttribute("aria-label", "Nome da carteira");
+
+
+                /* ---- Tipo (chips) ---- */
+
+                const typeLabel = el("div", "cw-field-label", "Tipo de carteira");
+                const typeGroup = el("div", "cw-chips");
+
+                typeGroup.setAttribute("role", "radiogroup");
+                typeGroup.setAttribute("aria-label", "Tipo de carteira");
+
+                TYPES.forEach(([value, text]) => {
+
+                    const chip = el("button", "cw-chip", text);
+
+                    chip.type = "button";
+                    chip.dataset.value = value;
+                    chip.setAttribute("role", "radio");
+
+                    chip.addEventListener("click", () => {
+                        type = value;
+                        syncType();
+                    });
+
+                    typeGroup.append(chip);
+                });
+
+                function syncType() {
+
+                    typeGroup.querySelectorAll(".cw-chip").forEach(chip => {
+
+                        const on = chip.dataset.value === type;
+
+                        chip.classList.toggle("selected", on);
+                        chip.setAttribute("aria-checked", String(on));
+                    });
+                }
+
+
+                /* ---- Meta (R$) ---- */
+
+                const goalLabel = el("label", "cw-field-label", "Meta da carteira");
+                const goalInput = el("input", "cw-input cw-money");
+
+                goalInput.type = "text";
+                goalInput.inputMode = "numeric";
+                goalInput.placeholder = "R$ 0,00";
+                goalInput.autocomplete = "off";
+                goalInput.setAttribute("aria-label", "Meta da carteira");
+
+                goalInput.addEventListener("input", () => {
+
+                    const digits = goalInput.value.replace(/\D/g, "").slice(0, 13);
+
+                    cents = digits ? parseInt(digits, 10) : 0;
+
+                    goalInput.value = cents > 0
+                        ? brlFmt.format(cents / 100)
+                        : "";
+                });
+
+
+                /* ---- Estilo (Simulada / Real) ---- */
+
+                const kindLabel = el("div", "cw-field-label", "Estilo da carteira");
+                const kindGroup = el("div", "cw-kinds");
+
+                kindGroup.setAttribute("role", "radiogroup");
+                kindGroup.setAttribute("aria-label", "Estilo da carteira");
+
+                KINDS.forEach(([value, title, desc, icon]) => {
+
+                    const card = el("button", "cw-kind");
+
+                    card.type = "button";
+                    card.dataset.value = value;
+                    card.setAttribute("role", "radio");
+
+                    const ico = el("span", "cw-kind-icon");
+
+                    ico.innerHTML =
+                        '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" ' +
+                        'stroke="currentColor" stroke-width="1.8" stroke-linecap="round" ' +
+                        'stroke-linejoin="round" aria-hidden="true"><path d="' + icon + '"/></svg>';
+
+                    card.append(
+                        ico,
+                        el("strong", "", title),
+                        el("span", "cw-kind-desc", desc)
                     );
 
+                    card.addEventListener("click", () => {
+                        kind = value;
+                        syncKind();
+                    });
 
-                input.type =
-                    "text";
+                    kindGroup.append(card);
+                });
+
+                function syncKind() {
+
+                    kindGroup.querySelectorAll(".cw-kind").forEach(card => {
+
+                        const on = card.dataset.value === kind;
+
+                        card.classList.toggle("selected", on);
+                        card.setAttribute("aria-checked", String(on));
+                    });
+                }
 
 
-                input.maxLength =
-                    30;
+                syncType();
+                syncKind();
 
-
-                input.placeholder =
-                    "Ex: Aposentadoria";
-
-
-                box.append(input);
-
+                box.append(
+                    nameLabel, nameInput,
+                    typeLabel, typeGroup,
+                    goalLabel, goalInput,
+                    kindLabel, kindGroup
+                );
 
                 return {
 
-                    getValue: () =>
-                        input.value,
-
+                    getValue: () => ({
+                        name: nameInput.value,
+                        goal: cents / 100,
+                        style: type,
+                        kind
+                    }),
 
                     focus: () =>
-                        input.focus()
-
+                        nameInput.focus()
                 };
             },
-
 
             validate:
                 async function (value) {
 
                     const result =
-                        await add(value);
-
+                        await add(value.name, value.goal, value.style, value.kind);
 
                     return result.error
-
-                        ? {
-                            error:
-                                result.error
-                        }
-
-                        : {
-                            value:
-                                result.wallet
-                        };
+                        ? { error: result.error }
+                        : { value: result.wallet };
                 }
         });
+    }
+
+
+    /* Converte "50000", "50.000", "50.000,50" ou "R$ 50.000" em número */
+    function parseMoney(texto) {
+
+        let t = String(texto || "").replace(/[^\d.,]/g, "");
+
+        if (!t) {
+            return 0;
+        }
+
+        if (t.includes(",")) {
+            t = t.replace(/\./g, "").replace(",", ".");
+        } else if (/^\d{1,3}(\.\d{3})+$/.test(t)) {
+            t = t.replace(/\./g, "");
+        }
+
+        const n = parseFloat(t);
+
+        return Number.isFinite(n) && n > 0 ? n : 0;
     }
 
 

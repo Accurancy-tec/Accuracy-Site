@@ -1,0 +1,548 @@
+/* =========================================================
+   APORTES - DETALHES DO ATIVO
+   Tela que aparece ao escolher um ativo para fazer o aporte
+   (antes do formulário "Novo aporte").
+   Usa as variáveis de Tema.css (funciona no claro/escuro).
+========================================================= */
+
+@keyframes ad-sobe {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes ad-revela {
+    from { clip-path: inset(0 100% 0 0); }
+    to   { clip-path: inset(0 0 0 0); }
+}
+
+@keyframes ad-gira {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes ad-pop {
+    0%   { transform: scale(.7); }
+    60%  { transform: scale(1.3); }
+    100% { transform: scale(1); }
+}
+
+
+/* ---------- entrada em sequência ---------- */
+
+.ad > * {
+    animation: ad-sobe .6s cubic-bezier(.2, .8, .2, 1) backwards;
+}
+
+.ad > :nth-child(2) { animation-delay: .06s; }
+.ad > :nth-child(3) { animation-delay: .12s; }
+.ad > :nth-child(4) { animation-delay: .18s; }
+.ad > :nth-child(5) { animation-delay: .24s; }
+.ad > :nth-child(6) { animation-delay: .30s; }
+.ad > :nth-child(7) { animation-delay: .36s; }
+.ad > :nth-child(8) { animation-delay: .42s; }
+
+
+/* ---------- cabeçalho (voltar / título / favorito) ---------- */
+
+.ad-fav {
+    width: 32px;
+    height: 32px;
+    border: 1px solid var(--borda);
+    border-radius: 8px;
+    background: var(--icone-bg);
+    color: var(--texto-suave);
+    cursor: pointer;
+    transition: border-color .2s ease, color .2s ease, transform .18s ease;
+}
+
+.ad-fav:hover {
+    border-color: var(--primaria);
+}
+
+.ad-fav:active {
+    transform: scale(.92);
+}
+
+.ad-fav.on {
+    color: var(--amarelo);
+}
+
+.ad-fav.pop i {
+    display: inline-block;
+    animation: ad-pop .5s ease;
+}
+
+
+/* ---------- cartão azul do ativo ---------- */
+
+.ad-hero {
+    padding: 16px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #1d4ed8, #1e3a8a);
+    color: #ffffff;
+}
+
+.ad-hero-top {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid rgba(255, 255, 255, .18);
+}
+
+.ad-hero .ad-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    height: 40px;
+    padding: 0 6px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, .16);
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.ad-hero-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.ad-hero-info strong {
+    display: block;
+    font-size: 16px;
+}
+
+.ad-hero-info small {
+    display: block;
+    overflow: hidden;
+    color: rgba(255, 255, 255, .75);
+    font-size: 11px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ad-status {
+    flex-shrink: 0;
+    padding: 5px 9px;
+    border-radius: 20px;
+    background: rgba(248, 113, 113, .22);
+    color: #fecaca;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.ad-status.aberto {
+    background: rgba(52, 211, 153, .22);
+    color: #a7f3d0;
+}
+
+.ad-hero-bottom {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-top: 14px;
+}
+
+.ad-hero-bottom small {
+    flex: 1;
+    color: rgba(255, 255, 255, .75);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .04em;
+}
+
+.ad-hero-bottom strong {
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.ad-chip {
+    padding: 4px 9px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.ad-hero .ad-chip.up {
+    background: rgba(52, 211, 153, .2);
+    color: #34d399;
+}
+
+.ad-hero .ad-chip.down {
+    background: rgba(248, 113, 113, .2);
+    color: #fca5a5;
+}
+
+.ad-card .ad-chip.up {
+    background: rgba(34, 197, 94, .14);
+    color: var(--verde);
+}
+
+.ad-card .ad-chip.down {
+    background: rgba(239, 68, 68, .14);
+    color: var(--vermelho);
+}
+
+.ad-chip:empty {
+    display: none;
+}
+
+
+/* ---------- última atualização ---------- */
+
+.ad-atualiza {
+    margin: 10px 0 4px;
+    color: var(--texto-secundario);
+    font-size: 11px;
+    text-align: center;
+}
+
+.ad-atualiza button {
+    margin-left: 4px;
+    padding: 2px 4px;
+    border: 0;
+    background: none;
+    color: var(--link);
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.ad-atualiza button i {
+    display: inline-block;
+    margin-right: 3px;
+}
+
+.ad-atualiza button.girando i {
+    animation: ad-gira .8s linear infinite;
+}
+
+.ad-atualiza button:disabled {
+    opacity: .6;
+    cursor: default;
+}
+
+
+/* ---------- títulos e cartões ---------- */
+
+.ad-titulo {
+    margin: 16px 0 8px;
+    color: var(--texto-suave);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.ad-card {
+    padding: 4px 14px;
+    border: 1px solid var(--borda-suave);
+    border-radius: 12px;
+    background: var(--surface);
+}
+
+.ad-linha {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--borda-item);
+    color: var(--texto-suave);
+    font-size: 12px;
+}
+
+.ad-linha:last-child {
+    border-bottom: 0;
+}
+
+.ad-linha strong {
+    color: var(--texto);
+    font-weight: 600;
+}
+
+.ad-linha strong.azul {
+    color: var(--link);
+}
+
+.ad-dir {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.ad-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 10px 0;
+}
+
+.ad-tags span {
+    padding: 4px 9px;
+    border-radius: 6px;
+    background: var(--icone-bg);
+    color: var(--texto-suave);
+    font-size: 11px;
+}
+
+
+/* ---------- estatísticas (gráfico) ---------- */
+
+.ad-stats-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin: 16px 0 8px;
+}
+
+.ad-stats-head .ad-titulo {
+    margin: 0;
+}
+
+.ad-periodos {
+    display: flex;
+    gap: 2px;
+}
+
+.ad-periodos button {
+    padding: 5px 9px;
+    border: 0;
+    border-radius: 14px;
+    background: none;
+    color: var(--texto-suave);
+    font-family: inherit;
+    font-size: 11px;
+    cursor: pointer;
+    transition: background .2s ease, color .2s ease, transform .18s ease;
+}
+
+.ad-periodos button:hover {
+    color: var(--texto);
+}
+
+.ad-periodos button:active {
+    transform: scale(.94);
+}
+
+.ad-periodos button.active {
+    background: var(--primaria-suave);
+    color: var(--link);
+    font-weight: 700;
+}
+
+.ad-grafico {
+    position: relative;
+    height: 140px;
+    touch-action: pan-y;
+}
+
+.ad-svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    animation: ad-revela .9s cubic-bezier(.3, .7, .2, 1) both;
+}
+
+.ad-svg.up   { --ad-cor: var(--verde); }
+.ad-svg.down { --ad-cor: var(--vermelho); }
+
+.ad-svg .ad-stop {
+    stop-color: var(--ad-cor);
+}
+
+.ad-svg .ad-curva {
+    fill: none;
+    stroke: var(--ad-cor);
+    stroke-width: 2;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+}
+
+.ad-cursor {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: var(--borda);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity .15s ease;
+}
+
+.ad-ponto {
+    position: absolute;
+    width: 9px;
+    height: 9px;
+    margin: -4.5px 0 0 -4.5px;
+    border: 2px solid var(--surface-2);
+    border-radius: 50%;
+    background: var(--ponto-cor, var(--verde));
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity .15s ease;
+}
+
+.ad-bolha {
+    position: absolute;
+    top: -2px;
+    z-index: 2;
+    padding: 4px 8px;
+    border: 1px solid var(--borda);
+    border-radius: 7px;
+    background: var(--surface);
+    color: var(--texto);
+    box-shadow: 0 6px 16px var(--sombra);
+    font-size: 11px;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateX(-50%);
+    transition: opacity .15s ease;
+}
+
+.ad-bolha small {
+    margin-left: 5px;
+    color: var(--texto-secundario);
+}
+
+.ad-grafico.ativo .ad-cursor,
+.ad-grafico.ativo .ad-ponto,
+.ad-grafico.ativo .ad-bolha {
+    opacity: 1;
+}
+
+.ad-resumo {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.ad-resumo div {
+    padding: 8px 10px;
+    border: 1px solid var(--borda-suave);
+    border-radius: 10px;
+    background: var(--surface);
+}
+
+.ad-resumo small {
+    display: block;
+    color: var(--texto-secundario);
+    font-size: 10px;
+}
+
+.ad-resumo strong {
+    display: block;
+    margin-top: 2px;
+    font-size: 12px;
+}
+
+.ad-resumo .up   { color: var(--verde); }
+.ad-resumo .down { color: var(--vermelho); }
+
+.ad-vazio {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: var(--texto-fraco);
+    font-size: 12px;
+    text-align: center;
+}
+
+
+/* ---------- rodapé: saldo + vender / comprar ---------- */
+
+.ad-rodape {
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid var(--borda-suave);
+}
+
+.ad-saldo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    color: var(--texto-suave);
+    font-size: 12px;
+}
+
+.ad-saldo strong {
+    color: var(--texto);
+    font-size: 15px;
+}
+
+.ad-botoes {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.ad-botoes button {
+    position: relative;
+    overflow: hidden;
+    padding: 12px;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform .18s ease, background .2s ease, border-color .2s ease, box-shadow .2s ease, opacity .2s ease;
+}
+
+.ad-botoes button:hover:not(:disabled) {
+    transform: translateY(-2px);
+}
+
+.ad-botoes button:active:not(:disabled) {
+    transform: scale(.97);
+}
+
+.ad-vender {
+    border: 1px solid var(--borda);
+    background: var(--surface);
+    color: var(--vermelho);
+}
+
+.ad-vender:hover:not(:disabled) {
+    border-color: var(--vermelho);
+}
+
+.ad-comprar {
+    border: 1px solid var(--primaria);
+    background: var(--primaria);
+    color: #ffffff;
+}
+
+.ad-comprar:hover:not(:disabled) {
+    background: var(--primaria-forte);
+    box-shadow: 0 8px 20px rgba(37, 99, 235, .35);
+}
+
+.ad-botoes button:disabled {
+    opacity: .4;
+    cursor: not-allowed;
+}
+
+
+/* ---------- acessibilidade ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .ad > *,
+    .ad-svg,
+    .ad-fav.pop i,
+    .ad-atualiza button.girando i {
+        animation: none !important;
+    }
+
+    .ad-botoes button,
+    .ad-periodos button,
+    .ad-fav {
+        transition: none !important;
+        transform: none !important;
+    }
+}

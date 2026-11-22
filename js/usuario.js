@@ -163,19 +163,6 @@ if (FormularioCadastro) {
 
 const formulario = document.getElementById("formLogin");
 
-/* Veio de uma sessão expirada: avisa o usuário na tela de login */
-if (formulario && sessionStorage.getItem("accuracy_sessao_expirada")) {
-
-    sessionStorage.removeItem("accuracy_sessao_expirada");
-
-    const avisoSessao = document.getElementById("erroEmail");
-
-    if (avisoSessao) {
-        avisoSessao.textContent =
-            "Sua sessão expirou. Entre novamente para continuar.";
-    }
-}
-
 if (formulario) {
 
     formulario.addEventListener("submit", async function (event) {
@@ -199,7 +186,7 @@ if (formulario) {
         try {
 
             const resposta = await fetch(
-                `${API_URL}auth/loginUnico`,
+                `${API_URL}auth/loginSite`,
                 {
                     method: "POST",
 
@@ -264,12 +251,6 @@ if (formulario) {
                     "Login realizado com sucesso."
                 );
 
-                if (resultado.admin === true) {
-                    localStorage.setItem("admin_token", resultado.token);
-                    localStorage.setItem("admin", JSON.stringify(resultado.user));
-                    window.location.href = "admin.php";
-                    return;
-                }
 
                 localStorage.removeItem(
                     "accuracy_profile_data"
@@ -287,16 +268,6 @@ if (formulario) {
                 );
 
 
-                /* Guarda o refreshToken, se a API enviar, para renovar o login sem pedir senha */
-                if (resultado.refreshToken) {
-
-                    localStorage.setItem(
-                        "refreshToken",
-                        resultado.refreshToken
-                    );
-                }
-
-
                 localStorage.setItem(
                     "usuario",
                     JSON.stringify(resultado.user)
@@ -307,12 +278,7 @@ if (formulario) {
                     "dashboard.php";
 
 
-            }
-            if (erro.includes("desativada")) {
-                return "Esta conta está desativada. Fale com o suporte.";
-            }
-
-            else {
+            } else {
 
                 const mensagem =
                     resultado.message ||

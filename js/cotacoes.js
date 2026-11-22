@@ -17,6 +17,113 @@ const Cotacoes = (function () {
     const API_URL =
         "https://accuracyappapi.onrender.com/brapi/get-quote";
 
+    /*
+     * Cripto e futuros têm rota própria de cotação.
+     * A rota de cada símbolo vem de:
+     *   1. window.ASSET_ROTA (preenchido ao escolher o ativo em Aportes)
+     *   2. localStorage (lembrado entre páginas)
+     *   3. tentativa automática: ação -> cripto -> futuros
+     */
+    const ROTAS_URL = {
+        acao: "get-quote",
+        cripto: "get-crypto-quote",
+        futuros: "get-futures-quote"
+    };
+
+    const ROTAS_KEY = "accuracy_rotas_cotacao";
+
+    /* só símbolos com cara de ticker entram na tentativa automática
+       (títulos de renda fixa, com espaços, nunca chegam à API) */
+    const PADRAO_TICKER = /^[A-Z0-9.^_-]{2,24}$/;
+
+    function lerRotas() {
+        try {
+            return JSON.parse(localStorage.getItem(ROTAS_KEY)) || {};
+        } catch {
+            return {};
+        }
+    }
+
+    function lembrarRota(symbol, tipo) {
+        try {
+            const rotas = lerRotas();
+
+            if (rotas[symbol] === tipo) {
+                return;
+            }
+
+            rotas[symbol] = tipo;
+            localStorage.setItem(ROTAS_KEY, JSON.stringify(rotas));
+        } catch {
+            /* sem localStorage: só perde a memória entre páginas */
+        }
+    }
+
+    function rotaConhecida(symbol) {
+        return (window.ASSET_ROTA || {})[symbol] || lerRotas()[symbol] || null;
+    }
+
+    async function consultar(tipo, symbol) {
+        const url = API_URL.replace(/get-quote$/, ROTAS_URL[tipo]);
+
+        const response = await fetch(
+            `${url}?symbol=${encodeURIComponent(symbol)}`
+        );
+
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        const ativo = data.results && data.results[0];
+
+        const preco = ativo && ativo.data && ativo.data.regularMarketPrice;
+
+        if (preco === null || preco === undefined || !isFinite(Number(preco))) {
+            throw new Error("Sem preço");
+        }
+
+        return Number(preco);
+    }
+
+    /* Devolve o preço do símbolo, ou null se nenhuma rota respondeu */
+    async function buscarPreco(symbol) {
+
+        const conhecida = rotaConhecida(symbol);
+
+        let tentativas;
+
+        if (conhecida) {
+            tentativas = [conhecida];
+        } else if (PADRAO_TICKER.test(symbol)) {
+            tentativas = ["acao", "cripto", "futuros"];
+        } else {
+            tentativas = ["acao"];
+        }
+
+        let ultimoErro = null;
+
+        for (const tipo of tentativas) {
+            try {
+                const preco = await consultar(tipo, symbol);
+
+                if (tipo !== "acao") {
+                    lembrarRota(symbol, tipo);
+                }
+
+                return preco;
+
+            } catch (erro) {
+                ultimoErro = erro;
+            }
+        }
+
+        console.error(`Erro ao buscar cotação de ${symbol}:`, ultimoErro);
+
+        return null;
+    }
+
 
     /*
      * Tempo de cache:
@@ -87,94 +194,18 @@ const Cotacoes = (function () {
              */
             for (const symbol of missing) {
 
-                try {
+                const price = await buscarPreco(symbol);
 
-                    const response =
-                        await fetch(
-                            `${API_URL}?symbol=${encodeURIComponent(
-                                symbol
-                            )}`
-                        );
+                if (price !== null) {
 
+                    cache[symbol] = {
 
-                    /*
-                     * Verifica HTTP
-                     */
-                    if (!response.ok) {
+                        price,
 
-                        throw new Error(
-                            `HTTP ${response.status}`
-                        );
+                        at:
+                            Date.now()
 
-                    }
-
-
-                    /*
-                     * Converte resposta
-                     * para JSON
-                     */
-                    const data =
-                        await response.json();
-
-
-                    /*
-                     * Formato retornado
-                     * pela sua API:
-                     *
-                     * {
-                     *   results: [
-                     *     {
-                     *       symbol: "PETR4",
-                     *       data: {
-                     *         regularMarketPrice: 49.77
-                     *       }
-                     *     }
-                     *   ]
-                     * }
-                     */
-
-                    const ativo =
-                        data.results &&
-                        data.results[0];
-
-
-                    const preco =
-                        ativo &&
-                        ativo.data &&
-                        ativo.data.regularMarketPrice;
-
-
-                    /*
-                     * Se encontrou a cotação,
-                     * salva no cache.
-                     */
-                    if (
-                        preco !== null &&
-                        preco !== undefined
-                    ) {
-
-                        const price =
-                            Number(preco);
-
-
-                        cache[symbol] = {
-
-                            price,
-
-                            at:
-                                Date.now()
-
-                        };
-
-                    }
-
-
-                } catch (error) {
-
-                    console.error(
-                        `Erro ao buscar cotação de ${symbol}:`,
-                        error
-                    );
+                    };
 
                 }
 

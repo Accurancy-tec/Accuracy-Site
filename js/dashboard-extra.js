@@ -90,10 +90,7 @@
 
     (function dataDeHoje() {
 
-        const titulo = [...document.querySelectorAll("h1")]
-            .find(h => h.textContent.trim() === "Dashboard");
-
-        const texto = titulo && titulo.nextElementSibling;
+        const texto = document.querySelector(".v2-page-head p");
 
         if (!texto) {
             return;
@@ -139,7 +136,7 @@
                 throw new Error(data.mensagem || `HTTP ${response.status}`);
             }
 
-            return data.aportes || [];
+            return (data.aportes || []).filter(a => !a.removido_em);
 
         } catch (error) {
 

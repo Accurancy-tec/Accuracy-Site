@@ -1,0 +1,648 @@
+/* =========================================================
+   CURSOS V2
+========================================================= */
+
+/* ---------- Destaque ("Continue de onde parou") ---------- */
+
+body.v2 .v2-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    gap: 22px;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 19px;
+    border: 1px solid var(--borda-suave);
+    border-radius: 12px;
+    background: var(--surface);
+}
+
+body.v2 .v2-thumb {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #17359b, #1e53d1);
+}
+
+body.v2 .v2-hero .v2-thumb {
+    aspect-ratio: 16 / 7.6;
+}
+
+body.v2 .v2-thumb img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: .78;
+}
+
+body.v2 .v2-thumb.cat-iniciante { background: linear-gradient(135deg, #17359b, #1e53d1); }
+body.v2 .v2-thumb.cat-fiis      { background: linear-gradient(135deg, #8a5a12, #e0a82a); }
+body.v2 .v2-thumb.cat-acoes     { background: linear-gradient(135deg, #16705a, #2dcf9b); }
+body.v2 .v2-thumb.cat-cripto    { background: linear-gradient(135deg, #5a2f9e, #8b66e8); }
+
+body.v2 .play-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    display: grid;
+    place-items: center;
+    width: 46px;
+    height: 46px;
+    margin: -23px 0 0 -23px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, .92);
+    color: #12306b;
+    cursor: pointer;
+    font-size: 24px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, .35);
+    transition: transform .15s;
+}
+
+body.v2 .play-button:hover {
+    transform: scale(1.08);
+}
+
+body.v2 .v2-hero-info h2 {
+    margin: 12px 0 14px;
+    font-family: var(--v2-heading);
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -.02em;
+    line-height: 1.15;
+}
+
+body.v2 .v2-hero-info .v2-tag {
+    margin: 0;
+    padding: 3px 9px;
+    font-size: 11.5px;
+    color: var(--texto-suave);
+}
+
+body.v2 .v2-course-meta {
+    color: var(--texto-secundario);
+    font-size: 13px;
+}
+
+body.v2 .v2-progress {
+    height: 5px;
+    margin: 12px 0 0;
+    border-radius: 999px;
+    background: var(--v2-track);
+    overflow: hidden;
+}
+
+body.v2 .v2-progress i {
+    display: block;
+    height: 100%;
+    border-radius: 999px;
+    background: #5b9bff;
+    transition: width .5s ease;
+}
+
+body.v2 .v2-hero-info .v2-btn {
+    margin-top: 16px;
+    padding: 9px 16px;
+}
+
+/* ---------- Filtros ---------- */
+
+body.v2 .v2-courses-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 14px;
+}
+
+body.v2 .v2-courses-head h2 {
+    margin: 0;
+    font-family: var(--v2-heading);
+    font-size: 16px;
+    font-weight: 700;
+}
+
+body.v2 .v2-courses-head .v2-pills {
+    margin: 0;
+}
+
+/* ---------- Cartões de curso ---------- */
+
+body.v2 .courses-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 15px;
+}
+
+body.v2 .course-card {
+    padding: 19px 19px 17px;
+    border: 1px solid var(--borda-suave);
+    border-radius: 12px;
+    background: var(--surface);
+    transition: border-color .15s, transform .15s;
+}
+
+body.v2 .course-card:hover {
+    border-color: var(--borda);
+    transform: translateY(-2px);
+}
+
+body.v2 .course-card.hidden-course {
+    display: none;
+}
+
+body.v2 .course-card .v2-thumb {
+    height: 112px;
+    margin-bottom: 15px;
+}
+
+body.v2 .course-card h3 {
+    margin: 0 0 6px;
+    font-family: var(--v2-heading);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -.01em;
+}
+
+body.v2 .course-card .v2-progress {
+    margin-top: 13px;
+}
+
+body.v2 .course-card .v2-pct {
+    display: block;
+    margin-top: 6px;
+    color: var(--texto-secundario);
+    font-size: 11.5px;
+}
+
+body.v2 .v2-empty-courses {
+    grid-column: 1 / -1;
+    padding: 34px 0;
+    color: var(--texto-secundario);
+    font-size: 13px;
+    text-align: center;
+}
+
+/* ---------- Tipos de investimento ---------- */
+
+body.v2 .invest-types {
+    margin-top: 28px;
+}
+
+body.v2 .invest-types .section-header {
+    margin-bottom: 14px;
+}
+
+body.v2 .invest-types .section-header h2 {
+    margin: 0;
+    font-family: var(--v2-heading);
+    font-size: 16px;
+    font-weight: 700;
+}
+
+body.v2 .invest-types .section-header p {
+    margin-top: 3px;
+    color: var(--texto-secundario);
+    font-size: 13px;
+}
+
+@media (max-width: 1100px) {
+    body.v2 .courses-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 760px) {
+    body.v2 .v2-hero,
+    body.v2 .courses-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+/* =========================================================
+   Modal do vídeo (extraído do cursos.css)
+========================================================= */
+
+.course-card.hidden-course {
+
+    display: none;
+
+}
+
+.video-modal {
+
+    position: fixed;
+
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    width: 100vw;
+    height: 100vh;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    background: rgba(0, 0, 0, 0.90);
+
+    opacity: 0;
+
+    visibility: hidden;
+
+    pointer-events: none;
+
+    z-index: 999999;
+
+    transition:
+        opacity 0.2s ease,
+        visibility 0.2s ease;
+}
+
+.video-modal.show {
+
+    opacity: 1;
+
+    visibility: visible;
+
+    pointer-events: auto;
+}
+
+.video-container {
+
+    position: relative;
+
+    width: 900px;
+
+    max-width: 95vw;
+
+    background: #0e1f3d;
+
+    border: 1px solid #294875;
+
+    border-radius: 16px;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 25px 80px rgba(0, 0, 0, 0.75);
+
+    z-index: 1000000;
+}
+
+.video-header {
+
+    width: 100%;
+
+    height: 58px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding: 0 16px 0 20px;
+
+    background: #0e1f3d;
+
+    color: #ffffff;
+
+    border-bottom: 1px solid #294875;
+}
+
+.video-header strong {
+
+    font-size: 15px;
+
+    font-weight: 600;
+}
+
+.close-video {
+
+    width: 36px;
+
+    height: 36px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border: none;
+
+    border-radius: 50%;
+
+    background: #1c3563;
+
+    color: #ffffff;
+
+    cursor: pointer;
+
+    font-size: 14px;
+
+    transition: 0.2s ease;
+}
+
+.close-video:hover {
+
+    background: #2563eb;
+
+    transform: scale(1.05);
+}
+
+.video-wrapper {
+
+    position: relative;
+
+    width: 100%;
+
+    height: 0;
+
+    padding-bottom: 56.25%;
+
+    background: #000000;
+
+    overflow: hidden;
+}
+
+.video-wrapper iframe {
+
+    position: absolute !important;
+
+    top: 0 !important;
+
+    left: 0 !important;
+
+    width: 100% !important;
+
+    height: 100% !important;
+
+    min-width: 100% !important;
+
+    min-height: 100% !important;
+
+    max-width: none !important;
+
+    max-height: none !important;
+
+    display: block !important;
+
+    visibility: visible !important;
+
+    opacity: 1 !important;
+
+    border: 0 !important;
+
+    margin: 0 !important;
+
+    padding: 0 !important;
+
+    background: #000000;
+
+    z-index: 1000001;
+}
+
+@media (max-width: 700px) {
+.video-modal {
+
+        padding: 10px;
+
+    }
+.video-container {
+
+        width: 100%;
+
+        max-width: 100%;
+
+        border-radius: 12px;
+
+    }
+.video-header {
+
+        height: 52px;
+
+        padding:
+            0
+            12px
+            0
+            16px;
+
+    }
+.video-header strong {
+
+        font-size: 14px;
+
+    }
+}
+
+
+/* =========================================================
+   Tipos de investimento: cards e janelinha (estavam inline)
+========================================================= */
+
+        .invest-types {
+            background: var(--surface-2, #0e1f3d);
+            border: 1px solid var(--borda-suave, #1c3563);
+            border-radius: 14px;
+            padding: 20px;
+        }
+
+        .invest-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .invest-card {
+            background: var(--icone-bg, #0b1930);
+            border: 1px solid var(--borda-suave, #1c3563);
+            border-radius: 12px;
+            padding: 18px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            text-align: left;
+            color: inherit;
+            cursor: pointer;
+            transition: .25s;
+        }
+
+        .invest-card:hover,
+        .invest-card:focus-visible {
+            border-color: #3b82f6;
+            transform: translateY(-3px);
+            outline: none;
+        }
+
+        .invest-icon {
+            width: 48px;
+            height: 48px;
+            flex-shrink: 0;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+        }
+
+        .invest-icon.cripto { background: rgba(245, 158, 11, .15); color: #f59e0b; }
+        .invest-icon.fiis   { background: rgba(34, 197, 94, .15);  color: #22c55e; }
+        .invest-icon.acoes  { background: rgba(59, 130, 246, .15); color: #3b82f6; }
+
+        .invest-card strong {
+            display: block;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .invest-card small {
+            color: #94a3b8;
+            font-size: 11px;
+        }
+
+        .invest-arrow {
+            margin-left: auto;
+            color: #94a3b8;
+            transition: .25s;
+        }
+
+        .invest-card:hover .invest-arrow {
+            color: #3b82f6;
+            transform: translateX(3px);
+        }
+
+        /* ---------- CARDZINHO ---------- */
+
+        .info-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity .2s ease, visibility .2s ease;
+            z-index: 999990;
+        }
+
+        .info-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .info-card {
+            position: relative;
+            width: 340px;
+            max-width: 100%;
+            background: var(--surface, #0e1f3d);
+            border: 1px solid var(--borda, #294875);
+            border-radius: 14px;
+            padding: 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, .6);
+            transform: translateY(14px) scale(.96);
+            transition: transform .25s ease;
+        }
+
+        .info-overlay.show .info-card {
+            transform: translateY(0) scale(1);
+        }
+
+        .info-close {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 30px;
+            height: 30px;
+            border: none;
+            border-radius: 50%;
+            background: #1c3563;
+            color: #fff;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .info-close:hover { background: #2563eb; }
+
+        .info-card .invest-icon {
+            margin-bottom: 14px;
+        }
+
+        .info-card h3 {
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+
+        .info-card > p {
+            color: #94a3b8;
+            font-size: 13px;
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .info-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .info-list li {
+            font-size: 12px;
+            line-height: 1.5;
+            display: flex;
+            gap: 8px;
+        }
+
+        .info-list i {
+            color: #3b82f6;
+            margin-top: 2px;
+        }
+
+        .info-risk {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 11px;
+            color: #94a3b8;
+            padding-top: 14px;
+            border-top: 1px solid var(--borda-suave, #1c3563);
+        }
+
+        .info-risk-bars {
+            display: flex;
+            gap: 4px;
+        }
+
+        .info-risk-bars span {
+            width: 22px;
+            height: 5px;
+            border-radius: 10px;
+            background: #1c3563;
+        }
+
+        .info-risk-bars span.on { background: #3b82f6; }
+
+        .info-note {
+            margin-top: 12px;
+            font-size: 10px;
+            color: #64748b;
+        }
+
+        @media (max-width: 900px) {
+            .invest-grid { grid-template-columns: 1fr; }
+        }
+        

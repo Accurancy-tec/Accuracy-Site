@@ -132,43 +132,6 @@ function getToken() {
    CADASTRAR APORTE
 ========================= */
 
-/*
- * Padroniza a mensagem de erro vinda da API.
- *
- * - Como o sistema de saldo ainda não foi implementado,
- *   toda compra é recusada pelo back-end com "Saldo insuficiente".
- *   Aqui garantimos que o usuário veja exatamente essa mensagem.
- * - Corrige textos com acentos quebrados (ex.: "NÃ£o foi possÃ­vel"),
- *   que o back-end pode devolver em erros genéricos.
- */
-function normalizarMensagemAPI(mensagem) {
-
-    let texto = String(mensagem || "").trim();
-
-    if (/[ÃÂ][\u0080-\u00BF]/.test(texto)) {
-
-        try {
-
-            const bytes = Uint8Array.from(
-                texto,
-                caractere => caractere.charCodeAt(0)
-            );
-
-            texto = new TextDecoder("utf-8", { fatal: true })
-                .decode(bytes);
-
-        } catch {
-            /* mantém o texto original */
-        }
-    }
-
-    if (/saldo\s+insuficiente/i.test(texto)) {
-        return "Saldo insuficiente";
-    }
-
-    return texto;
-}
-
 async function cadastrarAporteAPI(dados) {
 
     const token = getToken();
@@ -223,11 +186,9 @@ async function cadastrarAporteAPI(dados) {
 
     if (!response.ok || data.sucesso !== true) {
         throw new Error(
-            normalizarMensagemAPI(
-                data.mensagem ||
-                data.message ||
-                `Erro HTTP ${response.status}.`
-            )
+            data.mensagem ||
+            data.message ||
+            `Erro HTTP ${response.status}.`
         );
     }
 
@@ -801,7 +762,11 @@ $("#confirmBtn").addEventListener(
             if (
                 SEM_COTACAO.includes(
                     asset.value
-                )
+                ) ||
+                /* títulos de renda fixa e Tesouro (vindos da API) não têm cotação de mercado */
+                classOf(
+                    asset.value
+                ) === "Renda Fixa"
             ) {
 
                 unitPrice = null;
@@ -1829,7 +1794,7 @@ function updateCards() {
    NOTIFICAÇÃO
 ========================= */
 
-$("#notificationBtn").addEventListener(
+$("#notificationBtn")?.addEventListener(
     "click",
     () => {
 

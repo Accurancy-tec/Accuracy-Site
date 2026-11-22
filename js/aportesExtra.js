@@ -112,7 +112,7 @@
                 );
             }
 
-            contributions = (data.aportes || []).map(item => ({
+            contributions = (data.aportes || []).filter(item => !item.removido_em).map(item => ({
 
                 id: item.id_aporte,
 

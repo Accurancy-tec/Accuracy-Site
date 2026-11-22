@@ -83,15 +83,6 @@ const ResumoCarteiras = (function () {
         const texto =
             await response.text();
 
-        /* Token expirado: volta para o login */
-        if (response.status === 401) {
-
-            localStorage.removeItem("token");
-            localStorage.removeItem("usuario");
-
-            window.location.href = "login.php";
-        }
-
 
         let data;
 
@@ -263,6 +254,22 @@ const ResumoCarteiras = (function () {
 
                             nome_carteira:
                                 carteira.nome_carteira,
+
+
+                            meta_carteira:
+                                Number(
+                                    carteira.meta_carteira
+                                ) || 0,
+
+
+                            tipo_carteira:
+                                carteira.tipo_carteira
+                                || "",
+
+
+                            estilo_carteira:
+                                carteira.estilo_carteira
+                                || "",
 
 
                             saldo_livre_carteira:

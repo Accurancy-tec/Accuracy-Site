@@ -155,8 +155,8 @@
         <h3>Murilo Cordeiro</h3>
 
         <p>
-         Murilo foi responsável pela criação
-           e manutenção do Banco de Dados, API e do aplicativo mobile.
+          Murilo foi responsável pelo Back-End
+           e da manutenção do Banco de dados do App Accuracy.
         </p>
 
       </article>
@@ -173,8 +173,8 @@
         <h3>Kleberson Duarte</h3>
 
         <p>
-          Kleberson foi responsável pela criação
-           e manutenção do Banco de Dados, API e do aplicativo mobile.
+          Kleberson foi responsável pelo Back-End
+           e da manutenção do Banco de dados do App Accuracy.
         </p>
 
       </article>

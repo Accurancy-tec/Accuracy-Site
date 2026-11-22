@@ -1,0 +1,52 @@
+/* =========================================================
+   BASE V2
+   Reset mínimo + avatar, para páginas que não podem carregar
+   o dashboard.css (ele tem nomes de classe que colidem).
+========================================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background: var(--bg);
+    color: var(--texto);
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+button {
+    font-family: inherit;
+}
+
+.avatar {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: var(--primaria);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 600;
+    flex-shrink: 0;
+}
+
+.green {
+    color: var(--verde);
+}
+
+.red {
+    color: var(--vermelho);
+}
+
+.hidden {
+    display: none !important;
+}

@@ -293,6 +293,187 @@
     background: var(--primaria-forte);
 }
 
+.cw-btn:disabled {
+    opacity: .6;
+
+    cursor: wait;
+}
+
+
+/* =========================
+   NOVA CARTEIRA (formulário)
+========================= */
+
+.cw-modal.cw-new {
+    max-width: 460px;
+
+    max-height: calc(100vh - 40px);
+
+    overflow-y: auto;
+}
+
+.cw-new h3 {
+    margin-bottom: 18px;
+
+    font-size: 18px;
+}
+
+.cw-field-label {
+    display: block;
+
+    margin: 16px 0 8px;
+
+    color: var(--texto-suave);
+
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.cw-new h3 + .cw-field-label {
+    margin-top: 0;
+}
+
+.cw-new .cw-input {
+    padding: 13px 14px;
+
+    border-radius: 10px;
+
+    font-size: 14px;
+}
+
+.cw-chips {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 8px;
+}
+
+.cw-chip {
+    padding: 9px 16px;
+
+    border: 1px solid var(--borda);
+
+    border-radius: 999px;
+
+    background: transparent;
+
+    color: var(--texto-suave);
+
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    white-space: nowrap;
+
+    cursor: pointer;
+
+    transition: .2s;
+}
+
+.cw-chip:hover {
+    border-color: var(--primaria);
+}
+
+.cw-chip.selected {
+    border-color: var(--primaria);
+
+    background: var(--primaria-suave);
+
+    color: var(--texto-ativo);
+}
+
+.cw-kinds {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 10px;
+}
+
+.cw-kind {
+    display: flex;
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    gap: 6px;
+
+    padding: 14px;
+
+    border: 1px solid var(--borda);
+
+    border-radius: 12px;
+
+    background: var(--surface-2);
+
+    color: var(--texto);
+
+    font-family: inherit;
+    font-size: 14px;
+    text-align: left;
+
+    cursor: pointer;
+
+    transition: .2s;
+}
+
+.cw-kind:hover {
+    border-color: var(--primaria);
+}
+
+.cw-kind.selected {
+    border-color: var(--primaria);
+
+    background: var(--primaria-suave);
+}
+
+.cw-kind-icon {
+    display: grid;
+
+    place-items: center;
+
+    width: 36px;
+    height: 36px;
+
+    margin-bottom: 4px;
+
+    border-radius: 10px;
+
+    background: var(--icone-bg);
+
+    color: var(--link);
+}
+
+.cw-kind-desc {
+    color: var(--texto-secundario);
+
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+.cw-new .cw-actions {
+    margin-top: 20px;
+}
+
+.cw-new .cw-btn {
+    padding: 12px 18px;
+
+    font-size: 13px;
+}
+
+.cw-new .cw-btn.primary {
+    min-width: 140px;
+}
+
+@media (max-width: 480px) {
+
+    .cw-kinds {
+        grid-template-columns: 1fr;
+    }
+}
+
 
 @media (max-width: 600px) {
 

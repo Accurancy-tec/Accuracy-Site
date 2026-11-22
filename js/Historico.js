@@ -17,6 +17,7 @@
 
     let history = [];
     let currentFilter = "all";
+    let searchTerm = "";
 
 
     /* =========================
@@ -39,6 +40,21 @@
         const [year, month, day] = String(dateString).slice(0, 10).split("-");
 
         return `${day}/${month}/${year}`;
+    }
+
+        const MESES = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
+
+    /* 10 nov (e 10 nov 25 quando não é o ano atual) */
+    function formatDateShort(dateString) {
+        if (!dateString) {
+            return "-";
+        }
+
+        const [year, month, day] = String(dateString).slice(0, 10).split("-");
+        const nome = MESES[Number(month) - 1] || month;
+        const mesmoAno = Number(year) === new Date().getFullYear();
+
+        return `${Number(day)} ${nome}${mesmoAno ? "" : " " + String(year).slice(2)}`;
     }
 
     function recurrenceText(item) {
@@ -176,11 +192,11 @@
         $("#cardTotalInfo").textContent =
             plural(added.length, "aporte ativo", "aportes ativos");
 
-        $("#cardAdded").textContent = money(totalAdded + totalRemoved);
+        $("#cardAdded").textContent = "+" + money(totalAdded + totalRemoved);
         $("#cardAddedInfo").textContent =
             plural(added.length + removed.length, "operação", "operações");
 
-        $("#cardRemoved").textContent = money(totalRemoved);
+        $("#cardRemoved").textContent = (totalRemoved > 0 ? "-" : "") + money(totalRemoved);
         $("#cardRemovedInfo").textContent =
             plural(removed.length, "remoção", "remoções");
 
@@ -289,7 +305,15 @@
             b.date.localeCompare(a.date) || Number(b.id) - Number(a.id)
         );
 
+        const norm = t => String(t ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+        const term = norm(searchTerm.trim());
+
         const visible = sorted.filter(entry => {
+
+            if (term && !norm(`${entry.asset} ${entry.observation} ${entry.type}`).includes(term)) {
+                return false;
+            }
+
 
             if (currentFilter === "all") {
                 return true;
@@ -308,7 +332,7 @@
 
             body.innerHTML = `
                 <tr class="empty-row">
-                    <td colspan="6">Nenhuma movimentação encontrada.</td>
+                    <td colspan="4">Nenhuma movimentação encontrada.</td>
                 </tr>
             `;
 
@@ -318,27 +342,21 @@
         body.innerHTML = visible.map(entry => {
 
             const isRemoved = entry.action === "removed";
+            const detalhe = [recurrenceText(entry), entry.observation].filter(Boolean).join(" · ");
 
             return `
                 <tr>
-                    <td class="asset-cell">
+                    <td class="muted">${formatDateShort(entry.date)}</td>
+                    <td class="v2-wide">
                         ${escapeHtml(entry.asset)}
-                        <small>${entry.observation ? escapeHtml(entry.observation) : ""}</small>
+                        <small>${escapeHtml(detalhe)}</small>
                     </td>
-                    <td class="${typeClass(entry.type)}">${escapeHtml(entry.type)}</td>
-                    <td>${formatDate(entry.date)}</td>
-                    <td class="${isRemoved ? "red" : ""}">
-                        ${isRemoved ? "- " : ""}${money(entry.amount)}
-                    </td>
-                    <td>${recurrenceText(entry)}</td>
-                    <td>
-                        <span class="status ${isRemoved ? "removed" : "done"}">
-                            ${isRemoved ? "Removido" : "Concluída"}
-                        </span>
+                    <td>${escapeHtml(entry.type)}${isRemoved ? ' <span class="red">· Removido</span>' : ""}</td>
+                    <td class="num ${isRemoved ? "red" : "green"}">
+                        ${isRemoved ? "-" : "+"}${money(entry.amount)}
                     </td>
                 </tr>
             `;
-
         }).join("");
     }
 
@@ -372,6 +390,12 @@
     });
 
 
+    window.addEventListener("v2:busca", e => {
+        searchTerm = String(e.detail || "");
+        renderTable();
+    });
+
+
     /* =========================
        INICIALIZAÇÃO
     ========================= */
@@ -382,7 +406,7 @@
 
         body.innerHTML = `
             <tr class="empty-row">
-                <td colspan="6">Carregando histórico...</td>
+                <td colspan="4">Carregando histórico...</td>
             </tr>
         `;
     }
@@ -402,7 +426,7 @@
 
                 body.innerHTML = `
                     <tr class="empty-row">
-                        <td colspan="6">Erro ao carregar o histórico: ${escapeHtml(error.message)}</td>
+                        <td colspan="4">Erro ao carregar o histórico: ${escapeHtml(error.message)}</td>
                     </tr>
                 `;
             }

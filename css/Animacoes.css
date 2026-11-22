@@ -1,0 +1,504 @@
+/* =========================================================
+   ANIMAÇÕES (reutilizável em qualquer página do site)
+
+   Para usar em outra página basta incluir este CSS e o
+   js/animacoes.js. Os seletores abaixo só pegam elementos
+   que já existem nas páginas (.topbar, .info-card, .sidebar...).
+
+   Tudo é desligado para quem pede "reduzir movimento" no
+   sistema (acessibilidade).
+========================================================= */
+
+@keyframes anim-sobe {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes anim-desce {
+    from { opacity: 0; transform: translateY(-10px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes anim-entra-esq {
+    from { opacity: 0; transform: translateX(-12px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes anim-avanca {
+    from { opacity: 0; transform: translateX(22px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes anim-recua {
+    from { opacity: 0; transform: translateX(-22px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes anim-pop {
+    0%   { opacity: 0; transform: scale(.92); }
+    60%  { opacity: 1; transform: scale(1.03); }
+    100% { transform: scale(1); }
+}
+
+@keyframes anim-flutua {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-5px); }
+}
+
+@keyframes anim-cresce {
+    from { transform: scaleY(0); }
+    to   { transform: scaleY(1); }
+}
+
+@keyframes anim-brilho {
+    from { background-position: 200% 0; }
+    to   { background-position: -200% 0; }
+}
+
+@keyframes anim-sai {
+    0%   { opacity: 1; transform: translateX(0); max-height: 120px; }
+    45%  { opacity: 0; transform: translateX(60px); max-height: 120px; }
+    100% { opacity: 0; transform: translateX(60px); max-height: 0; padding-top: 0; padding-bottom: 0; border-width: 0; }
+}
+
+@keyframes anim-pulsa {
+    0%   { box-shadow: 0 0 0 0 rgba(34, 197, 94, .55); }
+    70%  { box-shadow: 0 0 0 7px rgba(34, 197, 94, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+}
+
+@keyframes anim-pisca-up {
+    0%   { background: rgba(34, 197, 94, .35); color: var(--verde); }
+    100% { background: transparent; }
+}
+
+@keyframes anim-pisca-down {
+    0%   { background: rgba(239, 68, 68, .35); color: var(--vermelho); }
+    100% { background: transparent; }
+}
+
+@keyframes anim-check {
+    0%   { transform: scale(.4) rotate(-90deg); }
+    60%  { transform: scale(1.35) rotate(10deg); }
+    100% { transform: scale(1) rotate(0); }
+}
+
+@keyframes anim-toast {
+    from { opacity: 0; transform: translateY(20px) scale(.96); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes anim-onda {
+    to { transform: scale(2.6); opacity: 0; }
+}
+
+
+/* =========================
+   ENTRADA DA PÁGINA
+========================= */
+
+.sidebar .menu a {
+    animation: anim-entra-esq 0.81s ease both;
+}
+
+.sidebar .menu a:nth-child(1) { animation-delay: 0.09s; }
+.sidebar .menu a:nth-child(2) { animation-delay: 0.18s; }
+.sidebar .menu a:nth-child(3) { animation-delay: 0.27s; }
+.sidebar .menu a:nth-child(4) { animation-delay: 0.36s; }
+.sidebar .menu a:nth-child(5) { animation-delay: 0.45s; }
+.sidebar .menu a:nth-child(6) { animation-delay: 0.54s; }
+
+.sidebar .menu a {
+    transition: transform .2s ease, background .2s ease, color .2s ease;
+}
+
+.sidebar .menu a:not(.active):hover {
+    transform: translateX(4px);
+}
+
+.main > .topbar {
+    animation: anim-desce 0.9s ease both;
+}
+
+.cards-top .info-card {
+    animation: anim-sobe 0.99s cubic-bezier(.2, .8, .2, 1) both;
+    transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+}
+
+.cards-top .info-card:nth-child(1) { animation-delay: 0.18s; }
+.cards-top .info-card:nth-child(2) { animation-delay: 0.32s; }
+.cards-top .info-card:nth-child(3) { animation-delay: 0.47s; }
+
+.cards-top .info-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--primaria);
+    box-shadow: 0 10px 24px var(--sombra);
+}
+
+.content-grid > .aporte-form {
+    animation: anim-sobe 0.99s cubic-bezier(.2, .8, .2, 1) 0.54s both;
+}
+
+.content-grid > .aporte-list {
+    animation: anim-sobe 0.99s cubic-bezier(.2, .8, .2, 1) 0.68s both;
+}
+
+
+/* =========================
+   LISTA DE APORTES
+   (a classe é colocada pelo js/animacoes.js só quando
+    os itens aparecem, para não repetir a cada atualização)
+========================= */
+
+.anim-item {
+    animation: anim-sobe 0.81s cubic-bezier(.2, .8, .2, 1) both;
+    animation-delay: calc(var(--i, 0) * 99ms);
+}
+
+.aporte-item {
+    transition: transform .2s ease, background .2s ease, border-color .2s ease;
+}
+
+.aporte-item:hover {
+    transform: translateX(3px);
+}
+
+.empty-state i {
+    display: inline-block;
+    animation: anim-flutua 5.4s ease-in-out infinite;
+}
+
+
+/* =========================
+   BOTÕES
+========================= */
+
+.confirm-btn,
+.clear-btn,
+.quick-values button,
+.pp-tile,
+.pp-banner,
+.pp-row,
+.pp-fixa,
+.pp-chips button,
+.pp-change,
+.pp-more {
+    transition: transform .18s ease, background .2s ease, border-color .2s ease, box-shadow .2s ease, color .2s ease;
+}
+
+.confirm-btn,
+.pp-chips button,
+.quick-values button,
+.pp-change {
+    position: relative;
+    overflow: hidden;
+}
+
+.confirm-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(37, 99, 235, .35);
+}
+
+.confirm-btn:active,
+.clear-btn:active,
+.quick-values button:active,
+.pp-tile:active,
+.pp-banner:active,
+.pp-row:active,
+.pp-fixa:active,
+.pp-chips button:active,
+.pp-change:active,
+.pp-more:active {
+    transform: scale(.97);
+}
+
+.quick-values button.selected {
+    animation: anim-pop 0.54s ease;
+}
+
+.anim-onda {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    margin: -20px 0 0 -20px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, .35);
+    pointer-events: none;
+    animation: anim-onda .6s ease-out forwards;
+}
+
+
+/* =========================
+   SELETOR DE PRODUTOS
+========================= */
+
+#ppRoot.pp-anim[data-dir="fwd"]  { animation: anim-avanca 0.58s ease both; }
+#ppRoot.pp-anim[data-dir="back"] { animation: anim-recua  0.58s ease both; }
+
+#ppRoot.pp-anim .pp-tile,
+#ppRoot.pp-anim .pp-banner,
+#ppRoot.pp-anim .pp-row,
+#ppRoot.pp-anim .pp-fixa {
+    animation: anim-sobe 0.72s cubic-bezier(.2, .8, .2, 1) both;
+}
+
+#ppRoot.pp-anim .pp-tile:nth-child(1), #ppRoot.pp-anim .pp-row:nth-child(1), #ppRoot.pp-anim .pp-fixa:nth-child(1) { animation-delay: 0.07s; }
+#ppRoot.pp-anim .pp-tile:nth-child(2), #ppRoot.pp-anim .pp-row:nth-child(2), #ppRoot.pp-anim .pp-fixa:nth-child(2) { animation-delay: 0.16s; }
+#ppRoot.pp-anim .pp-tile:nth-child(3), #ppRoot.pp-anim .pp-row:nth-child(3), #ppRoot.pp-anim .pp-fixa:nth-child(3) { animation-delay: 0.25s; }
+#ppRoot.pp-anim .pp-tile:nth-child(4), #ppRoot.pp-anim .pp-row:nth-child(4), #ppRoot.pp-anim .pp-fixa:nth-child(4) { animation-delay: 0.34s; }
+#ppRoot.pp-anim .pp-tile:nth-child(5), #ppRoot.pp-anim .pp-row:nth-child(5), #ppRoot.pp-anim .pp-fixa:nth-child(5) { animation-delay: 0.43s; }
+#ppRoot.pp-anim .pp-tile:nth-child(6), #ppRoot.pp-anim .pp-row:nth-child(6), #ppRoot.pp-anim .pp-fixa:nth-child(6) { animation-delay: 0.52s; }
+#ppRoot.pp-anim .pp-row:nth-child(n+7) { animation-delay: 0.58s; }
+#ppRoot.pp-anim .pp-banner { animation-delay: 0.61s; }
+
+.pp-tile:hover,
+.pp-banner:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px var(--sombra);
+}
+
+/* Dentro da lista (que rola) nada se desloca no hover: só destaca,
+   senão aparece barra de rolagem e o elemento fica tremendo. */
+.pp-row:hover,
+.pp-fixa:hover {
+    background: var(--surface-hover);
+    box-shadow: 0 0 0 1px var(--primaria);
+}
+
+.pp-row:hover .pp-badge {
+    transform: scale(1.1);
+}
+
+.pp-row .pp-badge {
+    transition: transform .2s ease;
+}
+
+.pp-tile .pp-badge {
+    transition: transform .25s ease;
+}
+
+.pp-tile:hover .pp-badge {
+    transform: scale(1.12) rotate(-4deg);
+}
+
+.pp-star i {
+    display: inline-block;
+}
+
+.pp-star.pop i {
+    animation: anim-pop 0.72s ease;
+}
+
+#formStep:not(.hidden) {
+    animation: anim-sobe 0.72s cubic-bezier(.2, .8, .2, 1) both;
+}
+
+.pp-selected {
+    animation: anim-pop 0.81s ease both;
+}
+
+
+/* =========================
+   HISTÓRICO
+========================= */
+
+.cards .card {
+    animation: anim-sobe 0.99s cubic-bezier(.2, .8, .2, 1) both;
+    transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+}
+
+.cards .card:nth-child(1) { animation-delay: 0.18s; }
+.cards .card:nth-child(2) { animation-delay: 0.32s; }
+.cards .card:nth-child(3) { animation-delay: 0.47s; }
+.cards .card:nth-child(4) { animation-delay: 0.61s; }
+
+.cards .card:hover {
+    box-shadow: 0 10px 24px var(--sombra);
+}
+
+.main > .chart {
+    animation: anim-sobe 0.99s cubic-bezier(.2, .8, .2, 1) 0.75s both;
+}
+
+.main > .table {
+    animation: anim-sobe 0.99s cubic-bezier(.2, .8, .2, 1) 0.9s both;
+}
+
+/* barras crescem de baixo para cima, mês a mês */
+.bar {
+    transform-origin: bottom;
+    animation: anim-cresce 1.3s cubic-bezier(.2, .8, .2, 1) both;
+}
+
+.bar-label,
+.bar-net {
+    animation: anim-sobe 0.9s ease both;
+    animation-delay: 1.4s;
+}
+
+.bar-group:nth-child(1) .bar.add { animation-delay: 0.90s; }
+.bar-group:nth-child(1) .bar.rem { animation-delay: 1.05s; }
+.bar-group:nth-child(2) .bar.add { animation-delay: 1.08s; }
+.bar-group:nth-child(2) .bar.rem { animation-delay: 1.23s; }
+.bar-group:nth-child(3) .bar.add { animation-delay: 1.26s; }
+.bar-group:nth-child(3) .bar.rem { animation-delay: 1.41s; }
+.bar-group:nth-child(4) .bar.add { animation-delay: 1.44s; }
+.bar-group:nth-child(4) .bar.rem { animation-delay: 1.59s; }
+.bar-group:nth-child(5) .bar.add { animation-delay: 1.62s; }
+.bar-group:nth-child(5) .bar.rem { animation-delay: 1.77s; }
+.bar-group:nth-child(6) .bar.add { animation-delay: 1.80s; }
+.bar-group:nth-child(6) .bar.rem { animation-delay: 1.95s; }
+
+/* linhas da tabela entram em sequência (também ao trocar o filtro) */
+#historyBody tr {
+    animation: anim-sobe 0.72s cubic-bezier(.2, .8, .2, 1) both;
+}
+
+#historyBody tr:nth-child(1) { animation-delay: 0.09s; }
+#historyBody tr:nth-child(2) { animation-delay: 0.18s; }
+#historyBody tr:nth-child(3) { animation-delay: 0.27s; }
+#historyBody tr:nth-child(4) { animation-delay: 0.36s; }
+#historyBody tr:nth-child(5) { animation-delay: 0.45s; }
+#historyBody tr:nth-child(6) { animation-delay: 0.54s; }
+#historyBody tr:nth-child(7) { animation-delay: 0.63s; }
+#historyBody tr:nth-child(8) { animation-delay: 0.72s; }
+#historyBody tr:nth-child(9) { animation-delay: 0.81s; }
+#historyBody tr:nth-child(10) { animation-delay: 0.90s; }
+#historyBody tr:nth-child(n+11) { animation-delay: 0.9s; }
+
+.filters button {
+    position: relative;
+    overflow: hidden;
+    transition: transform .18s ease, background .2s ease, border-color .2s ease, color .2s ease;
+}
+
+.filters button:active {
+    transform: scale(.95);
+}
+
+
+/* =========================
+   APORTES - EXTRAS
+========================= */
+
+/* Carregamento: brilho passando no lugar do spinner */
+.cards-top.is-loading::after,
+.aporte-list.is-loading::after {
+    display: none;
+}
+
+.cards-top.is-loading > *,
+.aporte-list.is-loading > * {
+    opacity: .4;
+}
+
+.cards-top.is-loading::before,
+.aporte-list.is-loading::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 4;
+    border-radius: 12px;
+    background: linear-gradient(100deg, transparent 25%, rgba(110, 168, 255, .22) 50%, transparent 75%);
+    background-size: 200% 100%;
+    animation: anim-brilho 2.2s linear infinite;
+}
+
+/* Cotação ao vivo: ponto pulsando + piscar quando o preço muda */
+.asset-price:not(:empty)::before {
+    content: "";
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    margin-right: 7px;
+    border-radius: 50%;
+    background: var(--verde);
+    animation: anim-pulsa 2.4s ease-out infinite;
+}
+
+.asset-price {
+    padding: 2px 4px;
+    margin-left: -4px;
+    border-radius: 6px;
+}
+
+.asset-price[data-pisca="up"]   { animation: anim-pisca-up 2s ease-out; }
+.asset-price[data-pisca="down"] { animation: anim-pisca-down 2s ease-out; }
+
+/* Excluir: o item desliza para fora e a lista fecha o espaço */
+.aporte-item.anim-saindo {
+    overflow: hidden;
+    pointer-events: none;
+    animation: anim-sai 1.1s ease-in forwards;
+    animation-delay: calc(var(--o, 0) * 120ms);
+}
+
+/* Confirmar: botão vira "check" verde */
+.confirm-btn.ok {
+    background: var(--verde);
+    box-shadow: 0 8px 22px rgba(34, 197, 94, .4);
+}
+
+.confirm-btn.ok i {
+    display: inline-block;
+    animation: anim-check .7s ease both;
+}
+
+.confirm-btn {
+    transition: background .35s ease, transform .18s ease, box-shadow .2s ease;
+}
+
+/* Aviso (toast) desliza para dentro */
+.toast.show {
+    animation: anim-toast .5s cubic-bezier(.2, .8, .2, 1) both;
+}
+
+
+/* =========================
+   ACESSIBILIDADE
+========================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .sidebar .menu a,
+    .main > .topbar,
+    .cards-top .info-card,
+    .content-grid > .aporte-form,
+    .content-grid > .aporte-list,
+    .anim-item,
+    .empty-state i,
+    #ppRoot.pp-anim,
+    #ppRoot.pp-anim *,
+    #formStep,
+    .pp-selected,
+    .quick-values button.selected,
+    .pp-star.pop i,
+    .asset-price,
+    .asset-price::before,
+    .aporte-item.anim-saindo,
+    .confirm-btn.ok i,
+    .toast.show,
+    .cards-top.is-loading::before,
+    .aporte-list.is-loading::before,
+    .cards .card,
+    .main > .chart,
+    .main > .table,
+    .bar,
+    .bar-label,
+    .bar-net,
+    #historyBody tr {
+        animation: none !important;
+    }
+
+    .aporte-item,
+    .cards-top .info-card,
+    .pp-tile,
+    .pp-row,
+    .pp-fixa,
+    .pp-banner,
+    .confirm-btn,
+    .sidebar .menu a {
+        transition: none !important;
+        transform: none !important;
+    }
+}

@@ -163,6 +163,19 @@ if (FormularioCadastro) {
 
 const formulario = document.getElementById("formLogin");
 
+/* Veio de uma sessão expirada: avisa o usuário na tela de login */
+if (formulario && sessionStorage.getItem("accuracy_sessao_expirada")) {
+
+    sessionStorage.removeItem("accuracy_sessao_expirada");
+
+    const avisoSessao = document.getElementById("erroEmail");
+
+    if (avisoSessao) {
+        avisoSessao.textContent =
+            "Sua sessão expirou. Entre novamente para continuar.";
+    }
+}
+
 if (formulario) {
 
     formulario.addEventListener("submit", async function (event) {
@@ -266,6 +279,16 @@ if (formulario) {
                     "token",
                     resultado.token
                 );
+
+
+                /* Guarda o refreshToken, se a API enviar, para renovar o login sem pedir senha */
+                if (resultado.refreshToken) {
+
+                    localStorage.setItem(
+                        "refreshToken",
+                        resultado.refreshToken
+                    );
+                }
 
 
                 localStorage.setItem(

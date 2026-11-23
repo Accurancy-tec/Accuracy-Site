@@ -13,7 +13,7 @@
     <!-- Base do site (reset, avatar) -->
     <link rel="stylesheet" href="css/dashboard.css">
 
-    <link rel="stylesheet" href="css/cursos-v2.css">
+    <link rel="stylesheet" href="css/cursos-v2.css?v=2">
 
     <!-- Novo layout (sidebar, topo, cartões e tabelas) -->
     <link rel="stylesheet" href="css/layout-v2.css?v=4">
@@ -105,18 +105,18 @@
             <section class="v2-hero">
 
                 <div class="v2-thumb cat-iniciante" id="heroThumb">
-                    <img id="heroImg" src="https://img.youtube.com/vi/25ScX8Ixhm4/maxresdefault.jpg" alt="" onerror="this.remove()">
-                    <button class="play-button" id="heroPlay" type="button" data-video="25ScX8Ixhm4" aria-label="Assistir curso">
+                    <i class="bi bi-mortarboard-fill thumb-icon" id="heroIcon"></i>
+                    <button class="play-button" id="heroPlay" type="button" aria-label="Abrir trilha">
                         <i class="bi bi-play-fill"></i>
                     </button>
                 </div>
 
                 <div class="v2-hero-info">
                     <span class="v2-tag" id="heroTag">Comece por aqui</span>
-                    <h2 id="heroTitle">Como começar a investir</h2>
-                    <div class="v2-course-meta" id="heroMeta">Iniciante · 10 min · 1 aula</div>
+                    <h2 id="heroTitle">Carregando trilhas...</h2>
+                    <div class="v2-course-meta" id="heroMeta">&nbsp;</div>
                     <div class="v2-progress" id="heroBar"><i style="width: 0%"></i></div>
-                    <button class="v2-btn watch-btn" id="heroBtn" type="button" data-video="25ScX8Ixhm4">Assistir curso</button>
+                    <button class="v2-btn watch-btn" id="heroBtn" type="button">Carregando...</button>
                 </div>
 
             </section>
@@ -130,63 +130,14 @@
                 <div class="v2-pills">
                     <button type="button" class="filter active" data-category="all">Todos</button>
                     <button type="button" class="filter" data-category="iniciante">Iniciante</button>
+                    <button type="button" class="filter" data-category="renda-fixa">Renda fixa</button>
                     <button type="button" class="filter" data-category="fiis">FIIs</button>
                     <button type="button" class="filter" data-category="acoes">Ações</button>
                     <button type="button" class="filter" data-category="cripto">Cripto</button>
                 </div>
             </div>
 
-            <div class="courses-grid">
-
-                <article class="course-card" data-category="iniciante" data-id="25ScX8Ixhm4">
-                    <div class="v2-thumb cat-iniciante">
-                        <img src="https://img.youtube.com/vi/25ScX8Ixhm4/maxresdefault.jpg" alt="" loading="lazy" onerror="this.remove()">
-                        <button class="play-button" type="button" data-video="25ScX8Ixhm4" aria-label="Assistir Como começar a investir">
-                            <i class="bi bi-play-fill"></i>
-                        </button>
-                    </div>
-                    <h3>Como começar a investir</h3>
-                    <div class="v2-course-meta">Iniciante · 10 min · 1 aula</div>
-                    <div class="v2-progress"><i style="width: 0%"></i></div>
-                    <span class="v2-pct">0% concluído</span>
-                </article>
-                <article class="course-card" data-category="fiis" data-id="z3fTzc0q10M">
-                    <div class="v2-thumb cat-fiis">
-                        <img src="https://img.youtube.com/vi/z3fTzc0q10M/maxresdefault.jpg" alt="" loading="lazy" onerror="this.remove()">
-                        <button class="play-button" type="button" data-video="z3fTzc0q10M" aria-label="Assistir O que são Fundos Imobiliários">
-                            <i class="bi bi-play-fill"></i>
-                        </button>
-                    </div>
-                    <h3>O que são Fundos Imobiliários</h3>
-                    <div class="v2-course-meta">Intermediário · 1h 5 min · 1 aula</div>
-                    <div class="v2-progress"><i style="width: 0%"></i></div>
-                    <span class="v2-pct">0% concluído</span>
-                </article>
-                <article class="course-card" data-category="acoes" data-id="yHuNhkntc-I">
-                    <div class="v2-thumb cat-acoes">
-                        <img src="https://img.youtube.com/vi/yHuNhkntc-I/maxresdefault.jpg" alt="" loading="lazy" onerror="this.remove()">
-                        <button class="play-button" type="button" data-video="yHuNhkntc-I" aria-label="Assistir Ações: o que são e como investir">
-                            <i class="bi bi-play-fill"></i>
-                        </button>
-                    </div>
-                    <h3>Ações: o que são e como investir</h3>
-                    <div class="v2-course-meta">Iniciante · 26 min · 1 aula</div>
-                    <div class="v2-progress"><i style="width: 0%"></i></div>
-                    <span class="v2-pct">0% concluído</span>
-                </article>
-                <article class="course-card" data-category="cripto" data-id="-ozukv39uic">
-                    <div class="v2-thumb cat-cripto">
-                        <img src="https://img.youtube.com/vi/-ozukv39uic/maxresdefault.jpg" alt="" loading="lazy" onerror="this.remove()">
-                        <button class="play-button" type="button" data-video="-ozukv39uic" aria-label="Assistir Entendendo Bitcoin e Criptomoedas">
-                            <i class="bi bi-play-fill"></i>
-                        </button>
-                    </div>
-                    <h3>Entendendo Bitcoin e Criptomoedas</h3>
-                    <div class="v2-course-meta">Intermediário · 31 min · 1 aula</div>
-                    <div class="v2-progress"><i style="width: 0%"></i></div>
-                    <span class="v2-pct">0% concluído</span>
-                </article>
-
+            <div class="courses-grid" id="trilhasGrid">
                 <div class="v2-empty-courses" id="coursesEmpty" hidden>Nenhum curso encontrado.</div>
 
             </div>
@@ -397,62 +348,11 @@
      MODAL DO VÍDEO
 ========================= -->
 
-<div
-    class="video-modal"
-    id="videoModal"
-    aria-hidden="true"
->
-
-    <div
-        class="video-container"
-        role="dialog"
-        aria-modal="true"
-        aria-label="Vídeo do curso"
-    >
-
-        <div class="video-header">
-
-            <strong>
-                Vídeo do curso
-            </strong>
-
-
-            <button
-                type="button"
-                class="close-video"
-                id="closeVideo"
-                aria-label="Fechar vídeo"
-            >
-
-                <i class="bi bi-x-lg"></i>
-
-            </button>
-
-        </div>
-
-
-        <div class="video-wrapper">
-
-            <iframe
-                id="youtubePlayer"
-                src=""
-                title="Vídeo do curso"
-                frameborder="0"
-                allow="autoplay; encrypted-media; picture-in-picture; web-share"
-                referrerpolicy="strict-origin-when-cross-origin"
-                allowfullscreen>
-            </iframe>
-
-        </div>
-
-    </div>
-
-</div>
-
 <script src="js/cotacoes.js?v=3"></script>
 <script src="js/resumoCarteiras.js?v=2"></script>
 <script src="js/shell-v2.js?v=4"></script>
-<script src="js/cursos.js?v=2"></script>
+<script src="js/progresso.js"></script>
+<script src="js/cursos.js?v=3"></script>
 
 </body>
 </html>

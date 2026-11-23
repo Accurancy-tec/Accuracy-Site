@@ -25,6 +25,9 @@ const HISTORY_KEY = "accuracy_historico";
 
 let contributions = [];
 
+/* Renda fixa / Tesouro: símbolo escolhido -> id_titulo da API (preenchido pelo Aportesprodutos.js) */
+window.ASSET_TITULO = window.ASSET_TITULO || {};
+
 /* Cotações atuais { PETR4: 38.5, ... } */
 let quotes = {};
 
@@ -89,6 +92,25 @@ const ASSET_CLASS = {
 
 function classOf(assetName) {
     return ASSET_CLASS[assetName] || "Outros";
+}
+
+/*
+ * Renda fixa e Tesouro não têm cotação de mercado.
+ * Usado pelo cotacoes.js para não consultar a brapi nesses casos.
+ */
+function temCotacao(simbolo) {
+
+    if (window.ASSET_TITULO && window.ASSET_TITULO[simbolo]) {
+        return false;
+    }
+
+    if (ASSET_CLASS[simbolo] === "Renda Fixa") {
+        return false;
+    }
+
+    const aporte = contributions.find(item => item.asset === simbolo);
+
+    return !(aporte && aporte.category === "Renda Fixa");
 }
 
 
@@ -209,8 +231,14 @@ async function carregarAportesAPI() {
         return;
     }
 
+    /*
+     * /aportes/historico-aportes devolve todos os aportes do usuário
+     * (com data, carteira e observação) na chave "aportes".
+     * A rota /aportes/buscar-aportes exige ?id_carteira= e usa outro
+     * formato, por isso não é usada aqui.
+     */
     const response = await fetch(
-        `${API_BASE_URL}/aportes/buscar-aportes`,
+        `${API_BASE_URL}/aportes/historico-aportes`,
         {
             method: "GET",
             headers: {
@@ -254,14 +282,14 @@ async function carregarAportesAPI() {
      * para o formato utilizado pelo render().
      */
 
-    contributions = (data.ativos || []).map(item => ({
+    contributions = (data.aportes || []).map(item => ({
         id: item.id_aporte,
 
         asset: item.ativo_aporte,
 
         category: item.categoria_ativo,
 
-        walletId: null,
+        walletId: item.id_carteira,
 
         amount: Number(item.valor_aporte),
 
@@ -278,7 +306,7 @@ async function carregarAportesAPI() {
 
         recurrenceDay: null,
 
-        observation: "",
+        observation: item.observacao_aporte || "",
 
         active: true,
 
@@ -858,6 +886,13 @@ $("#confirmBtn").addEventListener(
             observacao_aporte:
                 observation.value.trim()
         };
+
+        /* Renda fixa / Tesouro: a API exige o id do título escolhido */
+        const idTitulo = window.ASSET_TITULO[asset.value];
+
+        if (idTitulo) {
+            dadosAPI.id_titulo = Number(idTitulo);
+        }
 
         console.log(
             "Enviando aporte para a API:",

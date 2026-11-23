@@ -1,0 +1,18 @@
+.acc-venda-acao{background:#173366;border:1px solid #3266be;border-radius:9px;color:#eaf2ff;font:600 12px Inter,Arial,sans-serif;padding:8px 14px;cursor:pointer;transition:background .18s,transform .18s}.acc-venda-acao:hover{background:#2452a3;transform:translateY(-1px)}.acc-venda-acao:focus-visible{outline:2px solid #93b9ff;outline-offset:2px}.acc-venda-dialogo{border:1px solid #2a4675;border-radius:18px;background:#101d38;color:#f2f6ff;width:min(440px,calc(100% - 24px));padding:0;box-shadow:0 24px 75px #000a}.acc-venda-dialogo::backdrop{background:rgba(2,7,20,.78)}.acc-venda-caixa{padding:24px}.acc-venda-cabecalho{display:flex;justify-content:space-between;gap:12px;align-items:start}.acc-venda-cabecalho h2{font-size:21px;margin:4px 0 0}.acc-venda-etiqueta{font-size:12px;color:#91b8ff}.acc-venda-fechar{border:0;background:transparent;color:#afc3ed;cursor:pointer;font-size:27px}.acc-venda-identificacao{font-weight:600;margin:20px 0 5px}.acc-venda-disponivel{font-size:13px;color:#9eb6dd;margin:0 0 19px}.acc-venda-label{font-size:13px;display:block;margin-bottom:8px}.acc-venda-dialogo input{box-sizing:border-box;width:100%;border:1px solid #35517e;background:#09142a;border-radius:10px;padding:12px;color:#fff;font-size:16px}.acc-venda-resumo{margin:18px 0;display:flex;justify-content:space-between;align-items:center;gap:12px}.acc-venda-resumo span{font-size:13px;color:#aabfe0}.acc-venda-resumo strong{font-size:18px}.acc-venda-alerta{font-size:12px;line-height:1.5;color:#ffdaa1;background:#513b192b;border:1px solid #8a633d;border-radius:10px;padding:11px}.acc-venda-voltar{width:100%;margin-top:12px;background:#2f6de1;color:#fff;border:0;border-radius:10px;padding:12px;font-weight:700;cursor:pointer}
+/* Contador de unidades para a previa de venda */
+.acc-venda-dialogo .acc-venda-contador {display:flex;align-items:stretch;width:100%;border:1px solid #41639c;border-radius:12px;background:#09142a;overflow:hidden;box-sizing:border-box}
+.acc-venda-dialogo .acc-venda-contador input {flex:1;min-width:0;width:100%;border:0;border-radius:0;background:transparent;color:#f2f6ff;text-align:center;outline:none;font-size:20px;font-weight:700;padding:12px 8px;appearance:textfield;-moz-appearance:textfield}
+.acc-venda-dialogo .acc-venda-contador input::-webkit-inner-spin-button,.acc-venda-dialogo .acc-venda-contador input::-webkit-outer-spin-button {-webkit-appearance:none;margin:0}
+.acc-venda-contador button {border:0;background:#173366;color:#eaf2ff;min-width:52px;font-size:26px;font-weight:500;cursor:pointer;transition:background .15s}
+.acc-venda-contador button:hover:not(:disabled) {background:#2658ac}
+.acc-venda-contador button:disabled {opacity:.3;cursor:not-allowed}
+.acc-venda-contador:focus-within {border-color:#70a5ff;box-shadow:0 0 0 2px #357df344}
+.acc-venda-contador-info {display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:9px;font-size:13px;color:#a9c3f4}
+.acc-venda-maximo {border:1px solid #345fa7;background:#12294f;color:#d9eaff;padding:5px 11px;border-radius:8px;font-size:12px;cursor:pointer}
+.acc-venda-maximo:hover {background:#1a407d}
+/* Acoes da venda real */
+.acc-venda-acoes-finais{display:grid;gap:8px;margin-top:14px}
+.acc-venda-confirmar{border:0;border-radius:10px;padding:13px;background:#2563eb;color:#fff;font-weight:700;cursor:pointer}
+.acc-venda-confirmar:hover:not(:disabled){background:#3478fa}
+.acc-venda-confirmar:disabled{opacity:.55;cursor:wait}
+.acc-venda-acoes-finais .acc-venda-voltar{margin-top:0;background:#142b50;border:1px solid #365b9a}

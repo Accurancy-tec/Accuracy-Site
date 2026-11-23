@@ -162,7 +162,7 @@
             <header class="v2-topbar">
 
                 <div class="v2-topbar-right">
-                    <div class="v2-total"><span>Total</span> <strong id="v2Total">—</strong></div>
+                    <div class="v2-total"><span>Saldo disponivel</span> <strong id="v2Total">—</strong></div>
 
                     <a href="perfil.php" aria-label="Perfil">
                         <div class="avatar">U</div>
@@ -409,7 +409,7 @@
     <script src="js/aportesExtra.js?v=2"></script>
     <script src="js/resumoCarteiras.js?v=2"></script>
     <script src="js/Aportesdetalhe.js?v=12"></script>
-    <script src="js/shell-v2.js?v=20"></script>
+    <script src="js/shell-v2.js?v=21"></script>
     <script src="js/Aportesprodutos.js?v=12"></script>
     <script src="js/Animacoes.js"></script>
 

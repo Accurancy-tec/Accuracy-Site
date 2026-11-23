@@ -843,56 +843,80 @@ $("#confirmBtn").addEventListener(
             return;
         }
 
-        if (
-            carteiras.length === 1
-        ) {
+        // FILTRO POR CATEGORIA - somente carteiras compativeis
+        const normalizarCategoriaCarteira = (valor) =>
+            String(valor ?? "")
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .trim()
+                .toLowerCase();
 
-            walletId =
-                carteiras[0].id;
-
-        } else {
-        // Categoria cadastrada na criacao: estilo_carteira.
-        // tipo_carteira identifica a modalidade Real/Simulada.
-        const normalizarCategoriaCarteira = v => String(v ?? "")
-            .normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().toLowerCase();
-        const classeCarteira = normalizarCategoriaCarteira(classOf(asset.value));
-        const categoriaEsperadaCarteira = ["renda fixa", "tesouro"].includes(classeCarteira) ? "renda fixa"
-            : ["acoes", "fiis", "etf", "etfs", "futuros"].includes(classeCarteira) ? "renda variavel"
-            : ["cripto", "criptomoedas"].includes(classeCarteira) ? "cripto"
-            : ["internacional", "bdr", "bdrs"].includes(classeCarteira) ? "internacional"
-            : null;
-        if (!categoriaEsperadaCarteira) {
+        const classeAtivo = normalizarCategoriaCarteira(classOf(asset.value));
+        const categoriasAtivoCarteira = {
+            "renda fixa": "renda fixa",
+            "tesouro": "renda fixa",
+            "acoes": "renda variavel",
+            "acao": "renda variavel",
+            "fiis": "renda variavel",
+            "fii": "renda variavel",
+            "etf": "renda variavel",
+            "etfs": "renda variavel",
+            "futuros": "renda variavel",
+            "cripto": "cripto",
+            "criptomoedas": "cripto",
+            "internacional": "internacional",
+            "bdr": "internacional",
+            "bdrs": "internacional"
+        };
+        const categoriaEsperada = categoriasAtivoCarteira[classeAtivo];
+        if (!categoriaEsperada) {
             toast("Categoria do ativo nao identificada. Compra bloqueada.");
             return;
         }
+        if (typeof Carteiras.ensureCategories !== "function" ||
+            !(await Carteiras.ensureCategories(carteiras))) {
+            toast("Defina a categoria da carteira para continuar.");
+            return;
+        }
         if (carteiras.some(c => !c.style)) {
-            toast("A API de carteiras nao retornou estilo_carteira. Publique a atualizacao da API.");
+            toast("A API nao informou a categoria das carteiras. Compra bloqueada.");
             return;
         }
         const compativeis = carteiras.filter(c =>
-            normalizarCategoriaCarteira(c.style) === categoriaEsperadaCarteira
+            normalizarCategoriaCarteira(c.style) === categoriaEsperada
         );
         if (!compativeis.length) {
-            toast("Voce precisa de uma carteira da categoria " + categoriaEsperadaCarteira + ".");
+            toast("Nenhuma carteira compativel com " + categoriaEsperada + ".");
             return;
         }
-        const active = Carteiras.getActive();
-        const ativaValida = compativeis.find(c => String(c.id) === String(active));
-        if (compativeis.length <= 2) {
-            walletId = ativaValida ? ativaValida.id : compativeis[0].id;
-        } else {
-            const chosen = await Carteiras.askWallet({
-                selected: ativaValida ? ativaValida.id : compativeis[0].id,
-                allowedIds: compativeis.map(c => c.id)
-            });
-            if (!chosen) return;
-            if (!compativeis.some(c => String(c.id) === String(chosen))) {
-                toast("Carteira incompativel com este ativo.");
-                return;
-            }
-            walletId = chosen;
+        // ACCURACY_ESCOLHA_CARTEIRA_SEMPRE_V1
+        // Sempre exibir a escolha, mesmo quando existe apenas uma carteira compativel.
+        const carteiraAtivaParaAporte = Carteiras.getActive();
+        const carteiraPreSelecionada = compativeis.find(c =>
+            String(c.id) === String(carteiraAtivaParaAporte)
+        );
+
+        const carteiraEscolhida = await Carteiras.askWallet({
+            selected: carteiraPreSelecionada
+                ? carteiraPreSelecionada.id
+                : compativeis[0].id,
+            allowedIds: compativeis.map(c => c.id)
+        });
+
+        // Cancelamento: nao registra aporte.
+        if (!carteiraEscolhida) return;
+
+        // Verificacao adicional antes de enviar para API.
+        if (!compativeis.some(c => String(c.id) === String(carteiraEscolhida))) {
+            toast("Carteira incompativel com este ativo.");
+            return;
         }
-/* =========================
+
+        walletId = carteiraEscolhida;
+
+        
+
+        /* =========================
            VALIDAR ID DA CARTEIRA
         ========================= */
 

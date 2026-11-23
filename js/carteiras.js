@@ -67,6 +67,99 @@ const Carteiras = (function () {
     =====================================================
     */
 
+    // ACCURACY_CATEGORIAS_LOCAIS_V1
+    // Sao preferencias do navegador, NAO categorias confirmadas pelo servidor.
+    // Cada conta tem seu proprio espaco; sem ID confiavel nao ha reutilizacao.
+    function categoriaKey() {
+        const token = getToken();
+        if (!token) return null;
+        let id = null;
+        try {
+            const payload = JSON.parse(atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+            id = payload.id_usuario ?? payload.user_id ?? payload.id ?? payload.sub ?? null;
+        } catch (_) { /* token nao e JWT legivel */ }
+        if (id === null || id === undefined || String(id).trim() === '') {
+            try {
+                const usuario = JSON.parse(localStorage.getItem('usuario') || 'null');
+                id = usuario?.id_usuario ?? usuario?.user_id ?? usuario?.id ?? null;
+            } catch (_) { /* nenhum usuario valido */ }
+        }
+        return id === null || id === undefined || String(id).trim() === ''
+            ? null : 'accuracy_categoria_local_v1_' + String(id);
+    }
+
+    function categoriasLocais() {
+        const key = categoriaKey();
+        if (!key) return {};
+        try {
+            const valor = JSON.parse(localStorage.getItem(key) || '{}');
+            return valor && typeof valor === 'object' && !Array.isArray(valor) ? valor : {};
+        } catch (_) { return {}; }
+    }
+
+    function salvarCategoriaLocal(id, categoria) {
+        const key = categoriaKey();
+        const validas = ['Renda Fixa', 'Renda Variavel', 'Cripto', 'Internacional'];
+        if (!key || !validas.includes(categoria) || !normalizeId(id)) return false;
+        const dados = categoriasLocais();
+        dados[normalizeId(id)] = categoria;
+        localStorage.setItem(key, JSON.stringify(dados));
+        const existente = wallets.find(w => normalizeId(w.id) === normalizeId(id));
+        if (existente) existente.style = categoria;
+        return true;
+    }
+
+    function excluirCategoriaLocal(id) {
+        const key = categoriaKey();
+        if (!key) return;
+        const dados = categoriasLocais();
+        delete dados[normalizeId(id)];
+        localStorage.setItem(key, JSON.stringify(dados));
+    }
+
+    // Exibido apenas ao tentar investir com carteira ainda sem classificacao.
+    async function ensureCategories(carteirasParaClassificar = wallets) {
+        for (const carteira of carteirasParaClassificar) {
+            if (carteira.style) continue;
+            const categoria = await modal({
+                title: 'Categoria da carteira: ' + carteira.name,
+                text: 'A API nao envia essa informacao. Escolha a categoria original desta carteira. Ela sera salva somente neste navegador.',
+                okLabel: 'Salvar categoria neste navegador',
+                build(box) {
+                    const grupo = el('div', 'cw-options');
+                    const tipos = [
+                        ['Renda Fixa', 'Renda Fixa'],
+                        ['Renda Variavel', 'Renda Variavel'],
+                        ['Cripto', 'Cripto'],
+                        ['Internacional', 'Internacional']
+                    ];
+                    tipos.forEach(([valor, nome], indice) => {
+                        const label = el('label', 'cw-option');
+                        const radio = document.createElement('input');
+                        radio.type = 'radio';
+                        radio.name = 'cw-categoria-local';
+                        radio.value = valor;
+                        radio.checked = indice === 0;
+                        const titulo = el('span', '', nome);
+                        label.append(radio, titulo);
+                        grupo.append(label);
+                    });
+                    box.append(grupo);
+                    return {
+                        getValue: () => grupo.querySelector('input:checked')?.value,
+                        focus: () => grupo.querySelector('input:checked')?.focus()
+                    };
+                },
+                validate: async valor => ({ value: valor })
+            });
+            if (!categoria) return false;
+            if (!salvarCategoriaLocal(carteira.id, categoria)) {
+                alert('Nao foi possivel associar a categoria a esta conta. Compra bloqueada.');
+                return false;
+            }
+        }
+        return true;
+    }
     async function load() {
 
         const token =
@@ -182,8 +275,7 @@ const Carteiras = (function () {
                         type:
                             wallet.tipo_carteira,
 
-                        style:
-                            wallet.estilo_carteira,
+                        style: wallet.estilo_carteira || categoriasLocais()[normalizeId(wallet.id_carteira)] || undefined,
 
                         goal:
                             Number(wallet.meta_carteira) || 0
@@ -620,14 +712,11 @@ const Carteiras = (function () {
             }
 
 
-            setActive(
-                wallet.id
-            );
-
-
-            return {
-                wallet
-            };
+            if (!salvarCategoriaLocal(wallet.id, style)) {
+                console.warn('Categoria nao salva localmente: nao foi possivel identificar a conta.');
+            }
+            setActive(wallet.id);
+            return { wallet };
 
 
         } catch (error) {
@@ -696,6 +785,7 @@ const Carteiras = (function () {
                 };
             }
 
+            excluirCategoriaLocal(id);
             if (getActive() === normalizeId(id)) {
                 setActive(null);
             }
@@ -1486,7 +1576,7 @@ const Carteiras = (function () {
         setActive,
 
         askWallet,
-
+        ensureCategories,
         promptNewWallet
 
     };

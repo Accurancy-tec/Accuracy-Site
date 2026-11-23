@@ -32,6 +32,7 @@
 
     <script src="js/Tema.js"></script>
     <script src="js/avatar-global.js"></script>
+<link rel="stylesheet" href="css/dashboard-destaques.css?v=5">
 </head>
 
 <body class="v2">
@@ -81,7 +82,7 @@
                 </div>
 
                 <div class="v2-topbar-right">
-                    <div class="v2-total"><span>Total</span> <strong id="v2Total">—</strong></div>
+                    <div class="v2-total"><span>Saldo disponivel</span> <strong id="v2Total">—</strong></div>
 
                     <a href="perfil.php" aria-label="Perfil">
                         <div class="avatar">U</div>
@@ -233,13 +234,14 @@
 
     <script src="js/cotacoes.js?v=3"></script>
     <script src="js/resumoCarteiras.js?v=2"></script>
-    <script src="js/shell-v2.js?v=20"></script>
+    <script src="js/shell-v2.js?v=21"></script>
     <script src="js/Loading.js"></script>
     <script src="js/dashboard-extra.js"></script>
     <script src="js/dashboard-total.js"></script>
     <script src="js/Dashboard-animacoes.js"></script>
     <script src="js/noticias.js?v=1"></script>
 
+<script defer src="js/dashboard-destaques.js?v=logos6"></script>
 </body>
 
 </html>

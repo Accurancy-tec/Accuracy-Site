@@ -75,7 +75,7 @@
             <div class="v2-topbar-right">
 
                 <div class="v2-total">
-                    <span>Total</span>
+                    <span>Saldo disponivel</span>
                     <strong id="v2Total">—</strong>
                 </div>
 
@@ -603,7 +603,7 @@
 
 <script src="js/cotacoes.js?v=3"></script>
 <script src="js/resumoCarteiras.js?v=2"></script>
-<script src="js/shell-v2.js?v=20"></script>
+<script src="js/shell-v2.js?v=21"></script>
 <script src="js/perfil.js?v=9"></script>
 
 </body>

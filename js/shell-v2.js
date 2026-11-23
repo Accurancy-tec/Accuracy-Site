@@ -249,7 +249,7 @@
         const saldo = document.getElementById("v2Saldo");
 
         if (total) {
-            total.textContent = brl(dados.total);
+            total.textContent = brl(dados.saldo);
         }
 
         if (saldo) {
@@ -452,6 +452,26 @@
             });
         });
 
+        /* Accuracy: atualizacao automatica do total do topo */
+        let atualizandoResumo = false;
+        async function atualizarResumoTopo() {
+            if (atualizandoResumo || document.visibilityState === "hidden") return;
+            atualizandoResumo = true;
+            try {
+                const dados = await window.V2Dados.refresh();
+                pintarTopo(dados);
+            } catch (erro) {
+                console.error("Falha ao atualizar total do topo:", erro);
+            } finally {
+                atualizandoResumo = false;
+            }
+        }
+        window.addEventListener("focus", atualizarResumoTopo);
+        document.addEventListener("visibilitychange", () => {
+            if (document.visibilityState === "visible") atualizarResumoTopo();
+        });
+        window.addEventListener("pageshow", atualizarResumoTopo);
+        window.setInterval(atualizarResumoTopo, 30000);
         carregar({ onParcial: pintarTopo }).then(pintarTopo).catch(erro => {
             console.error("Erro ao montar o resumo:", erro);
         });

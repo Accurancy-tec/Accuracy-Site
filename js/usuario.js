@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:8080/";
+const API_URL = "https://accuracyappapi.onrender.com/";
 
 
 /* =========================================================
@@ -199,7 +199,7 @@ if (formulario) {
         try {
 
             const resposta = await fetch(
-                `${API_URL}auth/loginSite`,
+                `${API_URL}auth/loginUnico`,
                 {
                     method: "POST",
 
@@ -308,12 +308,7 @@ if (formulario) {
                     "dashboard.php";
 
 
-            }
-            if (erro.includes("desativada")) {
-                return "Esta conta está desativada. Fale com o suporte.";
-            }
-
-            else {
+            } else {
 
                 const mensagem =
                     resultado.message ||

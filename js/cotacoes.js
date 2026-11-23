@@ -150,6 +150,24 @@ const Cotacoes = (function () {
        BUSCAR COTAÇÕES
     ========================= */
 
+    /*
+     * Títulos de renda fixa / Tesouro (ex.: "LCI Pós-fixada 6 meses")
+     * não têm cotação na brapi. Um símbolo válido nunca tem espaço, e
+     * o Aportes.js ainda informa os títulos que ele conhece (temCotacao).
+     * Sem isso a API respondia 400 a cada consulta.
+     */
+    function semCotacao(symbol) {
+
+        if (/\s/.test(String(symbol))) {
+            return true;
+        }
+
+        return (
+            typeof temCotacao === "function" &&
+            !temCotacao(symbol)
+        );
+    }
+
     async function fetchQuotes(symbols) {
 
         /*
@@ -158,7 +176,8 @@ const Cotacoes = (function () {
          */
         const wanted =
             [...new Set(symbols)]
-                .filter(Boolean);
+                .filter(Boolean)
+                .filter(symbol => !semCotacao(symbol));
 
 
         /*

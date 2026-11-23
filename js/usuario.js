@@ -1,4 +1,4 @@
-const API_URL = "https://accuracyappapi.onrender.com/";
+const API_URL = "http://localhost:8080/";
 
 
 /* =========================================================
@@ -263,6 +263,12 @@ if (formulario) {
                 console.log(
                     "Login realizado com sucesso."
                 );
+                if (resultado.admin === true) {
+                    localStorage.setItem("admin_token", resultado.token);
+                    localStorage.setItem("admin", JSON.stringify(resultado.user));
+                    window.location.href = "admin.php";
+                    return;
+                }
 
 
                 localStorage.removeItem(
@@ -283,11 +289,12 @@ if (formulario) {
 
                 /* Guarda o refreshToken, se a API enviar, para renovar o login sem pedir senha */
                 if (resultado.refreshToken) {
-
                     localStorage.setItem(
                         "refreshToken",
                         resultado.refreshToken
                     );
+                } else {
+                    localStorage.removeItem("refreshToken");
                 }
 
 
@@ -301,7 +308,12 @@ if (formulario) {
                     "dashboard.php";
 
 
-            } else {
+            }
+            if (erro.includes("desativada")) {
+                return "Esta conta está desativada. Fale com o suporte.";
+            }
+
+            else {
 
                 const mensagem =
                     resultado.message ||

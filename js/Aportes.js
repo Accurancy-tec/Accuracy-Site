@@ -141,6 +141,148 @@ function getAmount() {
 }
 
 
+/* ======================================================
+   FORMULÁRIO DE COMPRA - QUANTIDADE OU VALOR
+   Ações / FIIs / Cripto: quantidade.
+   Renda fixa, Tesouro, Moedas e outros: valor em reais.
+   A API continua recebendo quantidade_aporte e valor_aporte.
+====================================================== */
+const compraQ = document.getElementById("quantidadeAporte");
+const compraSaldoEl = document.getElementById("compraSaldo");
+let saldoCompraConhecido = null;
+let saldoConsultaId = 0;
+
+function compraPorQuantidade() {
+    return ["Ações", "FIIs", "Cripto"].includes(classOf(asset.value));
+}
+
+function numeroQuantidade() {
+    const texto = String(compraQ.value || "").trim().replace(",", ".");
+    const n = Number(texto);
+    return texto && Number.isFinite(n) ? n : 0;
+}
+
+function compraQtdValida() {
+    const n = numeroQuantidade();
+    if (!(n > 0)) return false;
+    return classOf(asset.value) === "Cripto" ? Number(n.toFixed(8)) === n : Number.isInteger(n);
+}
+
+function atualizarCompra() {
+    const porQtd = compraPorQuantidade();
+    document.getElementById("quantidadeAporteBox").hidden = !porQtd;
+    document.getElementById("valorAporteBox").hidden = porQtd;
+    document.getElementById("compraCotacaoBox").hidden = !porQtd;
+    document.getElementById("compraResumoQuantidade").hidden = !porQtd;
+    document.getElementById("compraResumoPreco").hidden = !porQtd;
+    document.getElementById("quantidadeAjuda").textContent = classOf(asset.value) === "Cripto"
+        ? "Digite a quantidade de criptomoeda (até 8 casas decimais)."
+        : "Informe a quantidade de unidades (número inteiro).";
+
+    const preco = Number(quotes[asset.value]);
+    const cotacaoValida = Number.isFinite(preco) && preco > 0;
+    const quantidade = numeroQuantidade();
+    const valor = porQtd ? (cotacaoValida ? Math.round(quantidade * preco * 100) / 100 : 0) : getAmount();
+    const valido = porQtd ? (compraQtdValida() && cotacaoValida && valor > 0) : valor > 0;
+    const venda = type.value === "Venda";
+    document.getElementById("compraCotacao").textContent = cotacaoValida ? money(preco) : "Cotação indisponível";
+    document.getElementById("compraQtdResumo").textContent = classOf(asset.value) === "Cripto"
+        ? quantidade.toLocaleString("pt-BR", { maximumFractionDigits: 8 })
+        : quantidade.toLocaleString("pt-BR", { maximumFractionDigits: 0 });
+    document.getElementById("compraPrecoResumo").textContent = cotacaoValida ? money(preco) : "—";
+    document.getElementById("compraValorResumo").textContent = valido ? money(valor) : "—";
+    document.getElementById("compraTotalResumo").textContent = valido ? money(valor) : "—";
+    document.getElementById("compraTotalRotulo").textContent = venda ? "Total estimado da venda" : "Total estimado da compra";
+    document.getElementById("compraValorRotulo").textContent = porQtd ? "Valor dos ativos" : "Valor do investimento";
+
+    const aviso = document.getElementById("compraAviso");
+    let erro = "";
+    if (porQtd && !compraQtdValida()) erro = "Informe uma quantidade válida.";
+    else if (porQtd && !cotacaoValida) erro = "Aguardando cotação. Não é possível confirmar sem preço válido.";
+    else if (!porQtd && valor <= 0) erro = "Digite um valor maior que zero.";
+    else if (!venda && saldoCompraConhecido !== null && valor > saldoCompraConhecido + 0.001)
+        erro = `Saldo insuficiente. Total estimado: ${money(valor)} | Disponível: ${money(saldoCompraConhecido)}.`;
+    aviso.hidden = !erro;
+    aviso.textContent = erro;
+    document.getElementById("confirmBtn").disabled = Boolean(erro);
+}
+
+async function consultarSaldoCompra() {
+    const chamada = ++saldoConsultaId;
+    saldoCompraConhecido = null;
+    compraSaldoEl.textContent = "Consultando saldo disponível...";
+    atualizarCompra();
+    if (typeof ResumoCarteiras === "undefined") {
+        compraSaldoEl.textContent = "Saldo indisponível";
+        return;
+    }
+    try {
+        const token = getToken();
+        if (!token) throw new Error("Sessão não encontrada");
+        const [carteiras, saldoResposta] = await Promise.all([
+            ResumoCarteiras.load(),
+            fetch(`${API_BASE_URL}/carteiras/saldo`, {
+                headers: { Authorization: `Bearer ${token}` },
+                cache: "no-store"
+            })
+        ]);
+        if (chamada !== saldoConsultaId) return;
+        if (!saldoResposta.ok) throw new Error("Consulta de saldo indisponível");
+        const dadosSaldo = await saldoResposta.json();
+        if (dadosSaldo.success !== true) throw new Error("Saldo inválido");
+        const saldoUsuario = Number(dadosSaldo.saldo_atual);
+        if (!Number.isFinite(saldoUsuario) || saldoUsuario < 0) throw new Error("Saldo inválido");
+        if (!Array.isArray(carteiras) || !carteiras.length) throw new Error("Sem carteiras");
+        const carteiraAtiva = typeof Carteiras !== "undefined" && typeof Carteiras.getActive === "function"
+            ? Carteiras.getActive() : null;
+        const elegiveis = carteiras.length === 1 ? carteiras : carteiras.filter(c =>
+            String(c.id_carteira) === String(carteiraAtiva));
+        if (elegiveis.length !== 1) {
+            compraSaldoEl.textContent = "Saldo: selecione uma carteira ativa para comprar.";
+            return;
+        }
+        const saldoCarteira = Number(elegiveis[0].saldo_livre_carteira);
+        if (!Number.isFinite(saldoCarteira) || saldoCarteira < 0) throw new Error("Saldo da carteira inválido");
+        saldoCompraConhecido = Math.round((saldoUsuario + saldoCarteira) * 100) / 100;
+        compraSaldoEl.textContent = `Saldo para investir: ${money(saldoCompraConhecido)}`;
+        atualizarCompra();
+    } catch (erro) {
+        if (chamada !== saldoConsultaId) return;
+        console.error("Saldo da compra:", erro);
+        saldoCompraConhecido = 0; // Falha fechada: não permite confirmar sem saldo conhecido.
+        compraSaldoEl.textContent = "Não foi possível consultar o saldo. Atualize a página.";
+        atualizarCompra();
+    }
+}
+
+compraQ.addEventListener("input", atualizarCompra);
+document.getElementById("diminuirQuantidade").addEventListener("click", () => {
+    const passo = classOf(asset.value) === "Cripto" ? 0.00000001 : 1;
+    compraQ.value = Number(Math.max(passo, numeroQuantidade() - passo).toFixed(8)).toString();
+    atualizarCompra();
+});
+document.getElementById("aumentarQuantidade").addEventListener("click", () => {
+    const passo = classOf(asset.value) === "Cripto" ? 0.00000001 : 1;
+    compraQ.value = Number((numeroQuantidade() + passo).toFixed(8)).toString();
+    atualizarCompra();
+});
+amount.addEventListener("input", atualizarCompra);
+type.addEventListener("change", atualizarCompra);
+asset.addEventListener("change", () => {
+    saldoCompraConhecido = null;
+    compraQ.value = "1";
+    atualizarCompra();
+    consultarSaldoCompra();
+});
+// O seletor mostra o formulário ao sair dos detalhes do ativo.
+const formularioCompra = document.getElementById("formStep");
+new MutationObserver(() => {
+    if (!formularioCompra.classList.contains("hidden")) {
+        atualizarCompra();
+        consultarSaldoCompra();
+    }
+}).observe(formularioCompra, { attributes: true, attributeFilter: ["class"] });
+
 /* =========================
    API
 ========================= */
@@ -492,6 +634,7 @@ document
 
                 amount.value =
                     money(value);
+                atualizarCompra();
 
                 document
                     .querySelectorAll("[data-value]")
@@ -585,8 +728,24 @@ $("#confirmBtn").addEventListener(
     "click",
     async () => {
 
-        const value =
-            getAmount();
+        let value = getAmount();
+        if (compraPorQuantidade()) {
+            if (!compraQtdValida()) {
+                toast("Informe uma quantidade válida para esse ativo.");
+                compraQ.focus();
+                return;
+            }
+            const precoVisualizado = Number(quotes[asset.value]);
+            if (!(precoVisualizado > 0)) {
+                toast("A cotação ainda não está disponível.");
+                return;
+            }
+            value = Math.round(numeroQuantidade() * precoVisualizado * 100) / 100;
+        }
+        if (type.value !== "Venda" && saldoCompraConhecido !== null && value > saldoCompraConhecido + 0.001) {
+            toast("Saldo insuficiente para essa compra.");
+            return;
+        }
 
         if (value <= 0) {
 
@@ -692,27 +851,48 @@ $("#confirmBtn").addEventListener(
                 carteiras[0].id;
 
         } else {
-
-            const active =
-                Carteiras.getActive();
-
-            const chosen =
-                await Carteiras.askWallet({
-                    selected:
-                        active === "all"
-                            ? Carteiras.MAIN_ID
-                            : active
-                });
-
-            if (!chosen) {
+        // Categoria cadastrada na criacao: estilo_carteira.
+        // tipo_carteira identifica a modalidade Real/Simulada.
+        const normalizarCategoriaCarteira = v => String(v ?? "")
+            .normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().toLowerCase();
+        const classeCarteira = normalizarCategoriaCarteira(classOf(asset.value));
+        const categoriaEsperadaCarteira = ["renda fixa", "tesouro"].includes(classeCarteira) ? "renda fixa"
+            : ["acoes", "fiis", "etf", "etfs", "futuros"].includes(classeCarteira) ? "renda variavel"
+            : ["cripto", "criptomoedas"].includes(classeCarteira) ? "cripto"
+            : ["internacional", "bdr", "bdrs"].includes(classeCarteira) ? "internacional"
+            : null;
+        if (!categoriaEsperadaCarteira) {
+            toast("Categoria do ativo nao identificada. Compra bloqueada.");
+            return;
+        }
+        if (carteiras.some(c => !c.style)) {
+            toast("A API de carteiras nao retornou estilo_carteira. Publique a atualizacao da API.");
+            return;
+        }
+        const compativeis = carteiras.filter(c =>
+            normalizarCategoriaCarteira(c.style) === categoriaEsperadaCarteira
+        );
+        if (!compativeis.length) {
+            toast("Voce precisa de uma carteira da categoria " + categoriaEsperadaCarteira + ".");
+            return;
+        }
+        const active = Carteiras.getActive();
+        const ativaValida = compativeis.find(c => String(c.id) === String(active));
+        if (compativeis.length <= 2) {
+            walletId = ativaValida ? ativaValida.id : compativeis[0].id;
+        } else {
+            const chosen = await Carteiras.askWallet({
+                selected: ativaValida ? ativaValida.id : compativeis[0].id,
+                allowedIds: compativeis.map(c => c.id)
+            });
+            if (!chosen) return;
+            if (!compativeis.some(c => String(c.id) === String(chosen))) {
+                toast("Carteira incompativel com este ativo.");
                 return;
             }
-
             walletId = chosen;
         }
-
-
-        /* =========================
+/* =========================
            VALIDAR ID DA CARTEIRA
         ========================= */
 
@@ -814,10 +994,23 @@ $("#confirmBtn").addEventListener(
            QUANTIDADE
         ========================= */
 
-        const quantity =
-            unitPrice
-                ? value / Number(unitPrice)
-                : value;
+        // A cotação é atualizada novamente no envio; para ações, FIIs e
+        // cripto, a quantidade é a informação escolhida pelo usuário.
+        const quantity = compraPorQuantidade()
+            ? numeroQuantidade()
+            : (unitPrice ? value / Number(unitPrice) : value);
+
+        if (compraPorQuantidade()) {
+            value = Math.round(quantity * Number(unitPrice) * 100) / 100;
+            if (!(value > 0)) {
+                toast("A quantidade escolhida não produz um valor válido.");
+                return;
+            }
+            if (type.value !== "Venda" && saldoCompraConhecido !== null && value > saldoCompraConhecido + 0.001) {
+                toast("Saldo insuficiente para o valor atualizado da compra.");
+                return;
+            }
+        }
 
 
         /* =========================
@@ -984,6 +1177,8 @@ function clearForm() {
     recurrenceDayBox.classList.add(
         "hidden"
     );
+    compraQ.value = "1";
+    atualizarCompra();
 
     document
         .querySelectorAll("[data-value]")
@@ -1133,6 +1328,8 @@ function updateAssetPrice() {
         price
             ? `Cotação atual: ${money(price)}`
             : "";
+
+    atualizarCompra();
 }
 
 

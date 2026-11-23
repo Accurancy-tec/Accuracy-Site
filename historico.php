@@ -195,7 +195,7 @@
 
 <script src="js/cotacoes.js?v=3"></script>
 <script src="js/resumoCarteiras.js?v=2"></script>
-<script src="js/shell-v2.js?v=4"></script>
+<script src="js/shell-v2.js?v=20"></script>
 <script src="js/Historico.js?v=2"></script>
 
 </body>

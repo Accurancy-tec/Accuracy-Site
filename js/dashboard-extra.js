@@ -503,3 +503,134 @@
     })();
 
 })();
+(function () {
+
+    "use strict";
+
+    const API_BASE_URL = "https://accuracyappapi.onrender.com";
+
+    const cards = document.querySelectorAll(".grid .card");
+
+    if (!cards.length) {
+        return;
+    }
+
+    let distribuicao = null;
+    let dashboardPintou = false;
+    let aplicado = false;
+    let observador = null;
+
+    function dinheiro(valor) {
+        return (Number(valor) || 0).toLocaleString("pt-BR", {
+            style: "currency",
+            currency: "BRL"
+        });
+    }
+
+    /* mesma ordem dos cards: 0 Renda fixa | 1 Renda variável | 2 Cripto | 3 Outros */
+    function indiceDoCard(categoria) {
+
+        switch (categoria) {
+            case "Renda Fixa": return 0;
+            case "Ações":
+            case "FIIs": return 1;
+            case "Cripto": return 2;
+            default: return 3;
+        }
+    }
+
+    function aplicar() {
+
+        if (aplicado || !distribuicao) {
+            return;
+        }
+
+        aplicado = true;
+
+        if (observador) {
+            observador.disconnect();
+        }
+
+        const valores = [0, 0, 0, 0];
+
+        distribuicao.itens.forEach(item => {
+            valores[indiceDoCard(item.categoria)] += Number(item.valor) || 0;
+        });
+
+        const total = valores.reduce((soma, v) => soma + v, 0);
+
+        valores.forEach((valor, i) => {
+
+            const p = cards[i] && cards[i].querySelector("p");
+            const span = cards[i] && cards[i].querySelector("span");
+
+            if (p) {
+                p.textContent = dinheiro(valor);
+            }
+
+            if (span) {
+
+                const parte = total > 0 ? (valor / total) * 100 : 0;
+
+                span.textContent = `${parte.toLocaleString("pt-BR", {
+                    minimumFractionDigits: 1,
+                    maximumFractionDigits: 1
+                })}% da carteira`;
+            }
+        });
+    }
+
+    /* espera o código acima pintar os cards primeiro, para o nosso valor ficar por cima */
+    function observarCards() {
+
+        observador = new MutationObserver(() => {
+            dashboardPintou = true;
+            aplicar();
+        });
+
+        cards.forEach(card => {
+            observador.observe(card, { childList: true, characterData: true, subtree: true });
+        });
+
+        /* se o dashboard não mexer nos cards, aplica mesmo assim depois de um tempo */
+        setTimeout(() => {
+            dashboardPintou = true;
+            aplicar();
+        }, 8000);
+    }
+
+    async function carregar() {
+
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+            return;
+        }
+
+        try {
+
+            const resposta = await fetch(`${API_BASE_URL}/carteiras/distribuicao`, {
+                headers: { "Authorization": `Bearer ${token}` }
+            });
+
+            const dados = await resposta.json();
+
+            if (!resposta.ok || dados.sucesso !== true) {
+                throw new Error(dados.mensagem || `HTTP ${resposta.status}`);
+            }
+
+            distribuicao = { itens: dados.distribuicao || [] };
+
+            if (dashboardPintou) {
+                aplicar();
+            }
+
+        } catch (erro) {
+            console.error("Erro ao buscar a distribuição da carteira:", erro);
+        }
+    }
+
+    observarCards();
+    carregar();
+
+})();

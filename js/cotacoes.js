@@ -27,7 +27,8 @@ const Cotacoes = (function () {
     const ROTAS_URL = {
         acao: "get-quote",
         cripto: "get-crypto-quote",
-        futuros: "get-futures-quote"
+        futuros: "get-futures-quote",
+        moedas: "get-currency-quote"
     };
 
     const ROTAS_KEY = "accuracy_rotas_cotacao";

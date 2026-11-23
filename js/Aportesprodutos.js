@@ -34,15 +34,14 @@
     const PRODUTOS = [
         { id: "fixa", sigla: "CDB", cor: "cyan", titulo: "Renda fixa", desc: "CDB, LCI e LCA" },
         { id: "tesouro", sigla: "TD", cor: "blue", titulo: "Tesouro Direto", desc: "Títulos públicos" },
+        { id: "fiis", sigla: "FII", cor: "yellow", titulo: "Fundos imobiliários", desc: "FIIs listados na BRAPI" },
+        { id: "moedas", sigla: "USD", cor: "purple", titulo: "Moedas", desc: "Câmbio e moedas internacionais" },
         { id: "bolsa", sigla: "B3", cor: "green", titulo: "Bolsa", desc: "Ações, FIIs e BDRs" },
         { id: "cripto", sigla: "BTC", cor: "orange", titulo: "Cripto", desc: "Bitcoin e mais" },
-        { id: "internacional", sigla: "USD", cor: "purple", titulo: "Internacional", desc: "Dólar e exterior" },
-        { id: "fundos", sigla: "FDO", cor: "yellow", titulo: "Fundos", desc: "Multimercados" }
     ];
 
     const CATEGORIAS_VARIAVEL = [
         { id: "acoes", sigla: "AÇ", cor: "green", titulo: "Ações Nacionais", desc: "Empresas listadas na B3", cls: "Ações" },
-        { id: "fiis", sigla: "FII", cor: "yellow", titulo: "Fundos Imobiliários", desc: "FIIs", cls: "FIIs" },
         { id: "futuros", sigla: "FUT", cor: "orange", titulo: "Contratos Futuros", desc: "Índice, dólar e criptos", cls: "Outros" },
         { id: "bdr", sigla: "BDR", cor: "purple", titulo: "Ações e ETFs Internacionais", desc: "BDRs", cls: "Ações" },
         { id: "etf", sigla: "ETF", cor: "blue", titulo: "ETFs", desc: "Fundos de índices de ações e outros", cls: "Ações" }
@@ -185,6 +184,8 @@
                 TESOURO.splice(0, TESOURO.length, ...td);
             }
 
+            window.dispatchEvent(new Event("accuracy:rf-carregada"));
+
             /* a home mostra os cartões de renda fixa: atualiza se estiver aberta */
             if (typeof pilha !== "undefined" && pilha.length && pilha[pilha.length - 1].tela === "produtos") {
                 desenharFixasHome();
@@ -215,6 +216,28 @@
             .toLowerCase();
     }
 
+    /* Logo fornecida pela API da Accuracy/BRAPI; ticker se não existir. */
+    function logoAtivo(item, classe = "ac-asset-symbol") {
+        const sigla = esc(String(item.value || item.sigla || "AT").slice(0, 3));
+        let url = "";
+        try {
+            const candidata = new URL(String(item.logo || ""));
+            if (candidata.protocol === "https:") url = candidata.href;
+        } catch (_) { /* Sem logo válida: mostra a sigla. */ }
+
+        return `<span class="${classe} ac-logo-wrap">
+            <span class="ac-logo-fallback">${sigla}</span>
+            ${url ? `<img class="ac-logo-img" src="${esc(url)}" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer">` : ""}
+        </span>`;
+    }
+
+    // Quando uma logo não carrega, mostra o ticker sem imagem quebrada.
+    document.addEventListener("error", e => {
+        if (e.target instanceof HTMLImageElement && e.target.classList.contains("ac-logo-img")) {
+            e.target.remove();
+        }
+    }, true);
+
     function brl(valor) {
         return new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(valor);
     }
@@ -244,7 +267,7 @@
         if (i >= 0) {
             lista.splice(i, 1);
         } else {
-            lista.push({ value: item.value, name: item.name, sub: item.sub, cls: item.cls, sigla: item.sigla, cor: item.cor });
+            lista.push({ value: item.value, name: item.name, sub: item.sub, cls: item.cls, sigla: item.sigla, cor: item.cor, logo: item.logo || null });
         }
 
         gravarFavoritos(lista);
@@ -304,7 +327,7 @@
         formStep.classList.remove("hidden");
 
         selectedBox.innerHTML = `
-            <span class="pp-badge ${esc(item.cor || "blue")}">${esc(item.sigla || "AT")}</span>
+            ${logoAtivo(item, "pp-badge ac-logo-small")}
             <div class="pp-row-info">
                 <strong>${esc(item.name)}</strong>
                 <small>${esc(item.sub || item.cls)}</small>
@@ -356,28 +379,6 @@
                 <h3>${esc(titulo)}</h3>
             </div>
         `;
-    }
-
-    function campoBusca(placeholder) {
-        return `
-            <div class="pp-search">
-                <i class="bi bi-search"></i>
-                <input type="text" id="ppBusca" placeholder="${esc(placeholder)}" value="${esc(busca)}" autocomplete="off">
-            </div>
-        `;
-    }
-
-    function ligarBusca(aoDigitar) {
-        const campo = document.getElementById("ppBusca");
-
-        if (!campo) {
-            return;
-        }
-
-        campo.addEventListener("input", () => {
-            busca = campo.value;
-            aoDigitar();
-        });
     }
 
     let tamanhoAnterior = 0;
@@ -586,7 +587,7 @@
 
             return `
                 <tr data-n="${n}">
-                    <td><strong>${esc(i.value)}</strong></td>
+                    <td><span class="ac-table-ticker">${logoAtivo(i, "ac-asset-symbol ac-logo-small")}<strong>${esc(i.value)}</strong></span></td>
                     <td>${esc(nomeLimpo(i.sub))}</td>
                     <td class="muted">${esc(i.categoria)}</td>
                     <td class="num">${i.preco != null ? esc(brl(i.preco)) : "—"}</td>
@@ -609,7 +610,7 @@
             return /^[A-ZÁÉÍÓÚÂÊÔÃÕÇ][a-záéíóúâêôãõç]/.test(x) ? x.charAt(0).toLowerCase() + x.slice(1) : x;
         };
 
-        alvo.innerHTML = RENDA_FIXA.slice(0, 3).map((i, n) => `
+        alvo.innerHTML = RENDA_FIXA.filter(i => i.idTitulo != null).slice(0, 3).map((i, n) => `
             <button type="button" class="v2-fixa" data-fixa="${n}">
                 <div class="v2-fixa-tags">
                     <span class="v2-tag">${esc(i.tipo)}</span>
@@ -714,7 +715,7 @@
 
     function telaBusca() {
 
-        const campo = document.getElementById("v2Search");
+        const campo = document.getElementById("pesquisaAtivosAportes");
 
         busca = campo ? campo.value : busca;
 
@@ -781,10 +782,27 @@
 
     window.addEventListener("v2:busca", e => buscarTopo(e.detail));
 
+    // Barra única: permanece fora do ppRoot e funciona em qualquer categoria.
+    const pesquisaAtivosAportes = document.getElementById("pesquisaAtivosAportes");
+    if (pesquisaAtivosAportes) {
+        pesquisaAtivosAportes.addEventListener("input", () => {
+            buscarTopo(pesquisaAtivosAportes.value);
+        });
+        pesquisaAtivosAportes.addEventListener("keydown", event => {
+            if (event.key === "Escape") {
+                pesquisaAtivosAportes.value = "";
+                buscarTopo("");
+            }
+        });
+        window.addEventListener("v2:busca-limpar", () => {
+            pesquisaAtivosAportes.value = "";
+        });
+    }
+
     /* busca vinda de outra página: aportes.php?q=PETR */
     (function buscaInicial() {
         const q = new URLSearchParams(window.location.search).get("q");
-        const campo = document.getElementById("v2Search");
+        const campo = document.getElementById("pesquisaAtivosAportes");
 
         if (q && campo) {
             campo.value = q;
@@ -796,9 +814,13 @@
     function abrirProduto(id) {
         switch (id) {
             case "fixa":
-                return irPara("cards", { titulo: "Renda fixa", itens: RENDA_FIXA, cls: "Renda Fixa", sigla: "CDB", cor: "cyan", placeholder: "Buscar título" });
+                return irPara("cards", { titulo: "Renda fixa", itens: RENDA_FIXA, cls: "Renda Fixa", sigla: "CDB", cor: "cyan" });
             case "tesouro":
-                return irPara("cards", { titulo: "Tesouro Direto", itens: TESOURO, cls: "Renda Fixa", sigla: "TD", cor: "blue", placeholder: "Buscar título" });
+                return irPara("cards", { titulo: "Tesouro Direto", itens: TESOURO, cls: "Renda Fixa", sigla: "TD", cor: "blue" });
+            case "fiis":
+                return irPara("lista", { titulo: "Fundos imobiliários", fonte: "fiis", cls: "FIIs", sigla: "FII", cor: "yellow" });
+            case "moedas":
+                return irPara("lista", { titulo: "Moedas", fonte: "moedas", cls: "Outros", sigla: "FX", cor: "purple" });
             case "bolsa":
             case "variavel":
                 return irPara("variavel");
@@ -823,7 +845,6 @@
 
         root.innerHTML = `
             ${cabecalho("Renda variável", true)}
-            ${campoBusca("Empresa ou código do ativo")}
 
             <div class="pp-tabs">
                 <button type="button" data-aba="geral" class="${aba === "geral" ? "active" : ""}">Listagem geral</button>
@@ -890,7 +911,6 @@
             irRanking(alvo, filtro);
         }
 
-        ligarBusca(corpo);
         corpo();
     }
 
@@ -905,13 +925,72 @@
         desenharLinhas(alvo, favs);
     }
 
+    /* Busca direto na Brapi (via API) pelo texto digitado, em vez de
+   só filtrar o que já foi carregado nas páginas de 20 em 20. */
+    const buscaBrapi = { termo: "", itens: [], timer: null };
+
+    function buscarNaBrapi(termo, alvo) {
+        buscaBrapi.termo = termo;
+        buscaBrapi.itens = [];
+
+        clearTimeout(buscaBrapi.timer);
+
+        buscaBrapi.timer = setTimeout(async () => {
+            const q = encodeURIComponent(termo);
+
+            const pedir = rota => fetch(`${API_BASE_URL}/brapi/${rota}?page=1&limit=20&search=${q}`)
+                .then(r => r.json())
+                .then(d => (d.success && Array.isArray(d.stocks)) ? d.stocks : []);
+
+            const [ac, fi, intl, cr] = await Promise.allSettled([
+                pedir("listar-acoes-nacionais"),
+                pedir("listar-fiis-catalogo"),
+                pedir("listar-internacionais"),
+                pedir("listar-criptomoedas")
+            ]);
+
+            const lista = r => r.status === "fulfilled" ? r.value : [];
+            const itens = [];
+
+            lista(ac).forEach(a => itens.push(itemDeAcao(a)));
+            lista(fi).forEach(a => itens.push(itemDeFonte(a, { cls: "FIIs", sigla: "FII", cor: "yellow" })));
+
+            lista(intl).forEach(a => {
+                const nome = String(a.name);
+
+                if (nome.endsWith("(BDR)")) {
+                    itens.push(itemDeFonte(a, { cls: "Ações", sigla: "BDR", cor: "purple" }));
+                } else if (nome.endsWith("(ETF)")) {
+                    itens.push(itemDeFonte(a, { cls: "Ações", sigla: "ETF", cor: "blue" }));
+                }
+            });
+
+            lista(cr).forEach(a => itens.push(itemDeFonte(a, { rota: "cripto", cls: "Cripto", sigla: "₿", cor: "orange" })));
+
+            /* ignora se o usuário já digitou outra coisa */
+            if (buscaBrapi.termo !== termo) {
+                return;
+            }
+
+            buscaBrapi.itens = itens;
+
+            if (document.body.contains(alvo) && busca.trim() === termo) {
+                listarBusca(alvo);
+            }
+        }, 400);
+    }
+
     function listarBusca(alvo) {
         const termo = norm(busca.trim());
+
+        if (busca.trim() !== buscaBrapi.termo) {
+            buscarNaBrapi(busca.trim(), alvo);
+        }
 
         /* tudo que o app conhece: listas fixas + ações já carregadas + favoritos */
         const todos = new Map();
 
-        [...itensFixos(), ...acoes.map(itemDeAcao), ...lerFavoritos()].forEach(i => todos.set(i.value, i));
+        [...itensFixos(), ...acoes.map(itemDeAcao), ...buscaBrapi.itens, ...lerFavoritos()].forEach(i => todos.set(i.value, i));
 
         const achados = [...todos.values()].filter(i =>
             norm(i.value).includes(termo) || norm(i.name).includes(termo) || norm(i.sub).includes(termo)
@@ -935,6 +1014,20 @@
 
     function itensFixos() {
         const itens = [];
+
+        // Renda fixa e Tesouro Direto também aparecem na busca global.
+        RENDA_FIXA.forEach(t => itens.push({
+            idTitulo: t.idTitulo, value: t.value, name: t.value,
+            sub: `${t.tipo} · ${t.rent}`, cls: "Renda Fixa",
+            sigla: t.tipo || "CDB", cor: "cyan",
+            extra: { tipo: t.tipo, rent: t.rent, resgate: t.resgate, minimo: t.minimo, tags: t.tags }
+        }));
+        TESOURO.forEach(t => itens.push({
+            idTitulo: t.idTitulo, value: t.value, name: t.value,
+            sub: `${t.tipo} · ${t.rent}`, cls: "Renda Fixa",
+            sigla: "TD", cor: "blue",
+            extra: { tipo: t.tipo, rent: t.rent, resgate: t.resgate, minimo: t.minimo, tags: t.tags }
+        }));
 
         const fiisApi = FONTES_API.fiis.itens;
 
@@ -969,7 +1062,7 @@
 
     /* FIIs e BDRs/ETFs também vêm da API (mesmo formato das ações) */
     const FONTES_API = {
-        fiis: { rota: "listar-fiis", itens: [], pagina: 0, temMais: true, carregando: false, erro: "" },
+        fiis: { rota: "listar-fiis-catalogo", itens: [], pagina: 0, temMais: true, carregando: false, erro: "" },
         intl: { rota: "listar-internacionais", itens: [], pagina: 0, temMais: true, carregando: false, erro: "" },
         cripto: { rota: "listar-criptomoedas", itens: [], pagina: 0, temMais: true, carregando: false, erro: "" },
         futuros: { rota: "listar-futuros", itens: [], pagina: 0, temMais: true, carregando: false, erro: "" }
@@ -1035,7 +1128,8 @@
             cor: params.cor,
             preco: a.close,
             variacao: a.change,
-            volume: a.volume
+            volume: a.volume,
+            logo: a.logo ?? a.logourl ?? a.logoUrl ?? null
         };
     }
 
@@ -1054,7 +1148,8 @@
             cor: "green",
             preco: a.close,
             variacao: a.change,
-            volume: a.volume
+            volume: a.volume,
+            logo: a.logo ?? a.logourl ?? a.logoUrl ?? null
         };
     }
 
@@ -1121,14 +1216,215 @@
 
 
     /* =========================
+       CATÁLOGO PAGINADO - ACCURACY
+       Utiliza as rotas BRAPI existentes no backend.
+       Não baixa todos os ativos de uma vez.
+    ========================= */
+
+    function telaCatalogo(params) {
+        const configs = {
+            acoes: { rota: "listar-acoes-nacionais", ordem: "volume", nome: "Ações nacionais" },
+            fiis: { rota: "listar-fiis-catalogo", ordem: "volume", nome: "Fundos imobiliários" },
+            bdr: { rota: "listar-internacionais", ordem: "volume", nome: "BDRs" },
+            etf: { rota: "listar-internacionais", ordem: "volume", nome: "ETFs" },
+            cripto: { rota: "listar-criptomoedas", ordem: "rank", nome: "Criptomoedas" },
+            moedas: { rota: "listar-moedas", ordem: "rank", nome: "Moedas e câmbio" },
+            futuros: { rota: "listar-futuros", ordem: "expirationDate", nome: "Contratos futuros" }
+        };
+        const cfg = configs[params.fonte];
+        if (!cfg) return;
+        let paginaAtual = 1;
+        let proxima = false;
+        let totalPaginas = null;
+        let formato = localStorage.getItem("accuracy_catalogo_visual") === "tabela" ? "tabela" : "cards";
+        let ordenacao = cfg.ordem;
+        let direcao = cfg.ordem === "expirationDate" ? "asc" : "desc";
+        let numeroPedido = 0;
+        let itensAtuais = [];
+        let filtro = "todos";
+
+        root.innerHTML = `
+            ${cabecalho(cfg.nome, true)}
+            <div class="ac-catalog-sub">Explore os ativos disponíveis pela API e selecione um para investir.</div>
+            <div class="ac-catalog-toolbar">
+                <div class="ac-view-toggle" aria-label="Visualização">
+                    <button type="button" data-view="cards">▦ Cards</button>
+                    <button type="button" data-view="tabela">☷ Tabela</button>
+                </div>
+                <label class="ac-catalog-select">Ordenar
+                    <select id="acCatalogSort">
+                        <option value="padrao">Destaques</option>
+                        <option value="nome">Nome A–Z</option>
+                        <option value="precoAlta">Maior preço</option>
+                        <option value="precoBaixa">Menor preço</option>
+                    </select>
+                </label>
+                <label class="ac-catalog-select">Variação
+                    <select id="acCatalogFilter">
+                        <option value="todos">Todos</option>
+                        <option value="alta">Em alta</option>
+                        <option value="baixa">Em baixa</option>
+                    </select>
+                </label>
+            </div>
+            <p class="ac-catalog-status" id="acCatalogStatus" role="status"></p>
+            <div id="acCatalogResult"></div>
+            <nav class="ac-catalog-pager" aria-label="Páginas de ativos">
+                <button type="button" id="acCatalogPrev">‹ Anterior</button>
+                <span id="acCatalogPage">Página 1</span>
+                <button type="button" id="acCatalogNext">Próxima ›</button>
+            </nav>
+        `;
+
+        const resultado = document.getElementById("acCatalogResult");
+        const status = document.getElementById("acCatalogStatus");
+        const anterior = document.getElementById("acCatalogPrev");
+        const seguinte = document.getElementById("acCatalogNext");
+        const paginaEl = document.getElementById("acCatalogPage");
+        const sortSelect = document.getElementById("acCatalogSort");
+        if (["cripto", "futuros", "moedas"].includes(params.fonte)) {
+            sortSelect.disabled = true;
+            sortSelect.title = "Ordenação padrão da categoria";
+        }
+
+        function atualizarBotoes() {
+            root.querySelectorAll("[data-view]").forEach(botao => {
+                botao.classList.toggle("active", botao.dataset.view === formato);
+                botao.setAttribute("aria-pressed", String(botao.dataset.view === formato));
+            });
+            anterior.disabled = paginaAtual <= 1;
+            seguinte.disabled = !proxima;
+            paginaEl.textContent = totalPaginas
+                ? `Página ${paginaAtual} de ${totalPaginas}` : `Página ${paginaAtual}`;
+        }
+
+        function formatarPreco(v) {
+            return Number.isFinite(Number(v)) && v != null && v !== ""
+                ? brl(Number(v)) : "Cotação indisponível";
+        }
+
+        function desenharCatalogo() {
+            const itens = itensAtuais.filter(item => {
+                const v = Number(item.variacao);
+                return filtro === "todos" || (Number.isFinite(v) &&
+                    (filtro === "alta" ? v > 0 : v < 0));
+            });
+            if (!itens.length) {
+                resultado.innerHTML = '<div class="pp-empty">Nenhum ativo nesta página com esse filtro.</div>';
+                return;
+            }
+            if (formato === "cards") {
+                resultado.innerHTML = `<div class="ac-catalog-grid">${itens.map((item, n) => {
+                    const v = Number(item.variacao);
+                    const variacao = Number.isFinite(v) ? `${v > 0 ? "+" : ""}${v.toFixed(2).replace(".", ",")}%` : "—";
+                    return `<button type="button" class="ac-asset-card" data-asset="${n}">
+                        <div class="ac-asset-head">
+                            ${logoAtivo(item)}
+                            <div class="ac-asset-name"><strong>${esc(item.value)}</strong><small title="${esc(item.sub || "")}">${esc(item.sub || item.cls)}</small></div>
+                        </div>
+                        <div class="ac-asset-bottom"><strong>${esc(formatarPreco(item.preco))}</strong>
+                            <span class="ac-asset-change ${v > 0 ? "up" : v < 0 ? "down" : "flat"}">${esc(variacao)}</span>
+                        </div>
+                    </button>`;
+                }).join("")}</div>`;
+            } else {
+                resultado.innerHTML = `<div class="ac-catalog-table-wrap"><table class="ac-catalog-table">
+                    <thead><tr><th>Código</th><th>Ativo</th><th>Preço</th><th>Variação</th><th></th></tr></thead>
+                    <tbody>${itens.map((item, n) => `<tr data-asset="${n}">
+                        <td><span class="ac-table-ticker">${logoAtivo(item, "ac-asset-symbol ac-logo-small")}<strong>${esc(item.value)}</strong></span></td><td>${esc(item.sub || item.cls)}</td>
+                        <td>${esc(formatarPreco(item.preco))}</td>
+                        <td class="${Number(item.variacao) > 0 ? "ac-up" : "ac-down"}">${item.variacao == null ? "—" : esc(Number(item.variacao).toFixed(2).replace(".", ",") + "%")}</td>
+                        <td><button type="button" class="ac-choose">Ver</button></td>
+                    </tr>`).join("")}</tbody></table></div>`;
+            }
+            resultado.querySelectorAll("[data-asset]").forEach(el => {
+                el.addEventListener("click", () => escolher(itens[Number(el.dataset.asset)]));
+            });
+        }
+
+        async function carregar(pagina = 1) {
+            const pedido = ++numeroPedido;
+            status.textContent = "Carregando ativos...";
+            resultado.innerHTML = '<div class="pp-empty">Consultando a BRAPI...</div>';
+            anterior.disabled = true;
+            seguinte.disabled = true;
+            const query = new URLSearchParams({
+                page: String(pagina), limit: "20", sortBy: ordenacao, sortOrder: direcao
+            });
+            try {
+                const response = await fetch(`${API_BASE_URL}/brapi/${cfg.rota}?${query}`);
+                const dados = await response.json();
+                if (!response.ok || !dados.success || !Array.isArray(dados.stocks)) {
+                    throw new Error(dados.message || "Falha ao carregar ativos.");
+                }
+                if (pedido !== numeroPedido || !document.body.contains(resultado)) return;
+                paginaAtual = pagina;
+                const lista = dados.stocks;
+                const filtrados = params.fonte === "bdr" ? lista.filter(x => /\(BDR\)$/i.test(x.name || ""))
+                    : params.fonte === "etf" ? lista.filter(x => /\(ETF\)$/i.test(x.name || "")) : lista;
+                itensAtuais = filtrados.map(x => itemDeFonte(x, {
+                    cls: params.cls, cor: params.cor, sigla: params.sigla,
+                    rota: ["cripto", "futuros", "moedas"].includes(params.fonte) ? params.fonte : undefined
+                }));
+                const pg = dados.paginacao || {};
+                totalPaginas = Number(pg.totalPaginas) || null;
+                proxima = typeof pg.temProximaPagina === "boolean"
+                    ? pg.temProximaPagina : (totalPaginas ? pagina < totalPaginas : lista.length === 20);
+                status.textContent = `Ativos da página ${paginaAtual} · ${itensAtuais.length} exibidos`;
+                desenharCatalogo();
+            } catch (erro) {
+                if (pedido !== numeroPedido) return;
+                status.textContent = "Não foi possível consultar os ativos.";
+                resultado.textContent = erro.message;
+                proxima = false;
+            } finally {
+                if (pedido === numeroPedido) atualizarBotoes();
+            }
+        }
+
+        root.querySelectorAll("[data-view]").forEach(botao => {
+            botao.addEventListener("click", () => {
+                formato = botao.dataset.view;
+                localStorage.setItem("accuracy_catalogo_visual", formato);
+                atualizarBotoes(); desenharCatalogo();
+            });
+        });
+        sortSelect.addEventListener("change", () => {
+            const escolhas = {
+                padrao: [cfg.ordem, cfg.ordem === "expirationDate" ? "asc" : "desc"],
+                nome: [params.fonte === "fiis" ? "name" : "name", "asc"],
+                precoAlta: [params.fonte === "fiis" ? "price" : "close", "desc"],
+                precoBaixa: [params.fonte === "fiis" ? "price" : "close", "asc"]
+            };
+            [ordenacao, direcao] = escolhas[sortSelect.value];
+            // Futuros usa outros critérios de ordenação.
+            if (params.fonte === "futuros" && sortSelect.value !== "padrao") {
+                sortSelect.value = "padrao";
+                [ordenacao, direcao] = escolhas.padrao;
+            }
+            carregar(1);
+        });
+        document.getElementById("acCatalogFilter").addEventListener("change", e => {
+            filtro = e.target.value;
+            desenharCatalogo();
+        });
+        anterior.addEventListener("click", () => { if (paginaAtual > 1) carregar(paginaAtual - 1); });
+        seguinte.addEventListener("click", () => { if (proxima) carregar(paginaAtual + 1); });
+        atualizarBotoes(); carregar(1);
+    }
+
+    /* =========================
        LISTA DE ATIVOS DE UMA CATEGORIA
     ========================= */
 
     function telaLista(params) {
+        // Catálogo em cards/tabela com paginação da mesma API usada no Android.
+        if (["acoes", "fiis", "etf", "bdr", "cripto", "futuros", "moedas"].includes(params.fonte)) {
+            return telaCatalogo(params);
+        }
 
         root.innerHTML = `
             ${cabecalho(params.titulo, true)}
-            ${campoBusca("Buscar ativo")}
             <div id="ppCorpo"></div>
         `;
 
@@ -1207,7 +1503,6 @@
             }
         }
 
-        ligarBusca(corpo);
 
         /* busca páginas até aparecer algo do tipo pedido (BDR/ETF vêm misturados) */
         async function carregarAteTer() {
@@ -1244,7 +1539,7 @@
 
             return `
                 <div class="pp-row" data-n="${n}">
-                    <span class="pp-badge ${esc(i.cor || "blue")}">${esc(i.sigla || "AT")}</span>
+                    ${logoAtivo(i, "pp-badge ac-logo-small")}
                     <div class="pp-row-info">
                         <strong>${esc(i.name)}</strong>
                         <small>${esc(i.sub || i.cls)}</small>
@@ -1299,47 +1594,98 @@
     }
 
     function telaCards(params) {
+        // Títulos são cadastrados no banco Accuracy, não no catálogo BRAPI.
+        // O backend não retorna logos para esses títulos.
+        let formato = localStorage.getItem("accuracy_catalogo_visual") === "tabela" ? "tabela" : "cards";
+        let pagina = 1;
+        const limite = 20;
+        let ordem = "padrao";
 
         root.innerHTML = `
             ${cabecalho(params.titulo, true)}
-            ${campoBusca(params.placeholder)}
-            <div id="ppCorpo" class="pp-list"></div>
-        `;
+            <div class="ac-catalog-sub">Títulos registrados na Accuracy. Rentabilidades conforme os dados cadastrados no banco.</div>
+            <div class="ac-catalog-toolbar">
+                <div class="ac-view-toggle" aria-label="Visualização">
+                    <button type="button" data-rf-view="cards">▦ Cards</button>
+                    <button type="button" data-rf-view="tabela">☷ Tabela</button>
+                </div>
+                <label class="ac-catalog-select">Ordenar
+                    <select id="acRfSort"><option value="padrao">Padrão</option><option value="nome">Nome A–Z</option></select>
+                </label>
+            </div>
+            <p class="ac-catalog-status" id="acRfStatus" role="status"></p>
+            <div id="acRfResultado"></div>
+            <nav class="ac-catalog-pager" aria-label="Páginas de títulos">
+                <button type="button" id="acRfPrev">‹ Anterior</button>
+                <span id="acRfPagina"></span>
+                <button type="button" id="acRfNext">Próxima ›</button>
+            </nav>`;
 
-        function corpo() {
-            const alvo = document.getElementById("ppCorpo");
-            const termo = norm(busca.trim());
+        const resultado = document.getElementById("acRfResultado");
+        const status = document.getElementById("acRfStatus");
+        const prev = document.getElementById("acRfPrev");
+        const next = document.getElementById("acRfNext");
+        const pageLabel = document.getElementById("acRfPagina");
 
-            const lista = params.itens.filter(i =>
-                !termo || norm(i.value).includes(termo) || norm(i.tipo).includes(termo)
-            );
-
+        function desenharRf() {
+            if (!document.body.contains(resultado)) return;
+            // Apenas títulos retornados do banco; exemplos não são ofertas reais.
+            const registrados = params.itens.filter(item => item.idTitulo != null);
+            const lista = ordem === "nome"
+                ? [...registrados].sort((a, b) => a.value.localeCompare(b.value, "pt-BR"))
+                : registrados;
+            const paginas = Math.max(1, Math.ceil(lista.length / limite));
+            pagina = Math.min(pagina, paginas);
+            const itens = lista.slice((pagina - 1) * limite, pagina * limite);
+            status.textContent = `${lista.length} título(s) cadastrado(s) no banco`;
+            pageLabel.textContent = `Página ${pagina} de ${paginas}`;
+            prev.disabled = pagina <= 1;
+            next.disabled = pagina >= paginas;
+            root.querySelectorAll("[data-rf-view]").forEach(b => {
+                b.classList.toggle("active", b.dataset.rfView === formato);
+                b.setAttribute("aria-pressed", String(b.dataset.rfView === formato));
+            });
             if (!lista.length) {
-                alvo.innerHTML = `<div class="pp-empty">Nenhum título encontrado.</div>`;
+                resultado.innerHTML = '<div class="pp-empty">Nenhum título desta categoria foi retornado pelo banco da Accuracy.</div>';
                 return;
             }
-
-            alvo.innerHTML = lista.map((i, n) => `
-                <div class="pp-fixa" data-n="${n}">
-                    <div class="pp-fixa-tipo">${esc(i.tipo)}</div>
-                    <h4>${esc(i.value)}</h4>
-                    <div class="pp-tags">
-                        ${i.nivel ? `<span>${esc(i.nivel)}</span>` : ""}
-                        ${i.tags.map(t => `<span>${esc(t)}</span>`).join("")}
-                    </div>
-                    <div class="pp-kv"><span>Rentabilidade</span><strong class="green">${esc(i.rent)}</strong></div>
-                    <div class="pp-kv"><span>Resgate</span><strong>${esc(i.resgate)}</strong></div>
-                    ${i.minimo != null ? `<div class="pp-kv"><span>Aplicação mínima</span><strong>${esc(brl(i.minimo))}</strong></div>` : ""}
-                </div>
-            `).join("");
-
-            alvo.querySelectorAll(".pp-fixa").forEach(card => card.addEventListener("click", () => {
-                escolherFixa(lista[Number(card.dataset.n)], params);
-            }));
+            if (formato === "cards") {
+                resultado.innerHTML = `<div class="ac-catalog-grid">${itens.map((item, n) => `
+                    <button type="button" class="ac-asset-card" data-rf="${n}">
+                        <div class="ac-asset-head">
+                            ${logoAtivo({ ...item, logo: null })}
+                            <div class="ac-asset-name"><strong>${esc(item.value)}</strong>
+                                <small>${esc(item.tipo || "Renda fixa")}</small></div>
+                        </div>
+                        <div class="ac-rf-details"><strong>${esc(item.rent || "Rentabilidade não informada")}</strong>
+                            <small>Resgate: ${esc(item.resgate || "—")}</small>
+                            ${item.minimo != null ? `<small>Aplicação mínima: ${esc(brl(item.minimo))}</small>` : ""}
+                        </div>
+                    </button>`).join("")}</div>`;
+            } else {
+                resultado.innerHTML = `<div class="ac-catalog-table-wrap"><table class="ac-catalog-table">
+                    <thead><tr><th>Título</th><th>Tipo</th><th>Rentabilidade</th><th>Resgate</th><th></th></tr></thead>
+                    <tbody>${itens.map((item, n) => `<tr data-rf="${n}"><td>${esc(item.value)}</td>
+                    <td>${esc(item.tipo)}</td><td>${esc(item.rent)}</td><td>${esc(item.resgate)}</td>
+                    <td><button type="button" class="ac-choose">Ver</button></td></tr>`).join("")}</tbody></table></div>`;
+            }
+            resultado.querySelectorAll("[data-rf]").forEach(el => {
+                el.addEventListener("click", () => escolherFixa(itens[Number(el.dataset.rf)], params));
+            });
         }
 
-        ligarBusca(corpo);
-        corpo();
+        root.querySelectorAll("[data-rf-view]").forEach(btn => btn.addEventListener("click", () => {
+            formato = btn.dataset.rfView;
+            localStorage.setItem("accuracy_catalogo_visual", formato);
+            desenharRf();
+        }));
+        document.getElementById("acRfSort").addEventListener("change", e => {
+            ordem = e.target.value; pagina = 1; desenharRf();
+        });
+        prev.addEventListener("click", () => { if (pagina > 1) { pagina--; desenharRf(); } });
+        next.addEventListener("click", () => { pagina++; desenharRf(); });
+        window.addEventListener("accuracy:rf-carregada", desenharRf, { once: true });
+        desenharRf();
     }
 
 

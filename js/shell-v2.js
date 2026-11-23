@@ -257,6 +257,160 @@
         }
     }
 
+    /* =========================
+       DEPOSITO SIMULADO
+    ========================= */
+
+    let depositoEmAndamento = false;
+    let dialogoDeposito = null;
+
+    function abrirDeposito() {
+        if (dialogoDeposito) {
+            dialogoDeposito.querySelector("#v2DepositoValor").focus();
+            return;
+        }
+
+        if (!localStorage.getItem("token")) {
+            toast("Entre na sua conta para adicionar saldo.");
+            return;
+        }
+
+        if (!document.getElementById("v2DepositoEstilos")) {
+            const estilos = document.createElement("style");
+            estilos.id = "v2DepositoEstilos";
+            estilos.textContent = `
+                .v2-deposito-fundo { position:fixed; inset:0; z-index:10050; background:rgba(2,8,23,.78); display:flex; align-items:center; justify-content:center; padding:18px; backdrop-filter:blur(5px); }
+                .v2-deposito-modal { width:min(100%,430px); background:#0e1f3d; border:1px solid #2b456e; border-radius:20px; color:#f8fbff; padding:26px; box-shadow:0 26px 85px rgba(0,0,0,.48); font-family:inherit; }
+                .v2-deposito-topo { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:8px; }
+                .v2-deposito-topo h2 { font-size:21px; line-height:1.3; margin:0; color:white; }
+                .v2-deposito-fechar { border:0; background:#172e50; color:#e4ebff; border-radius:9px; width:34px; height:34px; font-size:23px; cursor:pointer; }
+                .v2-deposito-subtitulo { color:#9fb5d8; margin:0 0 18px; font-size:13px; line-height:1.5; }
+                .v2-deposito-saldo { padding:15px; background:#102a51; border:1px solid #29466e; border-radius:12px; margin-bottom:18px; }
+                .v2-deposito-saldo small { display:block; color:#adc1df; margin-bottom:5px; }
+                .v2-deposito-saldo strong { color:white; font-size:24px; }
+                .v2-deposito-modal label { display:block; margin-bottom:8px; font-size:14px; font-weight:600; color:#e9f0ff; }
+                .v2-deposito-modal input { box-sizing:border-box; width:100%; padding:14px 15px; color:white; font-size:18px; border:1px solid #3a5681; border-radius:10px; background:#0a182e; outline:none; }
+                .v2-deposito-modal input:focus { border-color:#4b89ff; box-shadow:0 0 0 3px rgba(59,130,246,.2); }
+                .v2-deposito-sugestoes { display:flex; flex-wrap:wrap; gap:8px; margin:12px 0; }
+                .v2-deposito-sugestoes button { cursor:pointer; padding:8px 13px; border:1px solid #304e7a; background:#12294c; border-radius:999px; color:#dbeafe; }
+                .v2-deposito-erro { color:#ff96a6; min-height:20px; font-size:13px; margin:8px 0; }
+                .v2-deposito-confirmar { width:100%; padding:14px; border:0; border-radius:11px; font-size:15px; font-weight:700; color:white; background:#2563eb; cursor:pointer; }
+                .v2-deposito-confirmar:disabled { cursor:not-allowed; opacity:.65; }
+                .v2-deposito-aviso { font-size:12px; line-height:1.5; color:#9fb5d8; margin:14px 0 0; }
+            `;
+            document.head.appendChild(estilos);
+        }
+
+        const fundo = document.createElement("div");
+        fundo.className = "v2-deposito-fundo";
+        fundo.innerHTML = `
+            <section class="v2-deposito-modal" role="dialog" aria-modal="true" aria-labelledby="v2DepositoTitulo">
+                <div class="v2-deposito-topo">
+                    <h2 id="v2DepositoTitulo">Adicionar saldo</h2>
+                    <button type="button" class="v2-deposito-fechar" aria-label="Fechar">×</button>
+                </div>
+                <p class="v2-deposito-subtitulo">Adicione dinheiro fictício à sua conta Accuracy.</p>
+                <div class="v2-deposito-saldo"><small>Saldo atual da conta</small><strong id="v2DepositoSaldo">Consultando...</strong></div>
+                <form id="v2DepositoForm" novalidate>
+                    <label for="v2DepositoValor">Valor do depósito (R$)</label>
+                    <input id="v2DepositoValor" type="text" inputmode="decimal" autocomplete="off" placeholder="Ex.: 500,00" required maxlength="18">
+                    <div class="v2-deposito-sugestoes">
+                        <button type="button" data-valor="100">R$ 100</button>
+                        <button type="button" data-valor="500">R$ 500</button>
+                        <button type="button" data-valor="1000">R$ 1.000</button>
+                    </div>
+                    <p id="v2DepositoErro" class="v2-deposito-erro" role="alert" aria-live="polite"></p>
+                    <button class="v2-deposito-confirmar" id="v2DepositoConfirmar" type="submit">Confirmar depósito simulado</button>
+                </form>
+                <p class="v2-deposito-aviso">Operação simulada: não há movimentação de dinheiro real.</p>
+            </section>`;
+
+        document.body.appendChild(fundo);
+        dialogoDeposito = fundo;
+        const entrada = fundo.querySelector("#v2DepositoValor");
+        const erroEl = fundo.querySelector("#v2DepositoErro");
+        const confirmar = fundo.querySelector("#v2DepositoConfirmar");
+        const fechar = () => {
+            if (depositoEmAndamento) return;
+            fundo.removeEventListener("keydown", teclas);
+            fundo.remove();
+            dialogoDeposito = null;
+        };
+        const teclas = e => { if (e.key === "Escape") fechar(); };
+        fundo.addEventListener("keydown", teclas);
+        fundo.querySelector(".v2-deposito-fechar").addEventListener("click", fechar);
+        fundo.addEventListener("click", e => { if (e.target === fundo) fechar(); });
+        fundo.querySelectorAll("[data-valor]").forEach(b => {
+            b.addEventListener("click", () => {
+                entrada.value = b.dataset.valor;
+                erroEl.textContent = "";
+                entrada.focus();
+            });
+        });
+
+        // O saldo da API e o saldo livre de uma carteira podem ser diferentes.
+        buscarSaldo().then(saldo => {
+            if (dialogoDeposito === fundo) {
+                fundo.querySelector("#v2DepositoSaldo").textContent = brl(saldo);
+            }
+        });
+
+        fundo.querySelector("#v2DepositoForm").addEventListener("submit", async e => {
+            e.preventDefault();
+            if (depositoEmAndamento) return;
+
+            const texto = entrada.value.trim().replace(/\s/g, "");
+            const canonico = texto.includes(",")
+                ? texto.replace(/\./g, "").replace(",", ".")
+                : texto;
+
+            if (!/^\d{1,13}(\.\d{1,2})?$/.test(canonico) || Number(canonico) <= 0) {
+                erroEl.textContent = "Informe um valor válido, maior que R$ 0,00 (até 2 casas decimais).";
+                entrada.focus();
+                return;
+            }
+
+            const token = localStorage.getItem("token");
+            if (!token) {
+                erroEl.textContent = "Sessão expirada. Faça login novamente.";
+                return;
+            }
+
+            depositoEmAndamento = true;
+            confirmar.disabled = true;
+            confirmar.textContent = "Adicionando saldo...";
+            erroEl.textContent = "";
+
+            try {
+                // A rota atualmente implementada pelo backend lê $_GET['valor'].
+                const url = `${API_BASE_URL}/carteiras/adicionar-saldo?valor=${encodeURIComponent(Number(canonico).toFixed(2))}`;
+                const resposta = await fetch(url, {
+                    method: "GET",
+                    headers: { Authorization: `Bearer ${token}` },
+                    cache: "no-store"
+                });
+                const data = await resposta.json();
+                if (!resposta.ok || data.success !== true) {
+                    throw new Error(data.message || data.mensagem || `Erro HTTP ${resposta.status}`);
+                }
+
+                confirmar.textContent = "Saldo adicionado!";
+                fundo.querySelector("#v2DepositoSaldo").textContent = brl(data.saldo_atual);
+                toast("Saldo simulado adicionado com sucesso.");
+                // Recarrega os resumos em todas as páginas sem deixar saldo em cache.
+                window.location.reload();
+            } catch (erro) {
+                erroEl.textContent = erro.message || "Não foi possível adicionar saldo.";
+                confirmar.textContent = "Confirmar depósito simulado";
+                confirmar.disabled = false;
+            } finally {
+                depositoEmAndamento = false;
+            }
+        });
+
+        entrada.focus();
+    }
+
     function iniciar() {
 
         /* busca do topo -> evento para quem quiser ouvir */
@@ -287,12 +441,14 @@
             });
         }
 
-        /* adicionar saldo: ainda não existe rota na API */
+        /* Deposito simulado por meio da rota existente da API */
         document.querySelectorAll("#v2AddSaldo, [data-v2-saldo]").forEach(botao => {
             botao.addEventListener("click", () => {
-                toast(botao.dataset.v2Saldo === "retirar"
-                    ? "Retirar saldo ainda não está disponível."
-                    : "Adicionar saldo ainda não está disponível.");
+                if (botao.dataset.v2Saldo === "retirar") {
+                    toast("Retirar saldo ainda não está disponível.");
+                    return;
+                }
+                abrirDeposito();
             });
         });
 

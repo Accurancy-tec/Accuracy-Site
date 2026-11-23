@@ -1038,12 +1038,10 @@ const Carteiras = (function () {
     =====================================================
     */
 
-    function askWallet(
-        { selected } = {}
-    ) {
-
-        const availableWallets =
-            list();
+    function askWallet({ selected, allowedIds } = {}) {
+        const availableWallets = Array.isArray(allowedIds)
+            ? list().filter(w => allowedIds.some(id => String(id) === String(w.id)))
+            : list();
 
 
         if (

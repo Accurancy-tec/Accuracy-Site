@@ -264,7 +264,7 @@
 
         }
 
-    } catch (erro) {}
+    } catch (erro) { }
 
 
     /*
@@ -279,6 +279,14 @@
 
             const nome =
                 window.usuarioLogado.nome || "Usuário";
+            // Exibe somente o primeiro nome na saudação.
+            const primeiroNome = nome.trim().split(/\s+/)[0] || "Usuário";
+
+            const elementoNome = document.getElementById("nomeUsuario");
+
+            if (elementoNome) {
+                elementoNome.textContent = primeiroNome;
+            }
 
             const inicial =
                 nome.trim().charAt(0).toUpperCase();

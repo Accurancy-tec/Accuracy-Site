@@ -199,7 +199,7 @@ if (formulario) {
         try {
 
             const resposta = await fetch(
-                `${API_URL}auth/loginSite`,
+                `${API_URL}auth/loginUnico`,
                 {
                     method: "POST",
 
@@ -263,6 +263,12 @@ if (formulario) {
                 console.log(
                     "Login realizado com sucesso."
                 );
+                if (resultado.admin === true) {
+                    localStorage.setItem("admin_token", resultado.token);
+                    localStorage.setItem("admin", JSON.stringify(resultado.user));
+                    window.location.href = "admin.php";
+                    return;
+                }
 
 
                 localStorage.removeItem(
@@ -283,11 +289,12 @@ if (formulario) {
 
                 /* Guarda o refreshToken, se a API enviar, para renovar o login sem pedir senha */
                 if (resultado.refreshToken) {
-
                     localStorage.setItem(
                         "refreshToken",
                         resultado.refreshToken
                     );
+                } else {
+                    localStorage.removeItem("refreshToken");
                 }
 
 

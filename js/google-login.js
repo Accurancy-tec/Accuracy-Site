@@ -1,95 +1,70 @@
-// Login com Google (Google Identity Services -> ID Token -> /auth/loginGoogle)
-
-// Client ID do tipo "Aplicativo da Web" (é público, pode ficar no front).
-// Tem que ser o MESMO valor de GOOGLE_CLIENT_ID_WEB no .env do back end.
+// Google Identity Services (OAuth 2.0 / OpenID Connect ID token)
+// Client ID publico; deve coincidir com GOOGLE_CLIENT_ID_WEB na API Render.
 const GOOGLE_CLIENT_ID = "407661889736-05nr228ois2n3c103to7707fbter8s1l.apps.googleusercontent.com";
+const GOOGLE_API_LOGIN = "https://accuracyappapi.onrender.com/auth/loginGoogle";
 
-// API_URL já é declarada em js/usuario.js (carregado antes deste arquivo).
-
-function mostrarErroGoogle(msg) {
-    const el = document.getElementById("erroGoogle");
-    if (el) el.textContent = msg || "";
+function mostrarErroGoogle(mensagem) {
+    const erro = document.getElementById("erroGoogle");
+    if (erro) erro.textContent = mensagem || "";
 }
 
 async function aoReceberCredencialGoogle(resposta) {
     mostrarErroGoogle("");
-
+    if (!resposta || !resposta.credential) {
+        mostrarErroGoogle("O Google nao retornou uma credencial valida.");
+        return;
+    }
     try {
-        const r = await fetch(`${API_URL}auth/loginGoogle`, {
+        const resultadoHttp = await fetch(GOOGLE_API_LOGIN, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ id_token: resposta.credential })
         });
-
-        const texto = await r.text();
-        let resultado;
-
-        try {
-            resultado = JSON.parse(texto);
-        } catch (e) {
-            console.error("Resposta inesperada do servidor:", texto);
-            mostrarErroGoogle("O servidor retornou um erro inesperado.");
-            return;
+        const texto = await resultadoHttp.text();
+        let dados;
+        try { dados = JSON.parse(texto); }
+        catch (_) { throw new Error("Resposta inesperada da API. Verifique o deploy do Render."); }
+        if (!resultadoHttp.ok || dados.success !== true || !dados.token || !dados.user) {
+            throw new Error(dados.message || dados.mensagem || "Nao foi possivel entrar com o Google.");
         }
-
-        if (!resultado.success) {
-            mostrarErroGoogle(resultado.message || "Não foi possível entrar com o Google.");
-            return;
-        }
-
-        // Mesmo comportamento do login por e-mail/senha (js/usuario.js)
+        // Mesma sessao do login comum, sem mexer nas credenciais administrativas.
         localStorage.removeItem("accuracy_profile_data");
         localStorage.removeItem("accuracy_avatar");
-        localStorage.setItem("token", resultado.token);
-        localStorage.setItem("usuario", JSON.stringify(resultado.user));
-
-        window.location.href = "dashboard.php";
-
-    } catch (erro) {
-        console.error("ERRO NO LOGIN COM GOOGLE:", erro);
-        mostrarErroGoogle("Erro de conexão. Tente novamente em instantes.");
+        localStorage.setItem("token", dados.token);
+        localStorage.setItem("usuario", JSON.stringify(dados.user));
+        if (dados.refreshToken) localStorage.setItem("refreshToken", dados.refreshToken);
+        else localStorage.removeItem("refreshToken");
+        window.location.assign("dashboard.php");
+    } catch (e) {
+        console.error("Falha no login Google:", e.message);
+        mostrarErroGoogle(e.message || "Nao foi possivel autenticar com o Google.");
     }
 }
 
-// O botão oficial é renderizado em 400x40 px; aqui ele é esticado
-// para cobrir exatamente o botão visual (largura e altura).
-function ajustarEscalaGoogle() {
-    const wrap = document.querySelector(".google-wrap");
-    const overlay = document.getElementById("googleBtn");
-    if (!wrap || !overlay) return;
-
-    const sx = wrap.offsetWidth / 400;
-    const sy = wrap.offsetHeight / 40;
-    overlay.style.transform = `scale(${sx}, ${sy})`;
-}
-
-function iniciarGoogle() {
-    const overlay = document.getElementById("googleBtn");
-    if (!overlay) return;
-
-    // O script do Google carrega com async/defer: se ainda não chegou, tenta de novo
-    if (!window.google || !google.accounts || !google.accounts.id) {
-        setTimeout(iniciarGoogle, 150);
+function iniciarGoogle(tentativa = 0) {
+    const el = document.getElementById("googleBtn");
+    if (!el) return;
+    if (!window.google?.accounts?.id) {
+        if (tentativa < 30) setTimeout(() => iniciarGoogle(tentativa + 1), 200);
+        else mostrarErroGoogle("O Google nao carregou. Verifique a conexao ou o bloqueador de anuncios.");
         return;
     }
-
     google.accounts.id.initialize({
         client_id: GOOGLE_CLIENT_ID,
-        callback: aoReceberCredencialGoogle
+        callback: aoReceberCredencialGoogle,
+        ux_mode: "popup"
     });
-
-    google.accounts.id.renderButton(overlay, {
+    el.replaceChildren();
+    google.accounts.id.renderButton(el, {
         type: "standard",
-        theme: "outline",
+        theme: "filled_blue",
         size: "large",
-        text: "signin_with",
-        shape: "rectangular",
+        shape: "pill",
+        text: "continue_with",
+        logo_alignment: "left",
         locale: "pt-BR",
-        width: 400
+        width: 360
     });
-
-    ajustarEscalaGoogle();
 }
 
-document.addEventListener("DOMContentLoaded", iniciarGoogle);
-window.addEventListener("resize", ajustarEscalaGoogle);
+document.addEventListener("DOMContentLoaded", () => iniciarGoogle());

@@ -373,3 +373,59 @@
 label[for="asset"] {
     display: none;
 }
+/* ===============================================
+   CATÁLOGO DE ATIVOS - ACCURACY
+   Cards / Tabela / Ordenação / Paginação
+=============================================== */
+.ac-catalog-sub { color: var(--texto-secundario); font-size: 13px; margin: -3px 0 17px; }
+.ac-catalog-toolbar { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; }
+.ac-view-toggle { display: flex; gap: 3px; padding: 3px; border: 1px solid var(--borda); border-radius: 10px; background: var(--surface); margin-right: auto; }
+.ac-view-toggle button { color: var(--texto-secundario); background: none; border: none; border-radius: 8px; padding: 9px 15px; font: inherit; font-size: 12px; cursor: pointer; }
+.ac-view-toggle button.active { color: #fff; background: var(--primaria, #2563eb); }
+.ac-catalog-select { display: flex; align-items: center; gap: 8px; padding: 7px 12px; border: 1px solid var(--borda); border-radius: 10px; background: var(--surface); color: var(--texto-secundario); font-size: 12px; }
+.ac-catalog-select select { background: transparent; color: var(--texto); border: none; outline: none; font: inherit; }
+.ac-catalog-select select option { background: var(--surface); color: var(--texto); }
+.ac-catalog-status { min-height: 19px; color: var(--texto-secundario); font-size: 12px; }
+.ac-catalog-grid { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 14px; }
+.ac-asset-card { display: flex; flex-direction: column; justify-content: space-between; gap: 24px; min-height: 150px; padding: 16px; border: 1px solid var(--borda-suave); border-radius: 13px; background: var(--surface); color: var(--texto); font: inherit; text-align: left; cursor: pointer; transition: border-color .2s, transform .2s; }
+.ac-asset-card:hover { border-color: var(--primaria); transform: translateY(-2px); }
+.ac-asset-head { display: flex; gap: 12px; align-items: center; min-width: 0; }
+.ac-asset-symbol { flex-shrink: 0; display: grid; place-items: center; width: 44px; height: 44px; border-radius: 9px; background: rgba(59,130,246,.16); color: #60a5fa; font-weight: 800; font-size: 11px; }
+.ac-asset-name { min-width: 0; }
+.ac-asset-name strong { display: block; font-size: 16px; }
+.ac-asset-name small { display: block; color: var(--texto-secundario); margin-top: 6px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; max-width: 100%; font-size: 11px; }
+.ac-asset-bottom { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.ac-asset-bottom strong { font-size: 21px; }
+.ac-asset-change { border-radius: 7px; padding: 6px 8px; white-space: nowrap; font-weight: 600; font-size: 12px; }
+.ac-asset-change.up { color: #4ade80; background: rgba(34,197,94,.12); }
+.ac-asset-change.down { color: #fb7185; background: rgba(239,68,68,.12); }
+.ac-asset-change.flat { color: var(--texto-secundario); background: var(--icone-bg); }
+.ac-catalog-table-wrap { overflow-x: auto; border: 1px solid var(--borda-suave); border-radius: 12px; }
+.ac-catalog-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; }
+.ac-catalog-table th, .ac-catalog-table td { padding: 13px; border-bottom: 1px solid var(--borda-suave); }
+.ac-catalog-table th { color: var(--texto-secundario); font-weight: 500; }
+.ac-catalog-table tr[data-asset] { cursor: pointer; }
+.ac-catalog-table tr[data-asset]:hover { background: var(--surface-hover); }
+.ac-catalog-table .ac-up { color: #4ade80; }
+.ac-catalog-table .ac-down { color: #fb7185; }
+.ac-choose { border: 1px solid var(--borda); background: var(--icone-bg); border-radius: 7px; color: var(--texto); padding: 6px 12px; cursor: pointer; }
+.ac-catalog-pager { display: flex; align-items: center; justify-content: center; gap: 14px; margin: 22px 0; color: var(--texto-secundario); font-size: 12px; }
+.ac-catalog-pager button { border: 1px solid var(--borda); background: var(--surface); color: var(--texto); padding: 9px 16px; border-radius: 9px; cursor: pointer; }
+.ac-catalog-pager button:not(:disabled):hover { border-color: var(--primaria); }
+.ac-catalog-pager button:disabled { opacity: .4; cursor: not-allowed; }
+@media(max-width:1150px) { .ac-catalog-grid { grid-template-columns: repeat(3,minmax(0,1fr)); } }
+@media(max-width:760px) { .ac-catalog-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } .ac-asset-bottom strong { font-size: 17px; } }
+@media(max-width:480px) { .ac-catalog-grid { grid-template-columns: 1fr; } .ac-catalog-toolbar { justify-content: flex-start; } }
+
+/* Logos reais devolvidas pela BRAPI via API Accuracy */
+.ac-logo-wrap { position: relative; overflow: hidden; isolation: isolate; }
+.ac-logo-fallback { display: grid; place-items: center; width: 100%; height: 100%; font-weight: 700; }
+.ac-logo-img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: contain; background: #fff; padding: 5px; box-sizing: border-box; border-radius: inherit; }
+.ac-logo-small { width: 36px; height: 36px; min-width: 36px; flex-shrink: 0; border-radius: 8px; display: grid; place-items: center; background: rgba(59,130,246,.16); color: #60a5fa; font-size: 11px; }
+.ac-table-ticker { display: inline-flex; gap: 10px; align-items: center; }
+.ac-table-ticker .ac-logo-small { width: 30px; height: 30px; min-width: 30px; }
+
+/* Catálogo de títulos de renda fixa (dados Accuracy, não BRAPI) */
+.ac-rf-details { display: flex; flex-direction: column; gap: 5px; }
+.ac-rf-details strong { color: #34d399; font-size: 18px; }
+.ac-rf-details small { color: var(--texto-secundario); font-size: 11px; }

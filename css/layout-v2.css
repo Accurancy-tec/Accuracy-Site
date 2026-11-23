@@ -916,8 +916,13 @@ body.v2 .v2-wallet-skeleton {
 }
 
 @keyframes v2-shimmer {
-    from { background-position: 160% 0; }
-    to   { background-position: -60% 0; }
+    from {
+        background-position: 160% 0;
+    }
+
+    to {
+        background-position: -60% 0;
+    }
 }
 
 
@@ -1125,7 +1130,7 @@ body.v2 .v2-table td.v2-wide {
     white-space: normal;
 }
 
-body.v2 .v2-panel + .v2-panel {
+body.v2 .v2-panel+.v2-panel {
     margin-top: 20px;
 }
 
@@ -1141,4 +1146,58 @@ body.v2 .v2-panel.v2-pad-b {
     body.v2 .v2-page-head {
         flex-wrap: wrap;
     }
+}
+
+/* Oculta a pesquisa do cabeçalho global */
+.v2-topbar .v2-search {
+    display: none !important;
+}
+
+/* =====================================
+   CABEÇALHO - ACCURACY
+===================================== */
+
+body.v2 .v2-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+body.v2 .v2-topbar-right {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 16px;
+    margin-left: auto;
+}
+
+body.v2 .v2-total {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    white-space: nowrap;
+}
+
+body.v2 .v2-topbar-right .avatar {
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    border-radius: 50%;
+    background-size: cover;
+    background-position: center;
+}
+
+/* Esconde a pesquisa antiga do cabeçalho */
+body.v2 .v2-topbar .v2-search {
+    display: none !important;
+}
+
+/* ==========================================
+   ACCURACY - OCULTAR RESUMO DE APORTES
+========================================== */
+
+body.v2 .v2-mine {
+    display: none !important;
 }

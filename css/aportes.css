@@ -178,7 +178,7 @@
     font-size: 15px;
 }
 
-.list-header > span {
+.list-header>span {
     color: var(--texto-secundario);
     font-size: 11px;
     white-space: nowrap;
@@ -414,11 +414,11 @@
     transition: 0.2s;
 }
 
-.switch input:checked + span {
+.switch input:checked+span {
     background: var(--primaria-forte);
 }
 
-.switch input:checked + span::before {
+.switch input:checked+span::before {
     transform: translateX(15px);
     background: #ffffff;
 }
@@ -532,9 +532,7 @@
 
     0% {
         transform:
-            translateY(-60px)
-            translateX(0)
-            rotate(var(--rot-start));
+            translateY(-60px) translateX(0) rotate(var(--rot-start));
         opacity: 1;
     }
 
@@ -544,9 +542,7 @@
 
     100% {
         transform:
-            translateY(112vh)
-            translateX(var(--drift))
-            rotate(var(--rot-end));
+            translateY(112vh) translateX(var(--drift)) rotate(var(--rot-end));
         opacity: 0;
     }
 
@@ -602,4 +598,56 @@
         width: 100%;
         justify-content: space-between;
     }
+}
+
+/* =====================================
+   PESQUISA DE ATIVOS - APORTES
+===================================== */
+
+.aportes-search-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    width: 100%;
+    max-width: 460px;
+    height: 44px;
+
+    margin: 20px 0;
+
+    padding: 0 15px;
+
+    border: 1px solid #263a5c;
+    border-radius: 10px;
+
+    background: #0e1f3d;
+
+    transition: border-color 0.2s;
+}
+
+.aportes-search-container:focus-within {
+    border-color: #3b82f6;
+}
+
+.aportes-search-container i {
+    font-size: 16px;
+    color: #8ca8d4;
+}
+
+.aportes-search-container input {
+    flex: 1;
+    width: 100%;
+
+    border: none;
+    outline: none;
+
+    background: transparent;
+    color: #ffffff;
+
+    font-family: Inter, sans-serif;
+    font-size: 13px;
+}
+
+.aportes-search-container input::placeholder {
+    color: #8ca8d4;
 }

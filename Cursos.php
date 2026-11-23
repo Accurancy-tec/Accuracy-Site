@@ -80,7 +80,7 @@
             </div>
 
             <div class="v2-topbar-right">
-                <div class="v2-total"><span>Total</span> <strong id="v2Total">—</strong></div>
+                <div class="v2-total"><span>Saldo disponivel</span> <strong id="v2Total">—</strong></div>
 
                 <a href="perfil.php" aria-label="Perfil">
                     <div class="avatar">U</div>
@@ -350,7 +350,7 @@
 
 <script src="js/cotacoes.js?v=3"></script>
 <script src="js/resumoCarteiras.js?v=2"></script>
-<script src="js/shell-v2.js?v=4"></script>
+<script src="js/shell-v2.js?v=21"></script>
 <script src="js/progresso.js"></script>
 <script src="js/cursos.js?v=3"></script>
 

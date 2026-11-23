@@ -121,7 +121,7 @@ const AtivoDetalhe = (function () {
     async function buscarCotacao(simbolo) {
 
         const tipo = (window.ASSET_ROTA || {})[simbolo];
-        const rota = tipo === "cripto" ? "get-crypto-quote" : (tipo === "futuros" ? "get-futures-quote" : "get-quote");
+        const rota = tipo === "cripto" ? "get-crypto-quote" : (tipo === "futuros" ? "get-futures-quote" : (tipo === "moedas" ? "get-currency-quote" : "get-quote"));
 
         const resp = await fetch(`${API}/brapi/${rota}?symbol=${encodeURIComponent(simbolo)}`);
 
@@ -238,7 +238,7 @@ const AtivoDetalhe = (function () {
         }
 
         const tipo = (window.ASSET_ROTA || {})[simbolo];
-        const rota = tipo === "cripto" ? "historico-criptomoedas" : (tipo === "futuros" ? "historico-futuros" : "historico-acoes");
+        const rota = tipo === "cripto" ? "historico-criptomoedas" : (tipo === "futuros" ? "historico-futuros" : (tipo === "moedas" ? "historico-moedas" : "historico-acoes"));
 
         const resp = await fetch(
             `${API}/brapi/${rota}?symbol=${encodeURIComponent(simbolo)}&range=${range}`

@@ -1,0 +1,320 @@
+/* =========================================================
+   TRILHAS (cards da página Cursos + página da playlist)
+========================================================= */
+
+/* ---------- Card de trilha (é um link) ---------- */
+
+a.course-card {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.fixa-thumb {
+    background: radial-gradient(circle, #1f6b4f, #101c31);
+}
+
+.trilhas-status {
+    grid-column: 1 / -1;
+    color: var(--texto-fraco);
+    font-size: 13px;
+    padding: 20px 0;
+}
+
+.trilhas-status button {
+    margin-left: 10px;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 8px;
+    background: var(--primaria);
+    color: #fff;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.course-meta .meta-go {
+    color: var(--primaria);
+    font-weight: 600;
+}
+
+/* ---------- Página da trilha ---------- */
+
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--link);
+    font-size: 12px;
+    text-decoration: none;
+    margin-bottom: 10px;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
+
+/* Player (esquerda) + lista de vídeos (direita) */
+.trilha-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 340px;
+    gap: 16px;
+    align-items: stretch;
+    max-width: 1400px;
+}
+
+.trilha-player {
+    min-width: 0;
+}
+
+.player-frame {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: #000;
+    border: 1px solid var(--borda-suave);
+    border-radius: 14px;
+    overflow: hidden;
+}
+
+.player-frame iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+
+.player-frame .trilhas-status {
+    padding: 24px;
+}
+
+.player-hint {
+    margin-top: 12px;
+    color: var(--texto-fraco);
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* ---------- Grade de trilhas: as 5 na mesma linha ---------- */
+
+.courses-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+@media (max-width: 1100px) {
+    .courses-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 700px) {
+    .courses-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 480px) {
+    .courses-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ---------- Barra de progresso (arredondada) ----------
+   Obs.: os nomes começam com "trilha-prog" de propósito, porque o
+   cursos.css já usa ".progress" e ".progress-bar" para outra coisa. */
+
+.trilha-prog {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 12px;
+}
+
+.trilha-prog[hidden] {
+    display: none;
+}
+
+/* trilho escuro e arredondado */
+.trilha-prog-barra {
+    flex: 1;
+    height: 8px;
+    border-radius: 999px;
+    background: #060e1c;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .06);
+    overflow: hidden;
+}
+
+/* parte "carregada" em azul claro */
+.trilha-prog-fill {
+    height: 100%;
+    width: 0;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #60a5fa, #93c5fd);
+    transition: width .4s ease;
+}
+
+.trilha-prog-rotulo {
+    min-width: 30px;
+    text-align: right;
+    color: var(--texto-fraco);
+    font-size: 10px;
+    font-weight: 600;
+}
+
+/* versão maior, usada embaixo do player */
+.trilha-prog-lg {
+    margin: 14px 0 0;
+}
+
+.trilha-prog-lg .trilha-prog-barra {
+    height: 10px;
+}
+
+.trilha-prog-lg .trilha-prog-rotulo {
+    min-width: 0;
+    font-size: 12px;
+}
+
+/* tema claro: trilho cinza-azulado em vez de preto */
+:root[data-theme="light"] .trilha-prog-barra {
+    background: #d3deee;
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .05);
+}
+
+/* ---------- Lista de vídeos da playlist ---------- */
+
+.playlist-panel {
+    position: relative;
+    min-height: 280px;
+    background: var(--surface);
+    border: 1px solid var(--borda-suave);
+    border-radius: 14px;
+    overflow: hidden;
+}
+
+/* o conteúdo fica "solto" dentro do painel para a lista rolar
+   sem aumentar a altura: o painel acompanha a altura do player */
+.playlist-inner {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.playlist-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--borda-suave);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.playlist-count {
+    color: var(--texto-fraco);
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.playlist-list {
+    position: relative;
+    flex: 1;
+    margin: 0;
+    padding: 8px;
+    list-style: none;
+    overflow-y: auto;
+}
+
+.playlist-status {
+    padding: 16px;
+    color: var(--texto-fraco);
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.playlist-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    margin-bottom: 4px;
+    padding: 6px;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    background: transparent;
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition: background .2s, border-color .2s;
+}
+
+.playlist-item:hover {
+    background: var(--surface-hover);
+}
+
+.playlist-item.active {
+    background: var(--primaria-suave);
+    border-color: var(--primaria);
+}
+
+.playlist-num {
+    width: 18px;
+    flex-shrink: 0;
+    text-align: center;
+    color: var(--texto-fraco);
+    font-size: 11px;
+}
+
+.playlist-thumb {
+    width: 96px;
+    flex-shrink: 0;
+    aspect-ratio: 16 / 9;
+    border-radius: 6px;
+    background: #000;
+    overflow: hidden;
+}
+
+.playlist-thumb img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.playlist-title {
+    flex: 1;
+    min-width: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    font-size: 12px;
+    line-height: 1.35;
+}
+
+.playlist-check {
+    flex-shrink: 0;
+    color: #22c55e;
+    font-size: 15px;
+    visibility: hidden;
+}
+
+.playlist-item.watched .playlist-check {
+    visibility: visible;
+}
+
+/* celular e telas estreitas: a lista vai para baixo do player */
+@media (max-width: 1000px) {
+    .trilha-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .playlist-panel {
+        height: 380px;
+    }
+}

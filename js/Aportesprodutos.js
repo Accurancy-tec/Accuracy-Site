@@ -159,6 +159,7 @@
                     : [r, idx].filter(Boolean).join(" ");
 
                 const item = {
+                    idTitulo: t.id_titulo,
                     value: nome,
                     tipo: tipo || (ehTesouro ? "Tesouro" : "Renda fixa"),
                     tags,
@@ -258,6 +259,15 @@
 
         /* categoria usada por classOf() ao registrar o aporte */
         ASSET_CLASS[item.value] = item.cls;
+
+        /* renda fixa / Tesouro: guarda o id_titulo que a API exige ao registrar */
+        window.ASSET_TITULO = window.ASSET_TITULO || {};
+
+        if (item.idTitulo) {
+            window.ASSET_TITULO[item.value] = item.idTitulo;
+        } else {
+            delete window.ASSET_TITULO[item.value];
+        }
 
         /* rota de cotação: "cripto", "futuros" ou nenhuma (ações, FIIs...) */
         if (item.rota) {
@@ -1277,6 +1287,7 @@
 
     function escolherFixa(i, params) {
         escolher({
+            idTitulo: i.idTitulo,
             value: i.value,
             name: i.value,
             sub: `${i.tipo} · ${i.rent}`,

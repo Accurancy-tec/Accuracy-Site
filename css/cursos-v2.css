@@ -646,3 +646,38 @@ body.v2 .invest-types .section-header p {
             .invest-grid { grid-template-columns: 1fr; }
         }
         
+
+
+/* =====================================================
+   TRILHAS vindas da API (ícone no lugar da imagem)
+===================================================== */
+body.v2 .v2-thumb { position: relative; }
+body.v2 .v2-thumb .thumb-icon {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 56px;
+    color: rgba(255, 255, 255, .28);
+    pointer-events: none;
+}
+body.v2 .v2-hero .v2-thumb .thumb-icon { font-size: 88px; }
+body.v2 .v2-thumb.cat-renda-fixa { background: linear-gradient(135deg, #0e5f78, #2bb3d6); }
+body.v2 .course-card { cursor: pointer; }
+
+body.v2 .trilhas-status {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 28px 12px;
+    color: var(--texto-secundario);
+}
+body.v2 .trilhas-status button {
+    margin-left: 10px;
+    padding: 7px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--borda);
+    background: var(--surface);
+    color: inherit;
+    cursor: pointer;
+}

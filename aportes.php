@@ -349,14 +349,14 @@
     </div>
 
     <script src="js/carteiras.js?v=2"></script>
-    <script src="js/cotacoes.js?v=3"></script>
-    <script src="js/Aportes.js?v=9"></script>
+    <script src="js/cotacoes.js?v=4"></script>
+    <script src="js/Aportes.js?v=10"></script>
     <script src="js/Loading.js"></script>
-    <script src="js/aportesExtra.js"></script>
+    <script src="js/aportesExtra.js?v=2"></script>
     <script src="js/resumoCarteiras.js?v=2"></script>
     <script src="js/Aportesdetalhe.js?v=2"></script>
     <script src="js/shell-v2.js?v=4"></script>
-    <script src="js/Aportesprodutos.js?v=4"></script>
+    <script src="js/Aportesprodutos.js?v=5"></script>
     <script src="js/Animacoes.js"></script>
 
 </body>

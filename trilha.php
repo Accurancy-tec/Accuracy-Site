@@ -13,7 +13,7 @@
     <!-- Base do site (reset, avatar) -->
     <link rel="stylesheet" href="css/dashboard.css">
 
-    <link rel="stylesheet" href="css/cursos-v2.css">
+    <link rel="stylesheet" href="css/cursos-v2.css?v=4">
 
     <!-- Novo layout (sidebar, topo, cartões e tabelas) -->
     <link rel="stylesheet" href="css/layout-v2.css?v=4">
@@ -148,7 +148,7 @@
 
 </div>
 
-<script src="js/cotacoes.js?v=3"></script>
+<script src="js/cotacoes.js?v=12"></script>
 <script src="js/resumoCarteiras.js?v=2"></script>
 <script src="js/shell-v2.js?v=21"></script>
 <script src="js/progresso.js"></script>

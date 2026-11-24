@@ -54,8 +54,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function progressoDe(trilha) {
-        const total = Number(trilha.total_videos_trilha) || 0;
         const P = window.AccuracyProgresso;
+        const total = P.lista(trilha.id_trilha).length;
         const feitos = P ? P.ler(trilha.id_trilha).length : 0;
         const pct = P ? P.percentual(feitos, total) : 0;
         return { total: total, feitos: feitos, pct: pct };
@@ -244,6 +244,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 return;
             }
 
+            await window.AccuracyProgresso.carregar();
             trilhas = dados.trilhas;
 
             limparGrid();
@@ -257,21 +258,18 @@ document.addEventListener("DOMContentLoaded", function () {
         } catch (erro) {
 
             console.error("Erro ao carregar trilhas:", erro);
-            mostrarMensagem("Não foi possível carregar as trilhas.", true);
+            trilhas = [];
+            alvoDoHero = null;
+            document.getElementById("heroTitle").textContent = "Progresso indisponível";
+            document.getElementById("heroBtn").textContent = "Tente novamente";
+            mostrarMensagem("Não foi possível carregar as trilhas e o progresso. Tente novamente.", true);
 
         }
     }
 
-    // Ao voltar de uma trilha (botão "voltar" do navegador), recalcula o progresso
+    // Ao voltar de uma trilha, busca novamente o progresso no banco.
     window.addEventListener("pageshow", function (e) {
-        if (e.persisted && trilhas.length) {
-            limparGrid();
-            trilhas.forEach(function (trilha) {
-                grid.insertBefore(criarCard(trilha), vazio || null);
-            });
-            atualizarHero();
-            aplicarFiltros();
-        }
+        if (e.persisted) carregarTrilhas();
     });
 
     carregarTrilhas();

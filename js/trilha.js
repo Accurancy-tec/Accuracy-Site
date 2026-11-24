@@ -10,9 +10,6 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     const API_BASE_URL = "https://accuracyappapi.onrender.com";
 
-    // Quando o aluno chega a esta parte do vídeo, conta como assistido
-    const PERCENTUAL_ASSISTIDO = 0.8;
-
     const titulo = document.getElementById("trilhaTitulo");
     const descricao = document.getElementById("trilhaDescricao");
     const moldura = document.getElementById("playerFrame");
@@ -33,10 +30,64 @@ document.addEventListener("DOMContentLoaded", async function () {
     let idsVideos = [];
     let botoes = [];
     let indiceAtual = -1;
-    let listaMontada = false;
-    let tentativasLista = 0;
     let timerProgresso = null;
     let assistidos = [];
+    const P = window.AccuracyProgresso;
+    let selecionado = null;
+    let ultimo = null;
+    let carregandoVideo = false;
+    let falha = false;
+    const status = document.createElement("p");
+    status.setAttribute("role", "status");
+    status.className = "player-hint";
+    boxProgresso.insertAdjacentElement("afterend", status);
+
+    function mensagem(texto) { status.textContent = texto; }
+
+    function capturar() {
+        if (!player || carregandoVideo || falha) return null;
+        try {
+            const d = player.getVideoData();
+            const tempo = player.getCurrentTime(), duracao = player.getDuration();
+            if (!d || d.video_id !== selecionado || !Number.isFinite(tempo) || !(duracao > 0)) return null;
+            if (tempo <= 0 && !ultimo) return null;
+            ultimo = {video: selecionado, tempo: Math.floor(tempo), pct: Math.min(100, Math.floor(100 * tempo / duracao))};
+            return ultimo;
+        } catch (_) { return null; }
+    }
+
+    function gravar(amostra, keepalive = false) {
+        if (!amostra) return Promise.resolve();
+        return P.salvar(idTrilha, amostra.video, amostra.pct, amostra.tempo, keepalive).then(function () {
+            assistidos = P.ler(idTrilha);
+            atualizarMarcas();
+            atualizarProgresso();
+            if (!falha) mensagem("Progresso salvo na sua conta.");
+        }).catch(function (erro) {
+            console.error("Erro ao salvar progresso:", erro);
+            mensagem("Não foi possível salvar o progresso. Aguarde ou tente novamente ao reproduzir.");
+        });
+    }
+
+    function trocarVideo(indice, jaSalvou = false) {
+        if (indice < 0 || indice >= idsVideos.length || !player) return;
+        if (!jaSalvou) gravar(capturar() || ultimo);
+        pararTimer();
+        ultimo = null;
+        carregandoVideo = true;
+        falha = false;
+        indiceAtual = indice;
+        selecionado = idsVideos[indice];
+        const item = P.atual(idTrilha, selecionado);
+        const inicio = item && !item.concluido_progresso ? Number(item.ultima_posicao_segundos) || 0 : 0;
+        player.loadVideoById({videoId: selecionado, startSeconds: inicio});
+        destacarAtual();
+    }
+
+    document.addEventListener("visibilitychange", function () {
+        if (document.visibilityState === "hidden") gravar(capturar() || ultimo, true);
+    });
+    window.addEventListener("pagehide", function () { gravar(capturar() || ultimo, true); });
 
 
     // ---------------------------------------------------------
@@ -105,44 +156,10 @@ document.addEventListener("DOMContentLoaded", async function () {
         });
     }
 
-    function idVideoAtual() {
-        try {
-            const dados = player.getVideoData();
-            if (dados && dados.video_id) {
-                return dados.video_id;
-            }
-        } catch (erro) { /* ignora */ }
-
-        return idsVideos[indiceAtual] || null;
-    }
-
-    function marcarAtualComoAssistido() {
-
-        const id = idVideoAtual();
-
-        if (!id || !window.AccuracyProgresso || assistidos.indexOf(id) !== -1) {
-            return;
-        }
-
-        assistidos = window.AccuracyProgresso.marcar(idTrilha, id);
-        atualizarMarcas();
-        atualizarProgresso();
-    }
-
-    // Enquanto o vídeo toca, confere de tempos em tempos se já passou de 80%
+    // Salva a posição a cada 15 segundos de reprodução.
     function iniciarTimer() {
         pararTimer();
-
-        timerProgresso = setInterval(function () {
-            try {
-                const duracao = player.getDuration();
-                const tempo = player.getCurrentTime();
-
-                if (duracao > 0 && tempo / duracao >= PERCENTUAL_ASSISTIDO) {
-                    marcarAtualComoAssistido();
-                }
-            } catch (erro) { /* ignora */ }
-        }, 3000);
+        timerProgresso = setInterval(function () { gravar(capturar()); }, 15000);
     }
 
     function pararTimer() {
@@ -157,50 +174,10 @@ document.addEventListener("DOMContentLoaded", async function () {
     // Lista de vídeos (lado direito)
     // ---------------------------------------------------------
 
-    function definirTituloDoVideo(idVideo, texto) {
-        const posicao = idsVideos.indexOf(idVideo);
-
-        if (posicao === -1 || !texto || !botoes[posicao]) {
-            return;
-        }
-
-        botoes[posicao].querySelector(".playlist-title").textContent = texto;
-    }
-
-    // Busca o título de cada vídeo (se falhar, fica "Vídeo N")
-    function buscarTitulos() {
-        idsVideos.forEach(function (idVideo) {
-
-            const endereco =
-                "https://www.youtube.com/oembed?format=json&url=" +
-                encodeURIComponent("https://www.youtube.com/watch?v=" + idVideo);
-
-            fetch(endereco)
-                .then(function (resposta) {
-                    return resposta.ok ? resposta.json() : null;
-                })
-                .then(function (dados) {
-                    if (dados && dados.title) {
-                        definirTituloDoVideo(idVideo, dados.title);
-                    }
-                })
-                .catch(function () { /* mantém o título provisório */ });
-        });
-    }
-
     function destacarAtual() {
 
-        let indice = -1;
-
-        try {
-            indice = player.getPlaylistIndex();
-        } catch (erro) { /* ignora */ }
-
-        if (typeof indice !== "number" || indice < 0 || indice >= botoes.length) {
-            return;
-        }
-
-        indiceAtual = indice;
+        const indice = indiceAtual;
+        if (indice < 0 || indice >= botoes.length) return;
 
         botoes.forEach(function (botao, i) {
             botao.classList.toggle("active", i === indice);
@@ -214,7 +191,6 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     function montarLista() {
 
-        listaMontada = true;
         lista.innerHTML = "";
         botoes = [];
 
@@ -241,7 +217,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
             const nome = document.createElement("span");
             nome.className = "playlist-title";
-            nome.textContent = "Vídeo " + (i + 1);
+            nome.textContent = P.atual(idTrilha, idVideo).titulo_curso || "Vídeo " + (i + 1);
 
             const check = document.createElement("i");
             check.className = "bi bi-check-circle-fill playlist-check";
@@ -254,7 +230,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
             botao.addEventListener("click", function () {
                 try {
-                    player.playVideoAt(i);
+                    trocarVideo(i);
                 } catch (erro) {
                     console.error("Não foi possível trocar de vídeo:", erro);
                 }
@@ -271,128 +247,60 @@ document.addEventListener("DOMContentLoaded", async function () {
         atualizarMarcas();
         atualizarProgresso();
         destacarAtual();
-        buscarTitulos();
+
     }
 
-    // O YouTube demora um instante para informar os vídeos da playlist,
-    // por isso tentamos algumas vezes até a lista aparecer.
-    function tentarMontarLista() {
-
-        if (listaMontada) {
-            return;
-        }
-
-        let ids = [];
-
-        try {
-            ids = player.getPlaylist() || [];
-        } catch (erro) {
-            ids = [];
-        }
-
-        if (ids.length > 0) {
-            idsVideos = ids;
-            montarLista();
-            return;
-        }
-
-        tentativasLista += 1;
-
-        if (tentativasLista <= 20) {
-            setTimeout(tentarMontarLista, 500);
-        } else {
-            mostrarMensagemLista(
-                "Não foi possível listar os vídeos. " +
-                "Use o menu de playlist dentro do player."
-            );
-        }
-    }
-
-
-    // ---------------------------------------------------------
-    // Player do YouTube
-    // ---------------------------------------------------------
-
+    // O player usa exclusivamente os vídeos válidos cadastrados no banco.
     function aoMudarEstado(evento) {
-
-        if (!listaMontada) {
-            tentarMontarLista();
-        }
-
         const estado = evento.data;
-
-        if (estado === 1) { // tocando
-            destacarAtual();
-            iniciarTimer();
-
-            // ajuda a preencher o título do vídeo atual se a busca falhou
+        if (estado === 1) {
             try {
-                const dados = player.getVideoData();
-                if (dados && dados.video_id && dados.title) {
-                    definirTituloDoVideo(dados.video_id, dados.title);
-                }
-            } catch (erro) { /* ignora */ }
-
-        } else if (estado === 0) { // terminou
+                if (player.getVideoData().video_id !== selecionado) return;
+            } catch (_) { return; }
+            carregandoVideo = false;
+            falha = false;
+            iniciarTimer();
+        } else if (estado === 0 && !carregandoVideo && !falha) {
             pararTimer();
-            marcarAtualComoAssistido();
-
+            const amostra = capturar() || ultimo;
+            if (amostra && amostra.video === selecionado) {
+                gravar({...amostra, pct: 100});
+                ultimo = null;
+            }
+            if (indiceAtual + 1 < idsVideos.length) trocarVideo(indiceAtual + 1, true);
         } else {
             pararTimer();
+            if (estado === 2) gravar(capturar());
         }
     }
 
     function aoPlayerPronto() {
-        tentarMontarLista();
-    }
-
-    function criarPlayer(codigoPlaylist) {
-
-        moldura.innerHTML = "";
-
-        const alvo = document.createElement("div");
-        alvo.id = "ytPlayer";
-        moldura.appendChild(alvo);
-
-        player = new YT.Player("ytPlayer", {
-            width: "100%",
-            height: "100%",
-            playerVars: {
-                listType: "playlist",
-                list: codigoPlaylist,
-                rel: 0,
-                playsinline: 1
-            },
-            events: {
-                onReady: aoPlayerPronto,
-                onStateChange: aoMudarEstado
-            }
-        });
-
+        montarLista();
         dica.hidden = false;
     }
 
-    // Plano B: se a API do YouTube não carregar, mostra o player simples
-    function criarPlayerSimples(codigoPlaylist, nomeTrilha) {
-
-        const iframe = document.createElement("iframe");
-        iframe.src =
-            "https://www.youtube.com/embed/videoseries?list=" +
-            encodeURIComponent(codigoPlaylist) +
-            "&rel=0&playsinline=1";
-        iframe.title = "Playlist: " + nomeTrilha;
-        iframe.allow =
-            "accelerometer; autoplay; encrypted-media; picture-in-picture; web-share";
-        iframe.referrerPolicy = "strict-origin-when-cross-origin";
-        iframe.allowFullscreen = true;
-
+    function criarPlayer() {
         moldura.innerHTML = "";
-        moldura.appendChild(iframe);
-
-        mostrarMensagemLista(
-            "Não foi possível carregar a lista de vídeos. " +
-            "Use o menu de playlist dentro do player."
-        );
+        const alvo = document.createElement("div");
+        alvo.id = "ytPlayer";
+        moldura.appendChild(alvo);
+        const item = P.retomar(idTrilha);
+        indiceAtual = Math.max(0, idsVideos.indexOf(item.video));
+        selecionado = idsVideos[indiceAtual];
+        carregandoVideo = true;
+        player = new YT.Player("ytPlayer", {
+            width: "100%", height: "100%", videoId: selecionado,
+            playerVars: { rel: 0, playsinline: 1, start: item.concluido_progresso ? 0 : Number(item.ultima_posicao_segundos) || 0 },
+            events: {
+                onReady: aoPlayerPronto,
+                onStateChange: aoMudarEstado,
+                onError: function () {
+                    pararTimer();
+                    falha = true;
+                    mensagem("Este vídeo está indisponível. Selecione outra aula na lista.");
+                }
+            }
+        });
     }
 
     function carregarApiYouTube() {
@@ -454,27 +362,17 @@ document.addEventListener("DOMContentLoaded", async function () {
         titulo.textContent = trilha.titulo_trilha;
         descricao.textContent = trilha.descricao_trilha || "";
 
-        // só aceita letras, números, _ e - no código da playlist
-        if (!/^[A-Za-z0-9_-]+$/.test(trilha.playlist_youtube_trilha || "")) {
-            mostrarErro("Esta trilha ainda não tem uma playlist cadastrada.");
+        await P.carregar();
+        idsVideos = P.lista(idTrilha).map(item => item.video);
+        totalNoBanco = idsVideos.length;
+        if (!idsVideos.length) {
+            mostrarErro("Esta trilha ainda não tem aulas cadastradas.");
             return;
         }
-
-        totalNoBanco = Number(trilha.total_videos_trilha) || 0;
-
-        if (window.AccuracyProgresso) {
-            assistidos = window.AccuracyProgresso.ler(idTrilha);
-        }
-
+        assistidos = P.ler(idTrilha);
         atualizarProgresso();
-
-        try {
-            await carregarApiYouTube();
-            criarPlayer(trilha.playlist_youtube_trilha);
-        } catch (erroApi) {
-            console.error("API do YouTube:", erroApi);
-            criarPlayerSimples(trilha.playlist_youtube_trilha, trilha.titulo_trilha);
-        }
+        await carregarApiYouTube();
+        criarPlayer();
 
     } catch (erro) {
 

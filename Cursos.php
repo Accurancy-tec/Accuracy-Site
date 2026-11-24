@@ -13,7 +13,7 @@
     <!-- Base do site (reset, avatar) -->
     <link rel="stylesheet" href="css/dashboard.css">
 
-    <link rel="stylesheet" href="css/cursos-v2.css?v=2">
+    <link rel="stylesheet" href="css/cursos-v2.css?v=4">
 
     <!-- Novo layout (sidebar, topo, cartões e tabelas) -->
     <link rel="stylesheet" href="css/layout-v2.css?v=4">
@@ -156,13 +156,24 @@
 
                         <div class="invest-grid">
 
-                            <button class="invest-card" type="button" data-info="cripto">
-                                <div class="invest-icon cripto">
-                                    <i class="bi bi-currency-bitcoin"></i>
+                            <button class="invest-card" type="button" data-info="iniciante">
+                                <div class="invest-icon inicio">
+                                    <i class="bi bi-mortarboard-fill"></i>
                                 </div>
                                 <div>
-                                    <strong>Criptomoedas</strong>
-                                    <small>Moedas digitais</small>
+                                    <strong>Primeiros passos</strong>
+                                    <small>Por onde começar</small>
+                                </div>
+                                <i class="bi bi-chevron-right invest-arrow"></i>
+                            </button>
+
+                            <button class="invest-card" type="button" data-info="renda-fixa">
+                                <div class="invest-icon fixa">
+                                    <i class="bi bi-bank"></i>
+                                </div>
+                                <div>
+                                    <strong>Renda Fixa</strong>
+                                    <small>Juros combinados</small>
                                 </div>
                                 <i class="bi bi-chevron-right invest-arrow"></i>
                             </button>
@@ -185,6 +196,17 @@
                                 <div>
                                     <strong>Ações</strong>
                                     <small>Sócio de empresas</small>
+                                </div>
+                                <i class="bi bi-chevron-right invest-arrow"></i>
+                            </button>
+
+                            <button class="invest-card" type="button" data-info="cripto">
+                                <div class="invest-icon cripto">
+                                    <i class="bi bi-currency-bitcoin"></i>
+                                </div>
+                                <div>
+                                    <strong>Criptomoedas</strong>
+                                    <small>Moedas digitais</small>
                                 </div>
                                 <i class="bi bi-chevron-right invest-arrow"></i>
                             </button>
@@ -233,6 +255,34 @@
                     (function () {
 
                         var dados = {
+
+                            iniciante: {
+                                titulo: "Primeiros passos",
+                                icone: "bi-mortarboard-fill",
+                                classe: "inicio",
+                                texto: "Antes de escolher onde investir, vale organizar as contas e entender seus objetivos e o prazo de cada um.",
+                                itens: [
+                                    "Monte uma reserva de emergência antes de arriscar.",
+                                    "Comece com valores pequenos e aprenda aos poucos.",
+                                    "Diversificar ajuda a não depender de um único investimento."
+                                ],
+                                risco: 0,
+                                riscoTexto: "Depende do que escolher"
+                            },
+
+                            "renda-fixa": {
+                                titulo: "Renda Fixa",
+                                icone: "bi-bank",
+                                classe: "fixa",
+                                texto: "Você empresta dinheiro a um banco ou ao governo e recebe juros em troca, por um prazo combinado. Tesouro Direto, CDB, LCI e LCA são exemplos.",
+                                itens: [
+                                    "Pode ser pré-fixada (taxa combinada) ou pós-fixada (acompanha um índice).",
+                                    "Cada título tem prazo e regras de resgate próprios.",
+                                    "Costuma oscilar menos que ações e criptomoedas."
+                                ],
+                                risco: 1,
+                                riscoTexto: "Baixo"
+                            },
 
                             cripto: {
                                 titulo: "Criptomoedas",
@@ -348,7 +398,7 @@
      MODAL DO VÍDEO
 ========================= -->
 
-<script src="js/cotacoes.js?v=3"></script>
+<script src="js/cotacoes.js?v=12"></script>
 <script src="js/resumoCarteiras.js?v=2"></script>
 <script src="js/shell-v2.js?v=21"></script>
 <script src="js/progresso.js"></script>

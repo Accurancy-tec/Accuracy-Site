@@ -164,9 +164,17 @@
 
             const data = await resposta.json();
 
-            return resposta.ok && data.success === true
-                ? (Number(data.saldo_atual) || 0)
-                : 0;
+                        // ACC_SALDOS_RAPIDOS_V1 - entrega o saldo antes de esperar as posicoes.
+            const valorSaldoRapido = resposta.ok && data.success === true
+                ? Number(data.saldo_atual)
+                : NaN;
+            if (Number.isFinite(valorSaldoRapido) && valorSaldoRapido >= 0) {
+                window.dispatchEvent(new CustomEvent("accuracy:saldo-api-rapido", {
+                    detail: valorSaldoRapido
+                }));
+                return valorSaldoRapido;
+            }
+            return 0;
 
         } catch (erro) {
             console.error("Erro ao buscar o saldo:", erro);
@@ -195,7 +203,9 @@
         parcial = null;
         ouvintesParcial = onParcial ? [onParcial] : [];
 
-        promessa = (async () => {
+        // ACC_SALDOS_RAPIDOS_V1 - inicia um novo ciclo de leitura de saldos.
+        window.dispatchEvent(new CustomEvent("accuracy:saldos-consulta-iniciada"));
+                promessa = (async () => {
 
             if (typeof ResumoCarteiras === "undefined") {
                 return calcular([], {});
@@ -255,6 +265,8 @@
         if (saldo) {
             saldo.textContent = brl(dados.saldo);
         }
+        // ACC_PERF_CARTEIRAS_V1 - atualiza cards e tabela com o resumo do shell.
+        window.dispatchEvent(new CustomEvent("accuracy:resumo-atualizado", { detail: dados }));
     }
 
     /* =========================

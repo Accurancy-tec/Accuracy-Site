@@ -145,6 +145,19 @@ const Cotacoes = (function () {
      * }
      */
     const cache = {};
+    // ACC_PERF_CARTEIRAS_V1 - evita cotacao duplicada quando duas partes da tela consultam juntas.
+    const cotacoesPendentes = new Map();
+    async function precoCompartilhado(simbolo) {
+        const atual = cotacoesPendentes.get(simbolo);
+        if (atual) return atual;
+        const tarefa = buscarPreco(simbolo);
+        cotacoesPendentes.set(simbolo, tarefa);
+        try {
+            return await tarefa;
+        } finally {
+            if (cotacoesPendentes.get(simbolo) === tarefa) cotacoesPendentes.delete(simbolo);
+        }
+    }
 
 
     /* =========================
@@ -212,23 +225,16 @@ const Cotacoes = (function () {
              *
              * /getQuote.php?symbol=PETR4
              */
-            for (const symbol of missing) {
-
-                const price = await buscarPreco(symbol);
-
-                if (price !== null) {
-
-                    cache[symbol] = {
-
-                        price,
-
-                        at:
-                            Date.now()
-
-                    };
-
-                }
-
+                        // ACC_PERF_CARTEIRAS_V1 - ate 4 simbolos simultaneos, sem sobrecarregar a API.
+            const LOTE_COTACOES = 4;
+            for (let inicio = 0; inicio < missing.length; inicio += LOTE_COTACOES) {
+                const grupo = missing.slice(inicio, inicio + LOTE_COTACOES);
+                await Promise.all(grupo.map(async symbol => {
+                    const price = await precoCompartilhado(symbol);
+                    if (price !== null) {
+                        cache[symbol] = { price, at: Date.now() };
+                    }
+                }));
             }
 
         }

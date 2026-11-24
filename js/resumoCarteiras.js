@@ -57,7 +57,7 @@ const ResumoCarteiras = (function () {
     ) {
 
         const response =
-            await fetch(
+            await (window.AccuracyPerf && window.AccuracyPerf.fetch ? window.AccuracyPerf.fetch : fetch)(
 
                 `${API_BASE_URL}${caminho}`,
 
@@ -192,6 +192,18 @@ const ResumoCarteiras = (function () {
             const carteiras =
                 dataCarteiras.carteiras
                 || [];
+            // ACC_SALDOS_RAPIDOS_V1 - saldos livres antes das posicoes.
+            window.dispatchEvent(new CustomEvent("accuracy:saldos-carteiras-rapidas", {
+                detail: carteiras.map(c => ({ saldo_livre_carteira: c.saldo_livre_carteira }))
+            }));
+            // ACC_PERF_CARTEIRAS_V1 - exibe estrutura antes de carregar posicoes.
+            window.dispatchEvent(new CustomEvent("accuracy:carteiras-basicas", {
+                detail: carteiras.map(c => ({
+                    id_carteira: c.id_carteira,
+                    nome_carteira: c.nome_carteira,
+                    tipo_carteira: c.tipo_carteira
+                }))
+            }));
 
 
             /*

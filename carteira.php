@@ -3,6 +3,9 @@
 
 <head>
     <meta charset="UTF-8">
+    <!-- ACC_PERF_CARTEIRAS_V1: antecipa conexao com a API -->
+    <link rel="preconnect" href="https://accuracyappapi.onrender.com" crossorigin>
+    <link rel="dns-prefetch" href="//accuracyappapi.onrender.com">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Carteira - Accuracy</title>
@@ -149,11 +152,12 @@
 
 </div>
 
-<script src="js/carteiras.js?v=2"></script>
-<script src="js/cotacoes.js?v=3"></script>
-<script src="js/resumoCarteiras.js?v=2"></script>
-<script src="js/shell-v2.js?v=22"></script>
-<script src="js/carteira-v2.js?v=2"></script>
+<script src="js/accuracy-carteiras-perf.js?v=1"></script><script src="js/carteiras.js?v=20261124191750"></script>
+<script src="js/cotacoes.js?v=4"></script>
+<script src="js/resumoCarteiras.js?v=4"></script>
+<script src="js/accuracy-saldos-rapidos.js?v=1"></script>
+<script src="js/shell-v2.js?v=24"></script>
+<script src="js/carteira-v2.js?v=3"></script>
 <link rel="stylesheet" href="css/carteira-venda.css?v=1">
 <script src="js/carteira-venda.js?v=5"></script>
 

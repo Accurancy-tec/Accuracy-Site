@@ -2,6 +2,7 @@
 <html lang="pt-BR">
 
 <head>
+    <link rel="preconnect" href="https://accuracyappapi.onrender.com" crossorigin>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -194,8 +195,9 @@
 
 
 <script src="js/cotacoes.js?v=3"></script>
-<script src="js/resumoCarteiras.js?v=2"></script>
-<script src="js/shell-v2.js?v=21"></script>
+<script src="js/resumoCarteiras.js?v=3"></script>
+<script src="js/accuracy-saldos-rapidos.js?v=1"></script>
+<script src="js/shell-v2.js?v=22"></script>
 <script src="js/Historico.js?v=2"></script>
 
 </body>

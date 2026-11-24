@@ -282,6 +282,8 @@
 
         /* categoria usada por classOf() ao registrar o aporte */
         ASSET_CLASS[item.value] = item.cls;
+        // ACCURACY_PRODUTO_CATEGORIA_V1: category for wallet filtering only.
+        window.AccuracyCategoriaProduto = { value: String(item.value), cls: item.cls, sigla: item.sigla, rota: item.rota, sub: item.sub };
 
         /* renda fixa / Tesouro: guarda o id_titulo que a API exige ao registrar */
         window.ASSET_TITULO = window.ASSET_TITULO || {};

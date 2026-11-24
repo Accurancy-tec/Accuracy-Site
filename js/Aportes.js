@@ -843,78 +843,49 @@ $("#confirmBtn").addEventListener(
             return;
         }
 
-        // FILTRO POR CATEGORIA - somente carteiras compativeis
-        const normalizarCategoriaCarteira = (valor) =>
-            String(valor ?? "")
-                .normalize("NFD")
-                .replace(/[\u0300-\u036f]/g, "")
-                .trim()
-                .toLowerCase();
-
-        const classeAtivo = normalizarCategoriaCarteira(classOf(asset.value));
-        const categoriasAtivoCarteira = {
-            "renda fixa": "renda fixa",
-            "tesouro": "renda fixa",
-            "acoes": "renda variavel",
-            "acao": "renda variavel",
-            "fiis": "renda variavel",
-            "fii": "renda variavel",
-            "etf": "renda variavel",
-            "etfs": "renda variavel",
-            "futuros": "renda variavel",
-            "cripto": "cripto",
-            "criptomoedas": "cripto",
-            "internacional": "internacional",
-            "bdr": "internacional",
-            "bdrs": "internacional"
-        };
-        const categoriaEsperada = categoriasAtivoCarteira[classeAtivo];
-        if (!categoriaEsperada) {
-            toast("Categoria do ativo nao identificada. Compra bloqueada.");
-            return;
-        }
-        if (typeof Carteiras.ensureCategories !== "function" ||
-            !(await Carteiras.ensureCategories(carteiras))) {
-            toast("Defina a categoria da carteira para continuar.");
-            return;
-        }
-        if (carteiras.some(c => !c.style)) {
-            toast("A API nao informou a categoria das carteiras. Compra bloqueada.");
-            return;
-        }
-        const compativeis = carteiras.filter(c =>
-            normalizarCategoriaCarteira(c.style) === categoriaEsperada
-        );
+        // ACCURACY_CATEGORIA_BANCO_V2
+        const normalizarCategoriaBanco = v => String(v ?? "").normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "").trim().toLowerCase();
+        const produto = window.AccuracyCategoriaProduto;
+        const info = produto && produto.value === String(asset.value) ? produto : {};
+        const classe = normalizarCategoriaBanco(classOf(asset.value));
+        const sigla = normalizarCategoriaBanco(info.sigla);
+        const rota = normalizarCategoriaBanco(info.rota);
+        const mapa = new Map([
+            ["renda fixa", "renda fixa"], ["tesouro", "renda fixa"],
+            ["acoes", "renda variavel"], ["acao", "renda variavel"],
+            ["renda variavel", "renda variavel"], ["fii", "renda variavel"],
+            ["fiis", "renda variavel"], ["etf", "renda variavel"],
+            ["etfs", "renda variavel"], ["futuros", "renda variavel"],
+            ["cripto", "cripto"], ["criptomoeda", "cripto"], ["criptomoedas", "cripto"],
+            ["internacional", "internacional"], ["bdr", "internacional"], ["bdrs", "internacional"]
+        ]);
+        const categoriaEsperada = (sigla === "bdr" || sigla === "usd" || rota === "internacional")
+            ? "internacional" : (sigla === "fut" || rota === "futuros")
+            ? "renda variavel" : mapa.get(classe);
+        const compativeis = carteiras.filter(c => {
+            const estilo = normalizarCategoriaBanco(c.style);
+            return estilo === "mista" || (categoriaEsperada && estilo === categoriaEsperada);
+        });
         if (!compativeis.length) {
-            toast("Nenhuma carteira compativel com " + categoriaEsperada + ".");
+            if (carteiras.some(c => !normalizarCategoriaBanco(c.style))) {
+                toast("A API ainda n\u00e3o informou a categoria de algumas carteiras. Atualize e tente novamente.");
+            } else {
+                toast("Nenhuma carteira compat\u00edvel. Crie uma carteira da categoria do ativo ou Mista.");
+            }
             return;
         }
-        // ACCURACY_ESCOLHA_CARTEIRA_SEMPRE_V1
-        // Sempre exibir a escolha, mesmo quando existe apenas uma carteira compativel.
-        const carteiraAtivaParaAporte = Carteiras.getActive();
-        const carteiraPreSelecionada = compativeis.find(c =>
-            String(c.id) === String(carteiraAtivaParaAporte)
-        );
-
-        const carteiraEscolhida = await Carteiras.askWallet({
-            selected: carteiraPreSelecionada
-                ? carteiraPreSelecionada.id
-                : compativeis[0].id,
+        const ativa = compativeis.find(c => String(c.id) === String(Carteiras.getActive()));
+        const escolhida = await Carteiras.askWallet({
+            selected: ativa ? ativa.id : compativeis[0].id,
             allowedIds: compativeis.map(c => c.id)
         });
-
-        // Cancelamento: nao registra aporte.
-        if (!carteiraEscolhida) return;
-
-        // Verificacao adicional antes de enviar para API.
-        if (!compativeis.some(c => String(c.id) === String(carteiraEscolhida))) {
-            toast("Carteira incompativel com este ativo.");
+        if (!escolhida) return;
+        if (!compativeis.some(c => String(c.id) === String(escolhida))) {
+            toast("Carteira incompat\u00edvel com este ativo.");
             return;
         }
-
-        walletId = carteiraEscolhida;
-
-        
+        walletId = escolhida;
 
         /* =========================
            VALIDAR ID DA CARTEIRA

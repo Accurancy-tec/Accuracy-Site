@@ -2,6 +2,7 @@
 <html lang="pt-BR">
 
 <head>
+    <link rel="preconnect" href="https://accuracyappapi.onrender.com" crossorigin>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -33,6 +34,7 @@
     <script src="js/Tema.js"></script>
     <script src="js/avatar-global.js"></script>
 <link rel="stylesheet" href="css/dashboard-destaques.css?v=5">
+    <link rel="stylesheet" href="css/dashboard-evolucao-premium.css?v=1">
 </head>
 
 <body class="v2">
@@ -233,10 +235,11 @@
 
 
     <script src="js/cotacoes.js?v=3"></script>
-    <script src="js/resumoCarteiras.js?v=2"></script>
-    <script src="js/shell-v2.js?v=21"></script>
+    <script src="js/resumoCarteiras.js?v=3"></script>
+    <script src="js/accuracy-saldos-rapidos.js?v=1"></script>
+<script src="js/shell-v2.js?v=22"></script>
     <script src="js/Loading.js"></script>
-    <script src="js/dashboard-extra.js"></script>
+    <script src="js/dashboard-extra.js?v=20261124"></script>
     <script src="js/dashboard-total.js"></script>
     <script src="js/Dashboard-animacoes.js"></script>
     <script src="js/noticias.js?v=1"></script>

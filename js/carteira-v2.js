@@ -358,7 +358,27 @@
        INÍCIO
     ========================= */
 
-    V2Dados.carregar({ onParcial: desenhar })
+        // ACC_PERF_CARTEIRAS_V1 - carregamento progressivo sem mostrar valores ficticios.
+    window.addEventListener("accuracy:carteiras-basicas", evento => {
+        if (dados) return;
+        const lista = Array.isArray(evento.detail) ? evento.detail : [];
+        if (!lista.length) return;
+        elCarteiras.innerHTML = lista.map((c, i) => `
+            <div class="v2-wallet" style="--c:${CORES[i % CORES.length]}">
+                <span class="v2-wallet-name">${esc(c.nome_carteira || "Carteira")}</span>
+                <span class="v2-wallet-tag">${esc(c.tipo_carteira || "")}</span>
+                <span class="v2-wallet-delta">Carregando investimentos...</span>
+            </div>
+        `).join("") + `<button type="button" class="v2-wallet v2-wallet-new" data-nova>+ Nova carteira</button>`;
+        elSub.textContent = "Carteiras encontradas. Carregando posicoes...";
+    });
+
+    // O shell ja atualiza o resumo; reaproveitar o resultado na tela sem novo fetch.
+    window.addEventListener("accuracy:resumo-atualizado", evento => {
+        const resultado = evento.detail;
+        if (resultado && Array.isArray(resultado.carteiras)) desenhar(resultado);
+    });
+V2Dados.carregar({ onParcial: desenhar })
         .then(desenhar)
         .catch(erro => {
             console.error("Erro ao carregar carteiras:", erro);

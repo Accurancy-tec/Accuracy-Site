@@ -1,0 +1,32 @@
+/* Accuracy - evolução visual do gráfico (frontend apenas) */
+body.v2 .chart { border-radius: 18px; background: linear-gradient(155deg, #101e39, #0b1428 90%); border-color: #203559; box-shadow: 0 15px 40px rgba(0,0,0,.13); }
+body.v2 .chart-box { height: auto; min-height: 390px; }
+.acc-chart-shell { width: 100%; min-width: 0; display:flex; flex-direction:column; gap: 14px; }
+.acc-chart-stats { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; }
+.acc-chart-stat { min-width:0; padding:14px 16px; border-radius:14px; background:rgba(9,18,36,.75); border:1px solid #23385d; display:flex; flex-direction:column; gap:7px; }
+.acc-chart-stat-label { color:#9aafd5; font-size:11px; display:flex; gap:7px; align-items:center; }
+.acc-chart-stat strong { color:#f2f6ff; font-size:clamp(14px,1.5vw,19px); font-weight:750; font-variant-numeric:tabular-nums; overflow-wrap:anywhere; }
+.acc-chart-stat.acc-stat-green strong { color:#5ae5b6; }
+.acc-chart-stat.acc-stat-red strong { color:#ff8a9b; }
+.acc-chart-stat.acc-stat-muted strong { color:#8799b8; }
+.acc-chart-plot { position:relative; min-width:0; border:1px solid #213354; background:radial-gradient(circle at 48% 15%,rgba(41,95,190,.14),transparent 63%),#09152b; border-radius:15px; overflow:hidden; padding:12px 8px 5px; }
+.acc-chart-plot svg { width:100%; display:block; height:auto; min-height:230px; }
+.acc-chart-gridline { stroke:#31486b; stroke-width:1; stroke-dasharray:4 8; opacity:.7; }
+.acc-chart-axis { fill:#8398bb; font-size:12px; }
+.acc-chart-invest-line { fill:none; stroke:url(#acc-invest-line); stroke-width:4; stroke-linejoin:round; stroke-linecap:round; filter:drop-shadow(0 2px 5px rgba(56,130,255,.35)); }
+.acc-point { fill:#9acaff; stroke:#15294e; stroke-width:3; cursor:crosshair; transition:r .15s,fill .15s; }
+.acc-point:hover,.acc-point-active { fill:#fff; r:8; }
+.acc-chart-current-link { stroke:#3bdcb7; stroke-width:2.5; stroke-dasharray:6 6; }
+.acc-chart-current-halo { fill:rgba(59,220,183,.2); }
+.acc-chart-current-dot { fill:#43e0bc; stroke:#0e2e34; stroke-width:2; }
+.acc-chart-crosshair { stroke:#8ac0ff; stroke-dasharray:3 5; stroke-width:1.4; opacity:.8; pointer-events:none; }
+.acc-chart-tooltip { position:absolute; top:22px; transform:translateX(-50%); pointer-events:none; white-space:nowrap; max-width:95%; background:#142847; border:1px solid #4978b2; box-shadow:0 10px 35px rgba(0,0,0,.3); border-radius:10px; padding:9px 13px; color:#f3f8ff; font-size:12px; z-index:3; }
+.acc-chart-tooltip[hidden] { display:none; }
+.acc-chart-footer { display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:10px 22px; color:#a1b7d7; font-size:11px; }
+.acc-chart-footer span { display:inline-flex; align-items:center; gap:7px; }
+.acc-chart-note { opacity:.65; }
+.acc-legend-dot { display:inline-block; width:8px; height:8px; border-radius:50%; }
+.acc-legend-blue { background:#5599ff; }
+.acc-legend-green { background:#43e0bc; }
+@media(max-width:860px){ .acc-chart-stats {grid-template-columns:repeat(2,minmax(0,1fr));} .acc-chart-plot svg { min-height:190px; } }
+@media(max-width:480px){ .acc-chart-stat {padding:10px;} .acc-chart-stat strong {font-size:14px;} .acc-chart-note { display:none!important; } }

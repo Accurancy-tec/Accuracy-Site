@@ -307,134 +307,142 @@
 
 
     function desenharGrafico() {
-
-        if (!blocoGrafico) {
-            return;
-        }
+        if (!blocoGrafico) return;
 
         if (dadosGrafico.aportes.length === 0) {
-
             blocoGrafico.innerHTML = `
                 <div class="chart-placeholder">
-                    <i class="bi bi-bar-chart-line"></i>
+                    <i class="bi bi-graph-up-arrow"></i>
                     <span>Faça seu primeiro aporte para acompanhar a evolução</span>
-                </div>
-            `;
-
+                </div>`;
             return;
         }
 
         const serie = montarSerie();
-
-        const L = 800;
-        const A = 300;
-        const mEsq = 70;
-        const mDir = 30;
-        const mTopo = 20;
-        const mBase = 40;
-
-        const valores = serie.map(p => p.valor);
-
-        if (dadosGrafico.valorAtual !== null) {
-            valores.push(dadosGrafico.valorAtual);
-        }
-
-        const maximo = Math.max(...valores, 1) * 1.15;
-
         const n = serie.length;
+        if (!n) return;
+        const investido = Number(serie[n - 1].valor) || 0;
+        const atual = dadosGrafico.valorAtual === null ? null : Number(dadosGrafico.valorAtual);
+        const variacao = atual === null ? null : atual - investido;
+        const variacaoPct = variacao !== null && investido > 0 ? (variacao / investido) * 100 : null;
+        const maior = Math.max(...serie.map(p => p.valor), atual === null ? 0 : atual, 1);
+        const menor = Math.min(0, ...serie.map(p => p.valor), atual === null ? 0 : atual);
+        const L = 1020, A = 340, left = 80, right = 44, top = 30, bottom = 48;
+        const w = L - left - right, h = A - top - bottom;
+        const pad = Math.max((maior - menor) * .14, 1);
+        const vmax = maior + pad;
+        const vmin = Math.min(0, menor - (menor < 0 ? pad : 0));
+        const x = i => left + (n === 1 ? w / 2 : i * w / (n - 1));
+        const y = v => top + (vmax - v) / (vmax - vmin || 1) * h;
+        const base = y(0);
+        const pathLine = pontos => {
+            if (pontos.length === 1) return `M ${pontos[0][0]} ${pontos[0][1]}`;
+            let s = `M ${pontos[0][0]} ${pontos[0][1]}`;
+            for (let i = 0; i < pontos.length - 1; i++) {
+                const p = pontos[i], q = pontos[i + 1], dx = (q[0] - p[0]) / 2;
+                s += ` C ${p[0] + dx} ${p[1]}, ${q[0] - dx} ${q[1]}, ${q[0]} ${q[1]}`;
+            }
+            return s;
+        };
+        const pts = serie.map((p, i) => [x(i), y(p.valor)]);
+        const linha = pathLine(pts);
+        const area = `${linha} L ${x(n - 1)} ${base} L ${x(0)} ${base} Z`;
+        const percentual = p => p === null ? '—' : `${p > 0 ? '+' : ''}${p.toLocaleString('pt-BR', {maximumFractionDigits:2, minimumFractionDigits:2})}%`;
+        const fmtSigned = v => v === null ? '—' : `${v > 0 ? '+' : v < 0 ? '−' : ''}${money(Math.abs(v))}`;
+        const pico = Math.max(...serie.map(p => p.valor));
+        const bars = [
+            ['Total investido', money(investido), 'bi-wallet2', 'blue'],
+            ['Valor atual', atual === null ? 'Indisponível' : money(atual), 'bi-graph-up-arrow', 'cyan'],
+            ['Diferença atual', fmtSigned(variacao), 'bi-arrow-left-right', variacao === null ? 'muted' : variacao >= 0 ? 'green' : 'red'],
+            ['Variação sobre aportes', percentual(variacaoPct), 'bi-percent', variacaoPct === null ? 'muted' : variacaoPct >= 0 ? 'green' : 'red']
+        ];
+        const cards = bars.map(([label, value, icon, tone]) => `
+            <div class="acc-chart-stat acc-stat-${tone}">
+                <span class="acc-chart-stat-label"><i class="bi ${icon}" aria-hidden="true"></i> ${label}</span>
+                <strong>${value}</strong>
+            </div>`).join('');
 
-        const x = i => mEsq + (n === 1
-            ? (L - mEsq - mDir) / 2
-            : (i * (L - mEsq - mDir)) / (n - 1));
-
-        const y = v => mTopo + (1 - v / maximo) * (A - mTopo - mBase);
-
-        const caminho = serie
-            .map((p, i) => `${i === 0 ? "M" : "L"}${x(i)},${y(p.valor)}`)
-            .join(" ");
-
-        const area = `${caminho} L${x(n - 1)},${A - mBase} L${x(0)},${A - mBase} Z`;
-
-        /* linhas de grade e valores do eixo Y */
-        let grade = "";
-
-        for (let g = 0; g <= 4; g++) {
-
-            const v = (maximo / 4) * g;
-
-            grade += `
-                <line x1="${mEsq}" x2="${L - mDir}" y1="${y(v)}" y2="${y(v)}"
-                      stroke="var(--borda-suave, #223b67)" stroke-dasharray="4 6"/>
-                <text x="${mEsq - 10}" y="${y(v) + 4}" text-anchor="end"
-                      font-size="11" fill="var(--texto-fraco, #7289aa)">${moneyCurto(v)}</text>
-            `;
+        let grade = '';
+        for (let i = 0; i <= 4; i++) {
+            const valor = vmin + (vmax - vmin) * (i / 4);
+            const yy = y(valor);
+            grade += `<line x1="${left}" x2="${L - right}" y1="${yy}" y2="${yy}" class="acc-chart-gridline" />
+                <text x="${left - 14}" y="${yy + 4}" text-anchor="end" class="acc-chart-axis">${moneyCurto(valor)}</text>`;
         }
-
-        /* meses no eixo X + bolinhas */
-        let rotulos = "";
-        let bolinhas = "";
-
-        serie.forEach((p, i) => {
-
-            rotulos += `
-                <text x="${x(i)}" y="${A - 14}" text-anchor="middle"
-                      font-size="11" fill="var(--texto-fraco, #7289aa)">${p.rotulo}</text>
-            `;
-
-            bolinhas += `
-                <circle cx="${x(i)}" cy="${y(p.valor)}" r="4"
-                        fill="var(--primaria, #3b82f6)">
-                    <title>${p.rotulo}: ${money(p.valor)} investidos</title>
-                </circle>
-            `;
-        });
-
-        /* trecho tracejado até o valor atual da carteira (com cotações) */
-        let atual = "";
-
-        if (dadosGrafico.valorAtual !== null) {
-
-            const ultimo = serie[n - 1];
-
-            const xAtual = x(n - 1);
-
-            atual = `
-                <path d="M${xAtual},${y(ultimo.valor)} L${xAtual},${y(dadosGrafico.valorAtual)}"
-                      stroke="var(--verde, #22c55e)" stroke-width="2" stroke-dasharray="5 4"/>
-                <circle cx="${xAtual}" cy="${y(dadosGrafico.valorAtual)}" r="5"
-                        fill="var(--verde, #22c55e)">
-                    <title>Valor atual da carteira: ${money(dadosGrafico.valorAtual)}</title>
-                </circle>
-            `;
-        }
+        const meses = serie.map((p, i) => `<text x="${x(i)}" y="${A - 14}" text-anchor="middle" class="acc-chart-axis">${p.rotulo}</text>`).join('');
+        const pontos = serie.map((p, i) => `<circle class="acc-point" cx="${x(i)}" cy="${y(p.valor)}" r="5" tabindex="0" data-point="${i}" aria-label="${p.rotulo}: ${money(p.valor)} investidos" />`).join('');
+        const ultimoX = x(n - 1);
+        const valorAtual = atual === null ? '' : `
+            <line x1="${ultimoX}" x2="${ultimoX}" y1="${y(investido)}" y2="${y(atual)}" class="acc-chart-current-link" />
+            <circle cx="${ultimoX}" cy="${y(atual)}" r="9" class="acc-chart-current-halo" />
+            <circle cx="${ultimoX}" cy="${y(atual)}" r="5.5" class="acc-chart-current-dot" />`;
 
         blocoGrafico.innerHTML = `
-            <div style="width:100%;height:100%;display:flex;flex-direction:column">
-            <svg viewBox="0 0 ${L} ${A}" style="flex:1;min-height:0;width:100%" role="img"
-                 aria-label="Evolução do total investido">
-                <defs>
-                    <linearGradient id="gradEvolucao" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.35"/>
-                        <stop offset="100%" stop-color="#3b82f6" stop-opacity="0"/>
-                    </linearGradient>
-                </defs>
-                ${grade}
-                <path d="${area}" fill="url(#gradEvolucao)"/>
-                <path d="${caminho}" fill="none" stroke="var(--primaria, #3b82f6)" stroke-width="3"
-                      stroke-linejoin="round" stroke-linecap="round"/>
-                ${atual}
-                ${bolinhas}
-                ${rotulos}
-            </svg>
-            <p style="flex:none;text-align:center;font-size:12px;margin:6px 0 0;color:var(--texto-fraco, #7289aa)">
-                <span style="color:var(--primaria, #3b82f6)">●</span> Total investido acumulado
-                &nbsp;&nbsp;
-                <span style="color:var(--verde, #22c55e)">●</span> Valor atual da carteira
-            </p>
-            </div>
-        `;
-    }
+            <div class="acc-chart-shell">
+                <div class="acc-chart-stats">${cards}</div>
+                <div class="acc-chart-plot" tabindex="0" aria-label="Gráfico de aportes acumulados. Use os pontos ou o mouse para consultar os meses.">
+                    <svg viewBox="0 0 ${L} ${A}" role="img" aria-label="Evolução do valor investido acumulado por mês">
+                        <defs>
+                            <linearGradient id="acc-invest-area" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stop-color="#438cff" stop-opacity=".37" />
+                                <stop offset="100%" stop-color="#438cff" stop-opacity="0" />
+                            </linearGradient>
+                            <linearGradient id="acc-invest-line" x1="0" y1="0" x2="1" y2="0">
+                                <stop offset="0%" stop-color="#4278ff" />
+                                <stop offset="100%" stop-color="#61b8ff" />
+                            </linearGradient>
+                        </defs>
+                        ${grade}
+                        <path d="${area}" fill="url(#acc-invest-area)" />
+                        <path d="${linha}" class="acc-chart-invest-line" />
+                        ${valorAtual}
+                        <line class="acc-chart-crosshair" x1="${ultimoX}" x2="${ultimoX}" y1="${top}" y2="${A - bottom}" style="display:none" />
+                        ${pontos}${meses}
+                    </svg>
+                    <div class="acc-chart-tooltip" role="status" aria-live="polite" hidden></div>
+                </div>
+                <div class="acc-chart-footer">
+                    <span><i class="acc-legend-dot acc-legend-blue"></i> Aportes acumulados</span>
+                    <span><i class="acc-legend-dot acc-legend-green"></i> Valor atual (apenas hoje)</span>
+                    <span class="acc-chart-note">Passe o mouse sobre os pontos para ver os valores mensais.</span>
+                </div>
+            </div>`;
 
+        const plot = blocoGrafico.querySelector('.acc-chart-plot');
+        const svg = plot.querySelector('svg');
+        const tooltip = plot.querySelector('.acc-chart-tooltip');
+        const crosshair = svg.querySelector('.acc-chart-crosshair');
+        const circles = Array.from(svg.querySelectorAll('.acc-point'));
+        const show = i => {
+            if (i < 0 || i >= n) return;
+            const p = serie[i];
+            circles.forEach((el, idx) => el.classList.toggle('acc-point-active', i === idx));
+            crosshair.style.display = '';
+            crosshair.setAttribute('x1', x(i));
+            crosshair.setAttribute('x2', x(i));
+            tooltip.hidden = false;
+            tooltip.textContent = `${p.rotulo} · Total investido: ${money(p.valor)}`;
+            tooltip.style.left = `${Math.min(82, Math.max(18, x(i) / L * 100))}%`;
+        };
+        const hide = () => {
+            crosshair.style.display = 'none';
+            circles.forEach(el => el.classList.remove('acc-point-active'));
+            tooltip.hidden = true;
+        };
+        circles.forEach((el, i) => {
+            el.addEventListener('mouseenter', () => show(i));
+            el.addEventListener('focus', () => show(i));
+            el.addEventListener('click', () => show(i));
+            el.addEventListener('blur', hide);
+        });
+        plot.addEventListener('mousemove', event => {
+            const rect = svg.getBoundingClientRect();
+            const relative = (event.clientX - rect.left) / (rect.width || 1);
+            const idx = Math.round((relative * L - left) / (w / Math.max(1, n - 1)));
+            show(Math.min(n - 1, Math.max(0, idx)));
+        });
+        plot.addEventListener('mouseleave', hide);
+    }
 
     /* botão "Últimos 6 meses" passa a funcionar: 3 -> 6 -> 12 meses */
     if (botaoFiltro) {

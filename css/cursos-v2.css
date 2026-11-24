@@ -681,3 +681,75 @@ body.v2 .trilhas-status button {
     color: inherit;
     cursor: pointer;
 }
+
+/* =====================================================
+   5 trilhas na mesma linha + 5 cards de tipos de investimento
+   (colar no FINAL do css/cursos-v2.css)
+===================================================== */
+
+body.v2 .courses-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+/* telas largas: cards um pouco mais compactos para caberem 5 */
+@media (min-width: 1280px) {
+    body.v2 .course-card {
+        padding: 14px;
+    }
+
+    body.v2 .course-card .v2-thumb {
+        height: 92px;
+        margin-bottom: 12px;
+    }
+}
+
+@media (max-width: 1279px) {
+    body.v2 .courses-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 999px) {
+    body.v2 .courses-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 520px) {
+    body.v2 .courses-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* tipos de investimento: 3 cards em cima e 2 (mais largos) embaixo */
+
+.invest-grid {
+    grid-template-columns: repeat(6, 1fr);
+}
+
+.invest-card {
+    grid-column: span 2;
+}
+
+.invest-card:nth-child(n+4) {
+    grid-column: span 3;
+}
+
+/* Cores dos ícones = mesmas cores das miniaturas das trilhas (.cat-*).
+   Vale também para o ícone da janela de explicação do card. */
+.invest-icon.inicio { background: linear-gradient(135deg, #17359b, #1e53d1); color: #fff; }  /* Iniciante  */
+.invest-icon.fixa   { background: linear-gradient(135deg, #0e5f78, #2bb3d6); color: #fff; }  /* Renda Fixa */
+.invest-icon.fiis   { background: linear-gradient(135deg, #8a5a12, #e0a82a); color: #fff; }  /* FIIs       */
+.invest-icon.acoes  { background: linear-gradient(135deg, #16705a, #2dcf9b); color: #fff; }  /* Ações      */
+.invest-icon.cripto { background: linear-gradient(135deg, #5a2f9e, #8b66e8); color: #fff; }  /* Cripto     */
+
+@media (max-width: 900px) {
+    .invest-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .invest-card,
+    .invest-card:nth-child(n+4) {
+        grid-column: auto;
+    }
+}

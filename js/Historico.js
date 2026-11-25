@@ -126,14 +126,14 @@
 
         return `
             <tr>
-                <td>${esc(dataBr(m.data))}</td>
-                <td><span class="historico-op ${m.tipo.toLowerCase()}">${esc(ROTULOS[m.tipo] || m.tipo)}</span></td>
-                <td class="v2-wide">${ativo}</td>
-                <td class="v2-wide">${carteira}</td>
-                <td class="num">${m.quantidade ? esc(fmtQtd.format(m.quantidade)) : "—"}</td>
-                <td class="num">${m.preco ? esc(brl(m.preco)) : "—"}</td>
-                <td class="num ${entrada ? "green" : ""}">${entrada ? "+" : "−"}${esc(brl(m.valor))}</td>
-                <td class="num">${typeof m.id === "number" ? `<button type="button" class="historico-excluir" data-id="${m.id}" aria-label="Excluir ${esc(ROTULOS[m.tipo])} de ${esc(m.ativo)}"><i class="bi bi-trash3" aria-hidden="true"></i></button>` : ""}</td>
+                <td data-rotulo="Data">${esc(dataBr(m.data))}</td>
+                <td data-rotulo="Operação"><span class="historico-op ${m.tipo.toLowerCase()}">${esc(ROTULOS[m.tipo] || m.tipo)}</span></td>
+                <td class="v2-wide v2-celula-larga" data-rotulo="Ativo">${ativo}</td>
+                <td class="v2-wide" data-rotulo="Carteira">${carteira}</td>
+                <td class="num" data-rotulo="Quantidade">${m.quantidade ? esc(fmtQtd.format(m.quantidade)) : "—"}</td>
+                <td class="num" data-rotulo="Preço unit.">${m.preco ? esc(brl(m.preco)) : "—"}</td>
+                <td class="num ${entrada ? "green" : ""}" data-rotulo="Valor">${entrada ? "+" : "−"}${esc(brl(m.valor))}</td>
+                <td class="num v2-celula-acao">${typeof m.id === "number" ? `<button type="button" class="historico-excluir" data-id="${m.id}" aria-label="Excluir ${esc(ROTULOS[m.tipo])} de ${esc(m.ativo)}"><i class="bi bi-trash3" aria-hidden="true"></i></button>` : ""}</td>
             </tr>`;
     }
 

@@ -69,7 +69,7 @@
             <!-- MOVIMENTAÇÕES -->
             <section class="v2-panel">
                 <div class="v2-table-wrap">
-                    <table class="v2-table historico-tabela">
+                    <table class="v2-table historico-tabela v2-tabela-cartoes">
                         <thead>
                             <tr>
                                 <th>Data</th>

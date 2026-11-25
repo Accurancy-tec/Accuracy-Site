@@ -225,13 +225,13 @@
 
                 return `
                     <tr>
-                        <td class="v2-wide"><strong>${esc(a.simbolo_ativo)}</strong> <span class="muted">${esc(nome)}</span></td>
-                        <td class="num">${esc(fmtQtd.format(a.quantidade_item))}</td>
-                        <td class="num">${esc(brl(a.preco_medio_item))}</td>
-                        <td class="num"${origem ? ` title="${esc(origem)}"` : ""}>${esc(brl(a.preco_atual))}${origem ? ' <i class="bi bi-info-circle muted" aria-hidden="true"></i>' : ""}</td>
-                        <td class="num">${esc(brl(a.posicao))}</td>
-                        <td class="num"><span class="v2-delta ${classeDelta(a.rent)}">${esc(a.rent === null ? "—" : pct(a.rent, 2))}</span></td>
-                        <td class="num">${podeVender ? `<button type="button" class="carteira-vender" data-vender="${esc(a.simbolo_ativo)}">Vender</button>` : ""}</td>
+                        <td class="v2-wide v2-celula-larga"><strong>${esc(a.simbolo_ativo)}</strong> <span class="muted">${esc(nome)}</span></td>
+                        <td class="num" data-rotulo="Quantidade">${esc(fmtQtd.format(a.quantidade_item))}</td>
+                        <td class="num" data-rotulo="Preço médio">${esc(brl(a.preco_medio_item))}</td>
+                        <td class="num" data-rotulo="Preço atual"${origem ? ` title="${esc(origem)}"` : ""}>${esc(brl(a.preco_atual))}${origem ? ' <i class="bi bi-info-circle muted" aria-hidden="true"></i>' : ""}</td>
+                        <td class="num" data-rotulo="Posição">${esc(brl(a.posicao))}</td>
+                        <td class="num" data-rotulo="Rentabilidade"><span class="v2-delta ${classeDelta(a.rent)}">${esc(a.rent === null ? "—" : pct(a.rent, 2))}</span></td>
+                        <td class="num v2-celula-acao">${podeVender ? `<button type="button" class="carteira-vender" data-vender="${esc(a.simbolo_ativo)}">Vender</button>` : ""}</td>
                     </tr>`;
             }).join("");
     }

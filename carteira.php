@@ -57,7 +57,7 @@
                 </dl>
 
                 <div class="v2-table-wrap">
-                    <table class="v2-table">
+                    <table class="v2-table v2-tabela-cartoes">
                         <thead>
                             <tr>
                                 <th>Ativo</th>

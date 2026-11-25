@@ -562,3 +562,66 @@ body.v2 .v2-toast.show {
         transition-duration: .01ms !important;
     }
 }
+
+
+/* =========================
+   TABELAS VIRAM CARTÕES NO CELULAR
+   Cada <td> precisa de data-rotulo com o nome da coluna.
+========================= */
+
+@media (max-width: 640px) {
+
+    body.v2 .v2-tabela-cartoes {
+        min-width: 0 !important;
+    }
+
+    body.v2 .v2-tabela-cartoes thead {
+        display: none;
+    }
+
+    body.v2 .v2-tabela-cartoes tbody,
+    body.v2 .v2-tabela-cartoes tr,
+    body.v2 .v2-tabela-cartoes td {
+        display: block;
+    }
+
+    body.v2 .v2-tabela-cartoes tr {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 6px 12px;
+        margin-bottom: 10px;
+        padding: 12px;
+        border: 1px solid var(--borda-fraca);
+        border-radius: 12px;
+    }
+
+    body.v2 .v2-tabela-cartoes td {
+        height: auto !important;
+        padding: 0 !important;
+        border: 0 !important;
+        text-align: left !important;
+        white-space: normal !important;
+    }
+
+    body.v2 .v2-tabela-cartoes td[data-rotulo]::before {
+        content: attr(data-rotulo);
+        display: block;
+        margin-bottom: 1px;
+        color: var(--texto-fraco);
+        font-size: 11px;
+    }
+
+    body.v2 .v2-tabela-cartoes td.v2-celula-larga,
+    body.v2 .v2-tabela-cartoes td[colspan] {
+        grid-column: 1 / -1;
+    }
+
+    body.v2 .v2-tabela-cartoes td.v2-celula-acao {
+        grid-column: 1 / -1;
+        text-align: right !important;
+    }
+
+    body.v2 .v2-tabela-cartoes td.v2-celula-acao:empty {
+        display: none;
+    }
+}

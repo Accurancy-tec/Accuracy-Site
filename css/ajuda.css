@@ -1,0 +1,298 @@
+/* =========================================================
+   PERGUNTAS FREQUENTES E CONTATO
+========================================================= */
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+}
+
+body.v2 .ajuda {
+    max-width: 920px;
+}
+
+body.v2 .ajuda a.v2-btn-outline {
+    text-decoration: none;
+}
+
+body.v2 .ajuda-busca {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 46px;
+    padding: 0 14px;
+    border: 1px solid var(--borda);
+    border-radius: 12px;
+    background: var(--surface);
+    color: var(--texto-secundario);
+}
+
+body.v2 .ajuda-busca:focus-within {
+    border-color: var(--primaria);
+    box-shadow: 0 0 0 3px var(--primaria-suave);
+}
+
+body.v2 .ajuda-busca input {
+    flex: 1;
+    min-width: 0;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: var(--texto);
+    font: inherit;
+    font-size: 14.5px;
+}
+
+body.v2 .ajuda-temas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 14px 0 6px;
+}
+
+body.v2 .ajuda-temas a {
+    padding: 6px 12px;
+    border: 1px solid var(--borda-suave);
+    border-radius: 999px;
+    color: var(--texto-suave);
+    font-size: 12.5px;
+    text-decoration: none;
+}
+
+body.v2 .ajuda-temas a:hover {
+    border-color: var(--primaria);
+    color: var(--texto);
+}
+
+body.v2 .ajuda-sem-resultado {
+    margin: 18px 0;
+    color: var(--texto-secundario);
+}
+
+body.v2 .ajuda-grupo {
+    margin-top: 26px;
+    scroll-margin-top: 70px;
+}
+
+body.v2 .ajuda-grupo h2 {
+    margin: 0 0 10px;
+    font-family: var(--v2-heading);
+    font-size: 17px;
+}
+
+body.v2 .ajuda-grupo details {
+    border: 1px solid var(--borda-suave);
+    border-radius: 12px;
+    background: var(--surface);
+    transition: border-color .15s;
+}
+
+body.v2 .ajuda-grupo details + details {
+    margin-top: 8px;
+}
+
+body.v2 .ajuda-grupo details[open] {
+    border-color: var(--borda);
+}
+
+body.v2 .ajuda-grupo summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 16px;
+    cursor: pointer;
+    font-size: 14.5px;
+    font-weight: 600;
+    list-style: none;
+}
+
+body.v2 .ajuda-grupo summary::-webkit-details-marker {
+    display: none;
+}
+
+body.v2 .ajuda-grupo summary::after {
+    content: "\F282";
+    font-family: "bootstrap-icons";
+    color: var(--texto-fraco);
+    transition: transform .2s;
+}
+
+body.v2 .ajuda-grupo details[open] summary::after {
+    transform: rotate(180deg);
+}
+
+body.v2 .ajuda-grupo summary:focus-visible {
+    outline: 2px solid var(--primaria);
+    outline-offset: 2px;
+    border-radius: 12px;
+}
+
+body.v2 .ajuda-grupo details p {
+    margin: 0;
+    padding: 0 16px 14px;
+    color: var(--texto-suave);
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+body.v2 .ajuda-grupo details p + p {
+    padding-top: 0;
+}
+
+body.v2 .ajuda-grupo details a,
+body.v2 .ajuda-mensagem a {
+    color: var(--link);
+}
+
+
+/* =========================
+   CONTATO
+========================= */
+
+body.v2 .ajuda-contato {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+    gap: 18px 26px;
+    margin-top: 36px;
+    padding: 22px;
+    border: 1px solid var(--borda-suave);
+    border-radius: 16px;
+    background: var(--surface);
+    scroll-margin-top: 70px;
+}
+
+body.v2 .ajuda-contato h2 {
+    margin: 0;
+    font-family: var(--v2-heading);
+    font-size: 19px;
+}
+
+body.v2 .ajuda-contato-texto p {
+    margin: 8px 0 0;
+    color: var(--texto-secundario);
+    line-height: 1.55;
+}
+
+body.v2 .ajuda-form {
+    display: grid;
+    gap: 6px;
+}
+
+body.v2 .ajuda-form label {
+    margin-top: 6px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+body.v2 .ajuda-form input,
+body.v2 .ajuda-form textarea {
+    padding: 11px 12px;
+    border: 1px solid var(--borda);
+    border-radius: 10px;
+    background: var(--bg);
+    color: var(--texto);
+    font: inherit;
+    font-size: 14px;
+    resize: vertical;
+}
+
+body.v2 .ajuda-form input:focus,
+body.v2 .ajuda-form textarea:focus {
+    border-color: var(--primaria);
+    outline: none;
+}
+
+body.v2 .ajuda-form .v2-btn {
+    justify-self: start;
+    margin-top: 6px;
+}
+
+body.v2 .ajuda-form-aviso {
+    min-height: 18px;
+    margin: 4px 0 0;
+    font-size: 13px;
+}
+
+body.v2 .ajuda-form-aviso.ok { color: var(--verde); }
+body.v2 .ajuda-form-aviso.erro { color: var(--vermelho); }
+
+body.v2 .ajuda-minhas {
+    grid-column: 1 / -1;
+    padding-top: 16px;
+    border-top: 1px solid var(--borda-fraca);
+}
+
+body.v2 .ajuda-minhas h3 {
+    margin: 0 0 12px;
+    font-size: 15px;
+}
+
+body.v2 #listaPerguntas {
+    display: grid;
+    gap: 10px;
+}
+
+body.v2 .ajuda-mensagem {
+    padding: 14px;
+    border: 1px solid var(--borda-fraca);
+    border-radius: 12px;
+    background: var(--bg);
+}
+
+body.v2 .ajuda-mensagem-cabeca {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+body.v2 .ajuda-mensagem small {
+    color: var(--texto-fraco);
+    font-size: 12px;
+}
+
+body.v2 .ajuda-mensagem p {
+    margin: 8px 0 0;
+    color: var(--texto-suave);
+    font-size: 14px;
+    line-height: 1.55;
+    white-space: pre-line;
+}
+
+body.v2 .ajuda-estado {
+    flex-shrink: 0;
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: 11.5px;
+    font-weight: 600;
+}
+
+body.v2 .ajuda-estado.respondida { background: var(--v2-pill-up-bg); color: var(--v2-pill-up-text); }
+body.v2 .ajuda-estado.aguardando { background: rgba(234, 179, 8, .14); color: var(--amarelo); }
+
+body.v2 .ajuda-resposta {
+    margin-top: 12px;
+    padding: 12px;
+    border-left: 3px solid var(--primaria);
+    border-radius: 8px;
+    background: var(--surface);
+}
+
+body.v2 .ajuda-vazio {
+    margin: 0;
+    color: var(--texto-secundario);
+    font-size: 13.5px;
+}
+
+@media (max-width: 760px) {
+
+    body.v2 .ajuda-contato {
+        grid-template-columns: 1fr;
+        padding: 16px;
+    }
+}

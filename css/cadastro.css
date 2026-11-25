@@ -676,3 +676,6 @@ button:active{
 .input-erro {
     border: 1px solid #ff4d4d !important;
 }
+/* Campo opcional e erro geral do cadastro */
+.opcional { color: #8aa0c2; font-weight: 400; font-size: .9em; }
+.erro-cadastro:empty { display: none; }

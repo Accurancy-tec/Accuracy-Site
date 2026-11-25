@@ -1,159 +1,150 @@
-const API_URL = "https://accuracyappapi.onrender.com/";
+/* =========================================================
+   CADASTRO E LOGIN
+
+   Cadastro: nome, e-mail e senha são obrigatórios; telefone
+   é opcional (a API valida o formato quando preenchido).
+   Nenhum dado do formulário é escrito no console.
+========================================================= */
+
+const API_URL = window.ACCURACY_API_URL + "/";
+
+async function enviarParaApi(rota, dados) {
+    const resposta = await fetch(`${API_URL}${rota}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(dados)
+    });
+
+    const resultado = await resposta.json().catch(() => null);
+
+    if (!resultado) {
+        throw new Error("O servidor não respondeu como esperado. Tente novamente em instantes.");
+    }
+
+    return resultado;
+}
+
+function limparErros(formulario) {
+    formulario.querySelectorAll(".mensagem-erro").forEach(erro => { erro.textContent = ""; });
+    formulario.querySelectorAll(".input-erro").forEach(input => {
+        input.classList.remove("input-erro");
+        input.removeAttribute("aria-invalid");
+    });
+}
+
+/* Mensagem logo abaixo do campo (cria o <small> quando ainda não existe) */
+function mostrarErroCampo(input, mensagem) {
+    input.classList.add("input-erro");
+    input.setAttribute("aria-invalid", "true");
+
+    let erro = input.parentElement.querySelector(".mensagem-erro");
+
+    if (!erro) {
+        erro = document.createElement("small");
+        erro.className = "mensagem-erro";
+        erro.id = `${input.id}-erro`;
+        input.insertAdjacentElement("afterend", erro);
+        input.setAttribute("aria-describedby", erro.id);
+    }
+
+    erro.textContent = mensagem;
+}
+
+function ocupado(botao, sim, textoOcupado) {
+    if (!botao) return;
+    if (!botao.dataset.texto) botao.dataset.texto = botao.textContent.trim();
+    botao.disabled = sim;
+    botao.textContent = sim ? textoOcupado : botao.dataset.texto;
+}
 
 
 /* =========================================================
    CADASTRO
 ========================================================= */
 
-const FormularioCadastro = document.getElementById("formCadastro");
+const formularioCadastro = document.getElementById("formCadastro");
 
-if (FormularioCadastro) {
+function validarCadastro(formulario) {
+    limparErros(formulario);
+    let valido = true;
 
-    FormularioCadastro.addEventListener("submit", async function (event) {
+    const nome = formulario.elements.nome_usuario;
+    const email = formulario.elements.email_usuario;
+    const senha = formulario.elements.senha_usuario;
+    const telefone = formulario.elements.telefone_usuario;
+    const termos = formulario.elements.aceite_termos;
 
+    if (nome.value.trim().length < 2) {
+        mostrarErroCampo(nome, "Informe seu nome.");
+        valido = false;
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())) {
+        mostrarErroCampo(email, "Digite um e-mail válido.");
+        valido = false;
+    }
+
+    if (senha.value.length < 8) {
+        mostrarErroCampo(senha, "A senha precisa ter pelo menos 8 caracteres.");
+        valido = false;
+    }
+
+    const digitosTelefone = telefone.value.replace(/\D/g, "");
+    if (digitosTelefone && !/^\d{10,11}$/.test(digitosTelefone)) {
+        mostrarErroCampo(telefone, "Use o DDD + número, ou deixe em branco.");
+        valido = false;
+    }
+
+    if (termos && !termos.checked) {
+        document.getElementById("erroCadastro").textContent = "Para criar a conta, aceite os Termos de Uso e a Política de Privacidade.";
+        valido = false;
+    }
+
+    return valido;
+}
+
+if (formularioCadastro) {
+    formularioCadastro.addEventListener("submit", async event => {
         event.preventDefault();
 
-        if (!validarCadastro(FormularioCadastro)) {
+        const erroGeral = document.getElementById("erroCadastro");
+        erroGeral.textContent = "";
+
+        if (!validarCadastro(formularioCadastro)) {
             return;
         }
 
-        const DadosForm = new FormData(FormularioCadastro);
+        const campos = formularioCadastro.elements;
+        const dados = {
+            nome_usuario: campos.nome_usuario.value.trim(),
+            email_usuario: campos.email_usuario.value.trim().toLowerCase(),
+            senha_usuario: campos.senha_usuario.value
+        };
 
-        const dados = Object.fromEntries(DadosForm.entries());
-
-
-        /* Remove a máscara do CPF */
-
-        if (dados.cpf_usuario) {
-
-            dados.cpf_usuario =
-                dados.cpf_usuario.replace(/\D/g, "");
+        const telefone = campos.telefone_usuario.value.replace(/\D/g, "");
+        if (telefone) {
+            dados.telefone_usuario = telefone;
         }
 
-
-        /* Remove a máscara do telefone */
-
-        if (dados.telefone_usuario) {
-
-            dados.telefone_usuario =
-                dados.telefone_usuario.replace(/\D/g, "");
-        }
-
-
-        console.log("Dados enviados:", dados);
-
+        const botao = formularioCadastro.querySelector("button[type=submit]");
+        ocupado(botao, true, "Criando conta...");
 
         try {
+            const resultado = await enviarParaApi("auth/registrarNovoUsuario", dados);
 
-            const resposta = await fetch(
-                `${API_URL}auth/registrarNovoUsuario`,
-                {
-                    method: "POST",
-
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-
-                    body: JSON.stringify(dados)
-                }
-            );
-
-
-            console.log(
-                "Status HTTP:",
-                resposta.status
-            );
-
-
-            const texto = await resposta.text();
-
-
-            console.log(
-                "Resposta da API:",
-                texto
-            );
-
-
-            let resultado;
-
-
-            try {
-
-                resultado = JSON.parse(texto);
-
-            } catch (erro) {
-
-                throw new Error(
-                    "A API não retornou JSON. Resposta: " +
-                    texto
-                );
-
+            if (resultado.status === "sucesso" || resultado.success === true) {
+                sessionStorage.setItem("email_verificacao", dados.email_usuario);
+                window.location.href = "confirmacodigo.php";
+                return;
             }
 
-
-            console.log(
-                "JSON:",
-                JSON.stringify(resultado, null, 2)
-            );
-
-
-            /*
-             * Cadastro realizado com sucesso
-             */
-
-            if (
-                resultado.success === true ||
-                resultado.status === "sucesso"
-            ) {
-
-                /*
-                 * Salva o e-mail para a página
-                 * de confirmação do código
-                 */
-
-                sessionStorage.setItem(
-                    "email_verificacao",
-                    dados.email_usuario
-                );
-
-
-                /*
-                 * Vai para a página de confirmação
-                 */
-
-                window.location.href =
-                    "confirmacodigo.php";
-
-
-            } else {
-
-                /*
-                 * Cadastro recusado pela API
-                 */
-
-                const mensagem =
-                    resultado.message ||
-                    resultado.mensagem ||
-                    "A API recusou o cadastro.";
-
-                console.error(
-                    "CADASTRO RECUSADO:",
-                    mensagem
-                );
-
-            }
-
+            erroGeral.textContent = resultado.mensagem || resultado.message || "Não foi possível criar a conta. Tente novamente.";
         } catch (erro) {
-
-            console.error(
-                "ERRO COMPLETO:",
-                erro
-            );
-
+            erroGeral.textContent = erro.message;
+        } finally {
+            ocupado(botao, false);
         }
-
     });
-
 }
 
 
@@ -161,528 +152,81 @@ if (FormularioCadastro) {
    LOGIN
 ========================================================= */
 
-const formulario = document.getElementById("formLogin");
+const formularioLogin = document.getElementById("formLogin");
 
-/* Veio de uma sessão expirada: avisa o usuário na tela de login */
-if (formulario && sessionStorage.getItem("accuracy_sessao_expirada")) {
+function mensagemDeLogin(mensagem) {
+    const texto = String(mensagem || "").toLowerCase();
 
-    sessionStorage.removeItem("accuracy_sessao_expirada");
-
-    const avisoSessao = document.getElementById("erroEmail");
-
-    if (avisoSessao) {
-        avisoSessao.textContent =
-            "Sua sessão expirou. Entre novamente para continuar.";
+    if (texto.includes("verificado") || texto.includes("confirme seu e-mail")) {
+        return "Seu e-mail ainda não foi confirmado. Veja o código que enviamos para a sua caixa de entrada.";
     }
+
+    return "E-mail ou senha incorretos.";
 }
 
-if (formulario) {
+if (formularioLogin && sessionStorage.getItem("accuracy_sessao_expirada")) {
+    sessionStorage.removeItem("accuracy_sessao_expirada");
+    const aviso = document.getElementById("erroEmail");
+    if (aviso) aviso.textContent = "Sua sessão expirou. Entre novamente para continuar.";
+}
 
-    formulario.addEventListener("submit", async function (event) {
-
+if (formularioLogin) {
+    formularioLogin.addEventListener("submit", async event => {
         event.preventDefault();
+        limparErros(formularioLogin);
 
+        const email = formularioLogin.elements.email_usuario;
+        const senha = formularioLogin.elements.senha_usuario;
 
-        const DadosForm =
-            new FormData(formulario);
+        if (!email.value.trim() || !senha.value) {
+            mostrarErroCampo(!email.value.trim() ? email : senha, "Preencha o e-mail e a senha.");
+            return;
+        }
 
-        const dados =
-            Object.fromEntries(DadosForm.entries());
-
-
-        console.log(
-            "Dados de login enviados:",
-            dados
-        );
-
+        const botao = formularioLogin.querySelector("button[type=submit]");
+        ocupado(botao, true, "Entrando...");
 
         try {
+            const resultado = await enviarParaApi("auth/loginUnico", {
+                email_usuario: email.value.trim(),
+                senha_usuario: senha.value
+            });
 
-            const resposta = await fetch(
-                `${API_URL}auth/loginUnico`,
-                {
-                    method: "POST",
+            if (resultado.success !== true) {
+                const mensagem = resultado.message || resultado.mensagem || "";
+                const naoVerificado = /verificado|confirme seu e-mail/i.test(mensagem);
 
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-
-                    body: JSON.stringify(dados)
+                if (naoVerificado) {
+                    sessionStorage.setItem("email_verificacao", email.value.trim().toLowerCase());
                 }
-            );
 
-
-            console.log(
-                "Status HTTP:",
-                resposta.status
-            );
-
-
-            const texto =
-                await resposta.text();
-
-
-            console.log(
-                "Resposta bruta do login:",
-                texto
-            );
-
-
-            let resultado;
-
-
-            try {
-
-                resultado =
-                    JSON.parse(texto);
-
-            } catch (erro) {
-
-                throw new Error(
-                    "A API de login não retornou JSON. Resposta: " +
-                    texto
-                );
-
+                mostrarErroCampo(naoVerificado ? email : senha, mensagemDeLogin(mensagem));
+                return;
             }
 
+            if (resultado.admin === true) {
+                localStorage.setItem("admin_token", resultado.token);
+                localStorage.setItem("admin", JSON.stringify(resultado.user));
+                window.location.href = "admin.php";
+                return;
+            }
 
-            console.log(
-                "Resultado da API:",
-                resultado
-            );
+            localStorage.removeItem("accuracy_profile_data");
+            localStorage.removeItem("accuracy_avatar");
+            localStorage.setItem("token", resultado.token);
 
-
-            console.log(
-                "JSON:",
-                JSON.stringify(resultado, null, 2)
-            );
-
-
-            if (resultado.success === true) {
-
-                console.log(
-                    "Login realizado com sucesso."
-                );
-                if (resultado.admin === true) {
-                    localStorage.setItem("admin_token", resultado.token);
-                    localStorage.setItem("admin", JSON.stringify(resultado.user));
-                    window.location.href = "admin.php";
-                    return;
-                }
-
-
-                localStorage.removeItem(
-                    "accuracy_profile_data"
-                );
-
-
-                localStorage.removeItem(
-                    "accuracy_avatar"
-                );
-
-
-                localStorage.setItem(
-                    "token",
-                    resultado.token
-                );
-
-
-                /* Guarda o refreshToken, se a API enviar, para renovar o login sem pedir senha */
-                if (resultado.refreshToken) {
-                    localStorage.setItem(
-                        "refreshToken",
-                        resultado.refreshToken
-                    );
-                } else {
-                    localStorage.removeItem("refreshToken");
-                }
-
-
-                localStorage.setItem(
-                    "usuario",
-                    JSON.stringify(resultado.user)
-                );
-
-
-                window.location.href =
-                    "dashboard.php";
-
-
+            if (resultado.refreshToken) {
+                localStorage.setItem("refreshToken", resultado.refreshToken);
             } else {
-
-                const mensagem =
-                    resultado.message ||
-                    resultado.mensagem ||
-                    "E-mail ou senha incorretos.";
-
-
-                console.error(
-                    "LOGIN RECUSADO:",
-                    mensagem
-                );
-
-
-                const mensagemUsuario =
-                    tratarErroLogin(mensagem);
-
-
-                if (
-                    mensagem.toLowerCase().includes("senha")
-                ) {
-
-                    mostrarErroInput(
-                        "senha_usuario",
-                        "erroSenha",
-                        mensagemUsuario
-                    );
-
-                } else {
-
-                    mostrarErroInput(
-                        "email_usuario",
-                        "erroEmail",
-                        mensagemUsuario
-                    );
-
-                }
-
+                localStorage.removeItem("refreshToken");
             }
 
-
+            localStorage.setItem("usuario", JSON.stringify(resultado.user));
+            window.location.href = "dashboard.php";
         } catch (erro) {
-
-            console.error(
-                "ERRO NO LOGIN:",
-                erro
-            );
-
+            mostrarErroCampo(email, "Não foi possível conectar. Verifique a internet e tente de novo.");
+        } finally {
+            ocupado(botao, false);
         }
-
     });
-
-}
-
-
-/* =========================================================
-   TRATAMENTO DE ERROS DO LOGIN
-========================================================= */
-
-function tratarErroLogin(mensagem) {
-
-    if (!mensagem) {
-
-        return "Não foi possível realizar o login.";
-
-    }
-
-
-    const erro = mensagem.toLowerCase();
-
-
-    if (
-        erro.includes("e-mail ainda não foi verificado")
-    ) {
-
-        return "Seu e-mail ainda não foi verificado. Verifique sua caixa de entrada.";
-
-    }
-
-
-    if (
-        erro.includes("e-mail ou senha") ||
-        erro.includes("senha incorreta") ||
-        erro.includes("credenciais inválidas")
-    ) {
-
-        return "E-mail ou senha incorretos.";
-
-    }
-
-
-    if (
-        erro.includes("usuário não encontrado")
-    ) {
-
-        return "Usuário não encontrado.";
-
-    }
-
-
-    return "Email ou Senha incorretos.";
-
-}
-
-
-/* =========================================================
-   TRATAMENTO DE ERROS DO CADASTRO
-========================================================= */
-
-function tratarErroCadastro(mensagem) {
-
-    if (!mensagem) {
-
-        return "Não foi possível realizar o cadastro.";
-
-    }
-
-
-    const erro = mensagem.toLowerCase();
-
-
-    if (
-        erro.includes("e-mail já cadastrado") ||
-        erro.includes("email já cadastrado") ||
-        erro.includes("e-mail já existe")
-    ) {
-
-        return "Este e-mail já está cadastrado.";
-
-    }
-
-
-    if (
-        erro.includes("e-mail inválido") ||
-        erro.includes("email inválido")
-    ) {
-
-        return "Digite um e-mail válido.";
-
-    }
-
-
-    if (
-        erro.includes("senha")
-    ) {
-
-        return "A senha informada não atende aos requisitos.";
-
-    }
-
-
-    if (
-        erro.includes("campos obrigatórios")
-    ) {
-
-        return "Preencha todos os campos obrigatórios.";
-
-    }
-
-
-    return "Não foi possível realizar o cadastro. Tente novamente.";
-
-}
-
-
-/* =========================================================
-   MOSTRAR ERRO NO INPUT
-========================================================= */
-
-function mostrarErroInput(
-    idInput,
-    idErro,
-    mensagem
-) {
-
-    const input =
-        document.getElementById(idInput);
-
-    const erro =
-        document.getElementById(idErro);
-
-
-    if (!input || !erro) {
-
-        console.error(
-            "Elemento de erro não encontrado."
-        );
-
-        return;
-
-    }
-
-
-    erro.textContent = mensagem;
-
-    input.classList.add("input-erro");
-
-}
-
-
-/* =========================================================
-   VALIDAR CADASTRO
-========================================================= */
-
-function validarCadastro(formulario) {
-
-    let valido = true;
-
-
-    /* Remove mensagens de erros anteriores */
-
-    formulario
-        .querySelectorAll(".mensagem-erro")
-        .forEach(erro => {
-
-            erro.textContent = "";
-
-        });
-
-
-    formulario
-        .querySelectorAll(".input-erro")
-        .forEach(input => {
-
-            input.classList.remove("input-erro");
-
-        });
-
-
-    /* Verifica todos os inputs */
-
-    const inputs =
-        formulario.querySelectorAll("input");
-
-
-    inputs.forEach(input => {
-
-
-        /* Ignora campos que não precisam ser validados */
-
-        if (
-            input.type === "submit" ||
-            input.type === "button" ||
-            input.type === "hidden"
-        ) {
-
-            return;
-
-        }
-
-
-        const valor =
-            input.value.trim();
-
-
-        /* Campo vazio */
-
-        if (valor === "") {
-
-            mostrarErroCadastro(
-                input,
-                "Este campo é obrigatório."
-            );
-
-            valido = false;
-
-        }
-
-    });
-
-
-    /* Validação do e-mail */
-
-    const email =
-        formulario.querySelector(
-            'input[name="email_usuario"]'
-        );
-
-
-    if (
-        email &&
-        email.value.trim() !== ""
-    ) {
-
-        const emailValido =
-            /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
-                email.value.trim()
-            );
-
-
-        if (!emailValido) {
-
-            mostrarErroCadastro(
-                email,
-                "Digite um e-mail válido."
-            );
-
-            valido = false;
-
-        }
-
-    }
-
-
-    /* Validação da senha */
-
-    const senha =
-        formulario.querySelector(
-            'input[name="senha_usuario"]'
-        );
-
-
-    if (
-        senha &&
-        senha.value !== ""
-    ) {
-
-        if (senha.value.length < 8) {
-
-            mostrarErroCadastro(
-                senha,
-                "A senha deve ter no mínimo 8 caracteres."
-            );
-
-            valido = false;
-
-        }
-
-    }
-
-
-    return valido;
-
-}
-
-
-/* =========================================================
-   MOSTRAR ERRO DO CADASTRO
-========================================================= */
-
-function mostrarErroCadastro(
-    input,
-    mensagem
-) {
-
-    input.classList.add("input-erro");
-
-
-    let erro =
-        input.nextElementSibling;
-
-
-    /* Se já existe uma mensagem de erro, usa ela */
-
-    if (
-        !erro ||
-        !erro.classList.contains("mensagem-erro")
-    ) {
-
-        erro =
-            document.createElement("small");
-
-        erro.classList.add(
-            "mensagem-erro"
-        );
-
-
-        input.insertAdjacentElement(
-            "afterend",
-            erro
-        );
-
-    }
-
-
-    erro.textContent = mensagem;
-
 }

@@ -4,7 +4,7 @@
    Dados, foto e segurança da conta
 ========================================= */
 
-const PERFIL_API_URL = "https://accuracyappapi.onrender.com";
+const PERFIL_API_URL = window.ACCURACY_API_URL;
 
 const PROFILE_KEY = "accuracy_profile_data";
 const AVATAR_KEY = "accuracy_avatar";
@@ -215,7 +215,7 @@ function applyProfile(data) {
         };
 
         if (Object.prototype.hasOwnProperty.call(mapa, campo)) {
-            value.textContent = mapa[campo] || "—";
+            value.textContent = mapa[campo] || "Não informado";
         }
     });
 
@@ -282,12 +282,9 @@ async function carregarPerfilDaApi() {
         const perfil = {
             nome: usuario.nome_usuario || anterior.nome || "",
             email: usuario.email_usuario || anterior.email || "",
-            telefone: formatarTelefone(
-                usuario.telefone_usuario || anterior.telefone
-            ),
-            cpf: formatarCpf(
-                usuario.cpf_usuario || anterior.cpf
-            )
+            // A API devolve o telefone já formatado e o CPF mascarado (o documento inteiro não sai do servidor).
+            telefone: usuario.telefone_formatado || "",
+            cpf: usuario.cpf_mascarado || ""
         };
 
         const usuarioAnterior = lerJSON("usuario");

@@ -488,3 +488,6 @@
     }
 
 }
+/* Saldo inicial da carteira simulada (janela "Nova carteira") */
+.cw-initial[hidden] { display: none; }
+.cw-hint { margin: 6px 0 0; color: var(--texto-secundario); font-size: 12.5px; line-height: 1.45; }

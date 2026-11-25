@@ -1,0 +1,161 @@
+/* =========================================================
+   CARTEIRAS - painel da carteira selecionada
+========================================================= */
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+}
+
+body.v2 .v2-wallet.simulada .v2-wallet-tag {
+    background: rgba(234, 179, 8, .14);
+    color: var(--amarelo);
+}
+
+body.v2 .v2-wallet-new {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+body.v2 .carteira-detalhe {
+    margin-top: 20px;
+    padding-bottom: 12px;
+}
+
+body.v2 .carteira-detalhe-cabeca {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+body.v2 .carteira-detalhe-cabeca h2 {
+    margin: 0;
+    font-family: var(--v2-heading);
+    font-size: 18px;
+}
+
+body.v2 .carteira-detalhe-tag {
+    display: inline-block;
+    margin-top: 6px;
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+body.v2 .carteira-detalhe-tag.real {
+    background: var(--primaria-suave);
+    color: var(--link);
+}
+
+body.v2 .carteira-detalhe-tag.simulada {
+    background: rgba(234, 179, 8, .14);
+    color: var(--amarelo);
+}
+
+body.v2 .carteira-detalhe-acoes {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+}
+
+body.v2 .carteira-detalhe-acoes a.v2-btn {
+    text-decoration: none;
+}
+
+body.v2 .carteira-numeros {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    margin: 0 0 14px;
+    padding: 14px 0;
+    border-top: 1px solid var(--borda-fraca);
+    border-bottom: 1px solid var(--borda-fraca);
+}
+
+body.v2 .carteira-numeros dt {
+    color: var(--texto-secundario);
+    font-size: 12px;
+}
+
+body.v2 .carteira-numeros dd {
+    margin: 4px 0 0;
+    font-size: 16px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+
+body.v2 .carteira-numeros dd small {
+    display: block;
+    margin-top: 2px;
+    color: var(--texto-fraco);
+    font-size: 11.5px;
+    font-weight: 500;
+}
+
+body.v2 .carteira-numeros dd.positivo { color: var(--verde); }
+body.v2 .carteira-numeros dd.negativo { color: var(--vermelho); }
+
+body.v2 .carteira-vender {
+    padding: 5px 12px;
+    border: 1px solid var(--borda);
+    border-radius: 7px;
+    background: transparent;
+    color: var(--texto);
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+body.v2 .carteira-vender:hover {
+    border-color: var(--primaria);
+    background: var(--surface-hover);
+}
+
+body.v2 .carteira-vazia {
+    padding: 28px 12px !important;
+    height: auto !important;
+    white-space: normal !important;
+    line-height: 1.6;
+    text-align: center;
+}
+
+body.v2 .carteira-vazia strong {
+    display: block;
+    color: var(--texto);
+}
+
+body.v2 .carteira-vazia .v2-btn {
+    display: inline-flex;
+    margin-top: 12px;
+    text-decoration: none;
+}
+
+body.v2 .v2-table td .bi-info-circle {
+    font-size: 11px;
+}
+
+@media (max-width: 760px) {
+
+    body.v2 .carteira-numeros {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    body.v2 .carteira-detalhe-acoes {
+        width: 100%;
+    }
+
+    body.v2 .carteira-detalhe-acoes > * {
+        flex: 1 1 auto;
+    }
+}

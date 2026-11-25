@@ -18,8 +18,7 @@ const Carteiras = (function () {
 
     "use strict";
 
-    const API_BASE_URL =
-        "https://accuracyappapi.onrender.com";
+    const API_BASE_URL = window.ACCURACY_API_URL;
 
     const ACTIVE_KEY =
         "accuracy_carteira_ativa";
@@ -114,8 +113,6 @@ const Carteiras = (function () {
                 throw new Error("A API não retornou JSON válido.");
             }
 
-            console.log("Resposta das carteiras:", data);
-
 
             /*
             A API atual utiliza "success".
@@ -189,12 +186,6 @@ const Carteiras = (function () {
 
                     })
                 );
-
-
-            console.log(
-                "Carteiras carregadas:",
-                wallets
-            );
 
 
             return wallets;
@@ -387,7 +378,7 @@ const Carteiras = (function () {
     =====================================================
     */
 
-    async function add(rawName, rawGoal, rawStyle, rawKind) {
+    async function add(rawName, rawGoal, rawStyle, rawKind, rawInitial) {
 
         const name =
             String(
@@ -402,6 +393,13 @@ const Carteiras = (function () {
 
         if (!["Real", "Simulada"].includes(kind)) {
             return { error: "Escolha se a carteira é Simulada ou Real." };
+        }
+
+        /* Na simulada o usuário escolhe quanto dinheiro fictício ela terá */
+        const initial = Number(rawInitial) || 0;
+
+        if (kind === "Simulada" && (initial <= 0 || initial > 10000000)) {
+            return { error: "Informe o saldo inicial da simulação (até R$ 10.000.000,00)." };
         }
 
         const allowedStyles = [
@@ -501,7 +499,10 @@ const Carteiras = (function () {
                                     style,
 
                                 meta_carteira:
-                                    goal > 0 ? goal : null
+                                    goal > 0 ? goal : null,
+
+                                saldo_inicial:
+                                    kind === "Simulada" ? initial : null
 
                             })
 
@@ -511,12 +512,6 @@ const Carteiras = (function () {
 
             const texto =
                 await response.text();
-
-
-            console.log(
-                "Resposta bruta da API:",
-                texto
-            );
 
 
             let data;
@@ -543,14 +538,6 @@ const Carteiras = (function () {
 
                 };
             }
-
-
-            console.log(
-
-                "Resposta criação carteira:",
-                data
-
-            );
 
 
             if (
@@ -588,12 +575,6 @@ const Carteiras = (function () {
                 new Event(
                     "carteirasAtualizadas"
                 )
-            );
-
-
-            console.log(
-                "Carteiras após criar:",
-                wallets
             );
 
 
@@ -1264,6 +1245,7 @@ const Carteiras = (function () {
                 let type = "Renda Variavel";
                 let kind = "Simulada";
                 let cents = 0;
+                let initialCents = 0;
 
 
                 /* ---- Nome ---- */
@@ -1374,6 +1356,37 @@ const Carteiras = (function () {
                     kindGroup.append(card);
                 });
 
+                /* ---- Saldo inicial (só na simulada) ---- */
+
+                const initialField = el("div", "cw-initial");
+                const initialLabel = el("label", "cw-field-label", "Saldo inicial da simulação");
+                const initialInput = el("input", "cw-input cw-money");
+                const initialHint = el(
+                    "p",
+                    "cw-hint",
+                    "Dinheiro fictício só desta carteira. Ele não sai do seu saldo geral."
+                );
+
+                initialInput.type = "text";
+                initialInput.inputMode = "numeric";
+                initialInput.placeholder = "R$ 10.000,00";
+                initialInput.autocomplete = "off";
+                initialInput.id = "cwSaldoInicial";
+                initialLabel.htmlFor = "cwSaldoInicial";
+
+                initialInput.addEventListener("input", () => {
+
+                    const digits = initialInput.value.replace(/\D/g, "").slice(0, 11);
+
+                    initialCents = digits ? parseInt(digits, 10) : 0;
+
+                    initialInput.value = initialCents > 0
+                        ? brlFmt.format(initialCents / 100)
+                        : "";
+                });
+
+                initialField.append(initialLabel, initialInput, initialHint);
+
                 function syncKind() {
 
                     kindGroup.querySelectorAll(".cw-kind").forEach(card => {
@@ -1383,6 +1396,8 @@ const Carteiras = (function () {
                         card.classList.toggle("selected", on);
                         card.setAttribute("aria-checked", String(on));
                     });
+
+                    initialField.hidden = kind !== "Simulada";
                 }
 
 
@@ -1393,7 +1408,8 @@ const Carteiras = (function () {
                     nameLabel, nameInput,
                     typeLabel, typeGroup,
                     goalLabel, goalInput,
-                    kindLabel, kindGroup
+                    kindLabel, kindGroup,
+                    initialField
                 );
 
                 return {
@@ -1402,7 +1418,8 @@ const Carteiras = (function () {
                         name: nameInput.value,
                         goal: cents / 100,
                         style: type,
-                        kind
+                        kind,
+                        initial: initialCents / 100
                     }),
 
                     focus: () =>
@@ -1414,7 +1431,7 @@ const Carteiras = (function () {
                 async function (value) {
 
                     const result =
-                        await add(value.name, value.goal, value.style, value.kind);
+                        await add(value.name, value.goal, value.style, value.kind, value.initial);
 
                     return result.error
                         ? { error: result.error }

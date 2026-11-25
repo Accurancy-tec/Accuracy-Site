@@ -42,7 +42,7 @@
 
     const CATEGORIAS_VARIAVEL = [
         { id: "acoes", sigla: "AÇ", cor: "green", titulo: "Ações Nacionais", desc: "Empresas listadas na B3", cls: "Ações" },
-        { id: "futuros", sigla: "FUT", cor: "orange", titulo: "Contratos Futuros", desc: "Índice, dólar e criptos", cls: "Outros" },
+        { id: "futuros", sigla: "FUT", cor: "orange", titulo: "Contratos Futuros", desc: "Índice, dólar e criptos", cls: "Futuros" },
         { id: "bdr", sigla: "BDR", cor: "purple", titulo: "Ações e ETFs Internacionais", desc: "BDRs", cls: "Ações" },
         { id: "etf", sigla: "ETF", cor: "blue", titulo: "ETFs", desc: "Fundos de índices de ações e outros", cls: "Ações" }
     ];
@@ -52,66 +52,20 @@
         fiis: ["XPML11", "HGLG11", "MXRF11", "KNRI11", "VISC11", "XPLG11", "BTLG11", "HGRU11"],
         etf: ["BOVA11", "IVVB11", "SMAL11", "HASH11", "GOLD11", "DIVO11"],
         bdr: ["AAPL34", "MSFT34", "AMZO34", "GOGL34", "NVDC34", "TSLA34", "MELI34"],
-        futuros: [
-            ["WIN", "Mini Índice Bovespa"],
-            ["WDO", "Mini Dólar"],
-            ["BIT", "Bitcoin Futuro"]
-        ],
         cripto: [
             ["Bitcoin", "BTC"],
             ["Ethereum", "ETH"],
             ["Solana", "SOL"],
             ["XRP", "XRP"]
-        ],
-        internacional: [
-            ["Dólar", "USD / BRL"],
-            ["Euro", "EUR / BRL"],
-            ["S&P 500", "Índice americano"],
-            ["Nasdaq 100", "Índice americano"]
-        ],
-        fundos: [
-            ["Fundo Renda Fixa", "Renda fixa"],
-            ["Fundo de Ações", "Renda variável"],
-            ["Fundo Multimercado", "Multimercado"]
         ]
     };
 
-    /* Exemplos de renda fixa e tesouro: confira os dados reais antes de publicar */
-    const RENDA_FIXA = [
-        {
-            value: "LCA Pós-Fixado", tipo: "LCA",
-            tags: ["Isento de IR"],
-            rent: "88% CDI", resgate: "no vencimento", minimo: 1052
-        },
-        {
-            value: "CDB Liq. Diária", tipo: "CDB",
-            tags: ["Garantia FGC"],
-            rent: "101,5% CDI", resgate: "diário", minimo: 20
-        },
-        {
-            value: "CDB Limite Garantido", tipo: "CDB",
-            tags: ["Garantia FGC"],
-            rent: "101,5% CDI", resgate: "em 2 dias úteis", minimo: 100
-        }
-    ];
-
-    const TESOURO = [
-        {
-            value: "Tesouro Selic", tipo: "Pós-fixado",
-            tags: ["Título público"], rent: "Taxa Selic", resgate: "Diário (D+1)"
-        },
-        {
-            value: "Tesouro IPCA+", tipo: "Híbrido",
-            tags: ["Título público"], rent: "IPCA + taxa", resgate: "Diário, a mercado"
-        },
-        {
-            value: "Tesouro Prefixado", tipo: "Prefixado",
-            tags: ["Título público"], rent: "Taxa fixa", resgate: "Diário, a mercado"
-        }
-    ];
+    /* Títulos de renda fixa e Tesouro: vêm do cadastro da API (listar-titulosRF) */
+    const RENDA_FIXA = [];
+    const TESOURO = [];
 
 
-    /* Renda fixa e Tesouro: troca os exemplos pelos títulos cadastrados na API */
+    /* Renda fixa e Tesouro: carrega os títulos cadastrados na API */
     async function carregarTitulosRF() {
         try {
             const resp = await fetch(`${API_BASE_URL}/aportes/listar-titulosRF`);
@@ -175,7 +129,6 @@
                 (ehTesouro ? td : rf).push(item);
             });
 
-            /* só troca se a API trouxe algo; senão ficam os exemplos */
             if (rf.length) {
                 RENDA_FIXA.splice(0, RENDA_FIXA.length, ...rf);
             }
@@ -822,16 +775,12 @@
             case "fiis":
                 return irPara("lista", { titulo: "Fundos imobiliários", fonte: "fiis", cls: "FIIs", sigla: "FII", cor: "yellow" });
             case "moedas":
-                return irPara("lista", { titulo: "Moedas", fonte: "moedas", cls: "Outros", sigla: "FX", cor: "purple" });
+                return irPara("lista", { titulo: "Moedas", fonte: "moedas", cls: "Internacional", sigla: "FX", cor: "purple" });
             case "bolsa":
             case "variavel":
                 return irPara("variavel");
             case "cripto":
                 return irPara("lista", { titulo: "Cripto", fonte: "cripto", cls: "Cripto", sigla: "₿", cor: "orange" });
-            case "internacional":
-                return irPara("lista", { titulo: "Internacional", fonte: "internacional", cls: "Outros", sigla: "USD", cor: "purple" });
-            case "fundos":
-                return irPara("lista", { titulo: "Fundos", fonte: "fundos", cls: "Outros", sigla: "FDO", cor: "yellow" });
         }
     }
 
@@ -934,6 +883,7 @@
     function buscarNaBrapi(termo, alvo) {
         buscaBrapi.termo = termo;
         buscaBrapi.itens = [];
+        buscaBrapi.pendente = true;
 
         clearTimeout(buscaBrapi.timer);
 
@@ -944,11 +894,13 @@
                 .then(r => r.json())
                 .then(d => (d.success && Array.isArray(d.stocks)) ? d.stocks : []);
 
-            const [ac, fi, intl, cr] = await Promise.allSettled([
+            const [ac, fi, intl, cr, fx, fut] = await Promise.allSettled([
                 pedir("listar-acoes-nacionais"),
                 pedir("listar-fiis-catalogo"),
                 pedir("listar-internacionais"),
-                pedir("listar-criptomoedas")
+                pedir("listar-criptomoedas"),
+                pedir("listar-moedas"),
+                pedir("listar-futuros")
             ]);
 
             const lista = r => r.status === "fulfilled" ? r.value : [];
@@ -968,6 +920,8 @@
             });
 
             lista(cr).forEach(a => itens.push(itemDeFonte(a, { rota: "cripto", cls: "Cripto", sigla: "₿", cor: "orange" })));
+            lista(fx).forEach(a => itens.push(itemDeFonte(a, { rota: "moedas", cls: "Internacional", sigla: "FX", cor: "purple" })));
+            lista(fut).forEach(a => itens.push(itemDeFonte(a, { rota: "futuros", cls: "Futuros", sigla: "FUT", cor: "orange" })));
 
             /* ignora se o usuário já digitou outra coisa */
             if (buscaBrapi.termo !== termo) {
@@ -975,6 +929,7 @@
             }
 
             buscaBrapi.itens = itens;
+            buscaBrapi.pendente = false;
 
             if (document.body.contains(alvo) && busca.trim() === termo) {
                 listarBusca(alvo);
@@ -998,16 +953,12 @@
             norm(i.value).includes(termo) || norm(i.name).includes(termo) || norm(i.sub).includes(termo)
         );
 
-        /* ticker que não está na lista: permite usar mesmo assim */
-        const ticker = busca.trim().toUpperCase();
-        const extra = (/^[A-Z0-9]{4,7}$/.test(ticker) && !todos.has(ticker))
-            ? [{ value: ticker, name: ticker, sub: "Ativo informado", cls: "Ações", sigla: ticker.slice(0, 3), cor: "blue" }]
-            : [];
-
-        const lista = [...achados, ...extra];
+        const lista = achados;
 
         if (!lista.length) {
-            alvo.innerHTML = `<div class="pp-empty">Nada encontrado para "${esc(busca)}".</div>`;
+            alvo.innerHTML = buscaBrapi.termo === busca.trim() && !buscaBrapi.pendente
+                ? `<div class="pp-empty">Nada encontrado para "${esc(busca)}". Tente o código (PETR4, MXRF11, BTC) ou parte do nome.</div>`
+                : `<div class="pp-empty">Buscando "${esc(busca)}"…</div>`;
             return;
         }
 
@@ -1040,8 +991,7 @@
 
         const futurosApi = FONTES_API.futuros.itens;
 
-        (futurosApi.length ? futurosApi.map(s => [s.stock, s.name]) : LISTAS.futuros)
-            .forEach(([c, n]) => itens.push({ value: c, name: c, sub: n, cls: "Outros", sigla: "FUT", cor: "orange", rota: "futuros" }));
+        futurosApi.forEach(s => itens.push({ value: s.stock, name: s.stock, sub: s.name, cls: "Futuros", sigla: "FUT", cor: "orange", rota: "futuros" }));
 
         const criptoApi = FONTES_API.cripto.itens;
 

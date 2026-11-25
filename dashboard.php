@@ -2,249 +2,172 @@
 <html lang="pt-BR">
 
 <head>
-    <link rel="preconnect" href="https://accuracyappapi.onrender.com" crossorigin>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Dashboard - Accuracy</title>
-
-    <!-- Tema (precisa vir antes de tudo) -->
-    <link rel="stylesheet" href="css/Tema.css">
-
-    <!-- Base do site (reset, avatar) -->
-    <link rel="stylesheet" href="css/base-v2.css">
-
-    <link rel="stylesheet" href="css/Loading.css">
-    <link rel="stylesheet" href="css/dashboard-v2.css">
-
-    <!-- Novo layout (sidebar, topo, cartões e tabelas) -->
-    <link rel="stylesheet" href="css/layout-v2.css?v=4">
-
-    <script src="js/usuario-global.js"></script>
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Manrope:wght@600;700;800&display=swap"
-        rel="stylesheet">
-
-    <link rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
-    <script src="js/Tema.js"></script>
-    <script src="js/avatar-global.js"></script>
-<link rel="stylesheet" href="css/dashboard-destaques.css?v=5">
-    <link rel="stylesheet" href="css/dashboard-evolucao-premium.css?v=1">
+    <?php
+    $tituloPagina = "Início";
+    $estilosPagina = ["css/inicio.css?v=1", "css/dashboard-destaques.css?v=6"];
+    include __DIR__ . "/includes/head-app.php";
+    ?>
 </head>
 
 <body class="v2">
 
     <div class="v2-app">
 
-        <!-- =========================
-         SIDEBAR
-    ========================== -->
+        <?php $paginaAtual = "inicio"; include __DIR__ . "/includes/menu-app.php"; ?>
 
-        <aside class="v2-sidebar">
+        <main class="v2-content inicio">
 
-            <a href="dashboard.php" class="v2-logo">Accuracy</a>
-
-            <nav class="v2-nav">
-                <a href="dashboard.php" class="active">Início</a>
-                <a href="carteira.php">Carteira</a>
-                <a href="aportes.php">Aportes</a>
-                <a href="historico.php">Histórico</a>
-                <a href="Cursos.php">Cursos</a>
-                <a href="perfil.php">Perfil</a>
-            </nav>
-
-            <div class="v2-balance">
-                <span>Saldo disponível</span>
-                <strong id="v2Saldo">—</strong>
-                <button type="button" id="v2AddSaldo">Adicionar saldo</button>
+            <div class="v2-page-head">
+                <div>
+                    <h1>Olá, <span id="nomeUsuario">Usuário</span></h1>
+                    <p id="inicioData"></p>
+                </div>
+                <div class="v2-head-actions">
+                    <button type="button" class="v2-btn-outline" data-v2-saldo>Adicionar saldo</button>
+                    <a class="v2-btn" href="aportes.php">Fazer um aporte</a>
+                </div>
             </div>
 
-        </aside>
+            <!-- RESUMO DO PATRIMÔNIO + MERCADO -->
+            <section class="inicio-topo">
 
+                <article class="inicio-patrimonio" aria-labelledby="tituloPatrimonio" aria-busy="true">
+                    <div class="inicio-patrimonio-cabeca">
+                        <span id="tituloPatrimonio">Patrimônio total</span>
+                        <span class="inicio-variacao" id="inicioVariacao" hidden></span>
+                    </div>
 
-        <div class="v2-main">
+                    <strong class="inicio-patrimonio-valor carregando-texto" id="inicioPatrimonio">R$ 0,00</strong>
+                    <p class="inicio-patrimonio-nota">Saldo disponível + valor atual dos ativos das carteiras reais.</p>
 
-            <!-- =========================
-             TOPO
-        ========================== -->
+                    <dl class="inicio-numeros">
+                        <div>
+                            <dt>Saldo disponível</dt>
+                            <dd class="carregando-texto" id="inicioSaldo">R$ 0,00</dd>
+                        </div>
+                        <div>
+                            <dt>Investido</dt>
+                            <dd class="carregando-texto" id="inicioInvestido">R$ 0,00</dd>
+                        </div>
+                        <div>
+                            <dt>Valor atual dos ativos</dt>
+                            <dd class="carregando-texto" id="inicioMercado">R$ 0,00</dd>
+                        </div>
+                        <div>
+                            <dt>Resultado</dt>
+                            <dd class="carregando-texto" id="inicioResultado">R$ 0,00</dd>
+                        </div>
+                    </dl>
 
-            <header class="v2-topbar">
+                    <a class="inicio-simulacoes" id="inicioSimulacoes" href="carteira.php" hidden></a>
+                </article>
 
-                <div class="v2-search">
-                    <input type="text"
-                        id="v2Search"
-                        placeholder="Buscar empresa ou código do ativo"
-                        autocomplete="off"
-                        aria-label="Buscar empresa ou código do ativo">
+                <section class="featured-assets" aria-labelledby="featuredAssetsTitle">
+                    <h2 id="featuredAssetsTitle">Ativos em destaque</h2>
+                    <div class="featured-assets-empty">
+                        <span class="skeleton" style="height:52px"></span>
+                        <span class="skeleton" style="height:52px"></span>
+                        <span class="skeleton" style="height:52px"></span>
+                        <p hidden></p>
+                    </div>
+                </section>
+
+            </section>
+
+            <!-- 1. CRIAR CARTEIRA -->
+            <section class="inicio-criar" aria-labelledby="tituloCriar">
+                <span class="inicio-criar-icone" aria-hidden="true"><i class="bi bi-wallet2"></i></span>
+                <div>
+                    <h2 id="tituloCriar">Organize seus investimentos em carteiras</h2>
+                    <p>Use uma carteira <strong>real</strong> com o seu saldo ou uma <strong>simulada</strong> com o valor que quiser para testar estratégias.</p>
                 </div>
+                <a class="v2-btn" href="carteira.php?nova=1">Criar carteira</a>
+            </section>
 
-                <div class="v2-topbar-right">
-                    <div class="v2-total"><span>Saldo disponivel</span> <strong id="v2Total">—</strong></div>
-
-                    <a href="perfil.php" aria-label="Perfil">
-                        <div class="avatar">U</div>
-                    </a>
-                </div>
-
-            </header>
-
-
-            <main class="v2-content">
-
-                <div class="v2-page-head">
+            <!-- 2. NOTÍCIAS -->
+            <section class="inicio-noticias" aria-labelledby="tituloNoticias">
+                <div class="inicio-secao-cabeca">
                     <div>
-                        <h1>Olá, <span id="nomeUsuario">Usuário</span></h1>
-                        <p>Resumo do seu patrimônio hoje.</p>
+                        <h2 id="tituloNoticias">Notícias do mercado</h2>
+                        <p>Economia e investimentos, de portais de notícias e da equipe Accuracy.</p>
+                    </div>
+                </div>
+                <div class="inicio-noticias-lista" id="inicioNoticias" aria-busy="true">
+                    <div class="inicio-noticia esqueleto"><span class="skeleton"></span><span class="skeleton"></span><span class="skeleton"></span></div>
+                    <div class="inicio-noticia esqueleto"><span class="skeleton"></span><span class="skeleton"></span><span class="skeleton"></span></div>
+                    <div class="inicio-noticia esqueleto"><span class="skeleton"></span><span class="skeleton"></span><span class="skeleton"></span></div>
+                </div>
+            </section>
+
+            <!-- 3. GRÁFICO -->
+            <section class="inicio-grafico" aria-labelledby="tituloGrafico">
+                <div class="inicio-secao-cabeca">
+                    <div>
+                        <h2 id="tituloGrafico">Evolução dos investimentos</h2>
+                        <p>Valor diário dos ativos das carteiras reais.</p>
+                    </div>
+                    <div class="inicio-periodos" role="tablist" aria-label="Período do gráfico">
+                        <button type="button" role="tab" data-periodo="1M" aria-selected="false">1 mês</button>
+                        <button type="button" role="tab" data-periodo="6M" aria-selected="true" class="ativo">6 meses</button>
+                        <button type="button" role="tab" data-periodo="1A" aria-selected="false">1 ano</button>
                     </div>
                 </div>
 
-                <!-- RESUMO PRINCIPAL + ATIVOS EM DESTAQUE -->
-                <section class="dashboard-overview">
-                    <section class="card-big">
-                        <div>
-                            <span class="card-label">SALDO TOTAL DA CARTEIRA</span>
-                            <h2>R$ 0,00</h2>
-                            <div class="stats">
-                                <div>
-                                    <p>Total investido</p>
-                                    <strong>R$ 0,00</strong>
-                                </div>
-                                <div>
-                                    <p>Saldo livre</p>
-                                    <strong>R$ 0,00</strong>
-                                </div>
-                                <div>
-                                    <p>Rendimento</p>
-                                    <strong class="green">R$ 0,00</strong>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="badge">—</div>
-                    </section>
-
-                    <section class="featured-assets" aria-labelledby="featuredAssetsTitle">
-                        <h2 id="featuredAssetsTitle">Ativos em destaque</h2>
-                        <div class="featured-assets-empty">
-                            <i class="bi bi-bar-chart-line" aria-hidden="true"></i>
-                            <p>Seus ativos aparecerão aqui quando houver dados disponíveis.</p>
-                        </div>
-                    </section>
-                </section>
-
-                <div class="dashboard-lower">
-                    <!-- DISTRIBUIÇÃO DA CARTEIRA (valores calculados com os dados reais) -->
-                    <section class="distribution-section">
-                        <div class="dashboard-section-heading">
-                            <h2>Distribuição da carteira</h2>
-                            <span>Composição dos seus investimentos</span>
-                        </div>
-                        <section class="grid">
-
-                            <div class="card">
-                                <div class="card-icon"><i class="bi bi-shield-check"></i></div>
-                                <h4>Renda fixa</h4>
-                                <p>R$ 0</p>
-                                <span class="green">—</span>
-                            </div>
-
-                            <div class="card">
-                                <div class="card-icon"><i class="bi bi-graph-up-arrow"></i></div>
-                                <h4>Renda variável</h4>
-                                <p>R$ 0</p>
-                                <span class="green">—</span>
-                            </div>
-
-                            <div class="card">
-                                <div class="card-icon"><i class="bi bi-currency-bitcoin"></i></div>
-                                <h4>Cripto</h4>
-                                <p>R$ 0</p>
-                                <span class="green">—</span>
-                            </div>
-
-                            <div class="card">
-                                <div class="card-icon"><i class="bi bi-globe2"></i></div>
-                                <h4>Outros</h4>
-                                <p>R$ 0</p>
-                                <span class="green">—</span>
-                            </div>
-
-                        </section>
-                    </section>
-
-                    <!-- NOTÍCIAS NO ESPAÇO DAS ÚLTIMAS MOVIMENTAÇÕES -->
-                    <section class="v2-news" id="v2News" aria-label="Notícias do mercado">
-                        <div class="v2-news-head">
-                            <div>
-                                <h2><i class="bi bi-newspaper" aria-hidden="true"></i> Notícias do mercado</h2>
-                                <p>Informações sobre investimentos, economia e mercado financeiro.</p>
-                            </div>
-                        </div>
-
-                        <div class="v2-carousel" id="v2Carousel" tabindex="0"
-                            role="region" aria-roledescription="carrossel" aria-label="Notícias do mercado" hidden>
-                            <div class="v2-slides" id="v2Slides"></div>
-                            <button type="button" class="v2-car-btn prev" aria-label="Notícia anterior">&#8249;</button>
-                            <button type="button" class="v2-car-btn next" aria-label="Próxima notícia">&#8250;</button>
-                            <div class="v2-dots" id="v2Dots"></div>
-                        </div>
-
-                        <div class="v2-carousel v2-news-vazio" id="v2NewsEmpty">
-                            <i class="bi bi-megaphone" aria-hidden="true"></i>
-                            <div>
-                                <strong>Em breve: notícias e novidades do mercado financeiro.</strong>
-                                <p>Assim que houver notícias publicadas, elas aparecerão aqui.</p>
-                            </div>
-                        </div>
-                    </section>
+                <div class="inicio-grafico-area" id="inicioGrafico" aria-busy="true">
+                    <div class="grafico-carregando">
+                        <span class="skeleton"></span>
+                        <small>Montando o gráfico…</small>
+                    </div>
                 </div>
 
-                <!-- GRÁFICO -->
-                <section class="chart">
+                <dl class="inicio-grafico-rodape" id="inicioGraficoRodape" hidden>
+                    <div><dt>Início do período</dt><dd id="graficoInicio"></dd></div>
+                    <div><dt>Hoje</dt><dd id="graficoFim"></dd></div>
+                    <div><dt>Diferença (inclui novos aportes)</dt><dd id="graficoVariacao"></dd></div>
+                </dl>
+            </section>
 
-                    <div class="chart-header">
-                        <div>
-                            <h3>Evolução da carteira</h3>
-                            <p>Acompanhe o crescimento dos seus investimentos</p>
-                        </div>
-
-                        <button type="button" class="chart-filter">
-                            Últimos 6 meses
-                            <i class="bi bi-chevron-down"></i>
-                        </button>
+            <!-- DISTRIBUIÇÃO E CARTEIRAS -->
+            <section class="inicio-baixo">
+                <article class="inicio-distribuicao" aria-labelledby="tituloDistribuicao">
+                    <h2 id="tituloDistribuicao">Distribuição por tipo de ativo</h2>
+                    <div id="inicioDistribuicao" aria-busy="true">
+                        <span class="skeleton" style="height:16px"></span>
+                        <span class="skeleton" style="height:16px"></span>
+                        <span class="skeleton" style="height:16px"></span>
                     </div>
+                </article>
 
-                    <div class="chart-box">
-                        <div class="chart-placeholder">
-                            <i class="bi bi-bar-chart-line"></i>
-                            <span>Gráfico da evolução da carteira</span>
-                        </div>
+                <article class="inicio-carteiras" aria-labelledby="tituloCarteiras">
+                    <div class="inicio-secao-cabeca">
+                        <h2 id="tituloCarteiras">Suas carteiras</h2>
+                        <a class="v2-link-btn" href="carteira.php">Ver todas</a>
                     </div>
+                    <ul id="inicioCarteiras" aria-busy="true">
+                        <li><span class="skeleton" style="height:44px"></span></li>
+                        <li><span class="skeleton" style="height:44px"></span></li>
+                    </ul>
+                </article>
+            </section>
 
-                </section>
-
-            </main>
-
-        </div>
+        </main>
 
     </div>
+</div>
 
+<dialog class="inicio-noticia-dialogo" id="noticiaDialogo" aria-labelledby="noticiaDialogoTitulo">
+    <form method="dialog">
+        <span class="inicio-noticia-fonte" id="noticiaDialogoFonte"></span>
+        <h2 id="noticiaDialogoTitulo"></h2>
+        <div id="noticiaDialogoTexto"></div>
+        <button class="v2-btn" value="fechar">Fechar</button>
+    </form>
+</dialog>
 
-    <script src="js/cotacoes.js?v=3"></script>
-    <script src="js/resumoCarteiras.js?v=3"></script>
-    <script src="js/accuracy-saldos-rapidos.js?v=1"></script>
-<script src="js/shell-v2.js?v=22"></script>
-    <script src="js/Loading.js"></script>
-    <script src="js/dashboard-extra.js?v=20261124"></script>
-    <script src="js/dashboard-total.js"></script>
-    <script src="js/Dashboard-animacoes.js"></script>
-    <script src="js/noticias.js?v=1"></script>
-
-<script defer src="js/dashboard-destaques.js?v=logos6"></script>
+<?php include __DIR__ . "/includes/scripts-app.php"; ?>
+<script src="js/grafico-linha.js?v=1"></script>
+<script src="js/inicio.js?v=1"></script>
+<script defer src="js/dashboard-destaques.js?v=logos7"></script>
 </body>
 
 </html>

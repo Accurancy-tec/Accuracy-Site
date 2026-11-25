@@ -1,6 +1,6 @@
 (() => {
     "use strict";
-    const API = "https://accuracyappapi.onrender.com";
+    const API = window.ACCURACY_API_URL;
     const panel = document.querySelector(".featured-assets");
     if (!panel) return;
     const empty = panel.querySelector(".featured-assets-empty");
@@ -31,7 +31,7 @@
         style: "currency", currency: "BRL"
     });
     // Fontes alternativas: dados da API, icones da brapi e favicon oficial.
-    // A URL de favicon Ã© uma alternativa visual e pode nao ser o logo completo.
+    // O favicon é só uma alternativa visual e pode não ser o logo completo.
     const accuracyLogoFallbackDomains = {
         COGN3: "cogna.com.br",
         B3SA3: "b3.com.br",
@@ -128,8 +128,12 @@
             // Mantém os dados anteriores caso a atualização falhe.
             if (!panel.querySelector(`.${listClass}`) && empty) {
                 empty.style.display = "";
+                empty.querySelectorAll(".skeleton").forEach(s => s.remove());
                 const message = empty.querySelector("p");
-                if (message) message.textContent = "Não foi possível carregar os destaques do mercado agora.";
+                if (message) {
+                    message.hidden = false;
+                    message.textContent = "Não foi possível carregar os destaques do mercado agora.";
+                }
             }
         } finally { pending = false; }
     }

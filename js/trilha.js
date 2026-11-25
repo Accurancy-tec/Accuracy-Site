@@ -8,7 +8,7 @@
 
 document.addEventListener("DOMContentLoaded", async function () {
 
-    const API_BASE_URL = "https://accuracyappapi.onrender.com";
+    const API_BASE_URL = window.ACCURACY_API_URL;
 
     const titulo = document.getElementById("trilhaTitulo");
     const descricao = document.getElementById("trilhaDescricao");

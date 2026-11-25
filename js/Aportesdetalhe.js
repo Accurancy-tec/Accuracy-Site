@@ -27,7 +27,7 @@ const AtivoDetalhe = (function () {
 
     const API = (typeof API_BASE_URL !== "undefined")
         ? API_BASE_URL
-        : "https://accuracyappapi.onrender.com";
+        : window.ACCURACY_API_URL;
 
     const PERIODOS = [
         { rotulo: "1S", range: "7d" },

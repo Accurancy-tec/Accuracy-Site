@@ -1,7 +1,7 @@
 // Progresso dos cursos: PostgreSQL via API autenticada; sem localStorage de aulas.
 (function () {
     "use strict";
-    const BASE = "https://accuracyappapi.onrender.com/cursos/";
+    const BASE = window.ACCURACY_API_URL + "/cursos/";
     const porTrilha = new Map();
     const pendentes = new Map();
     const emEnvio = new Map();

@@ -18,7 +18,7 @@ const contributionCount = $("#contributionCount");
 const monthlyAverage = $("#monthlyAverage");
 const nextContribution = $("#nextContribution");
 
-const API_BASE_URL = "https://accuracyappapi.onrender.com";
+const API_BASE_URL = window.ACCURACY_API_URL;
 
 const STORAGE_KEY = "accuracy_aportes_cache";
 const HISTORY_KEY = "accuracy_historico";

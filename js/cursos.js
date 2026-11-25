@@ -6,7 +6,7 @@
 
 document.addEventListener("DOMContentLoaded", function () {
 
-    const API_BASE_URL = "https://accuracyappapi.onrender.com";
+    const API_BASE_URL = window.ACCURACY_API_URL;
 
     const grid = document.getElementById("trilhasGrid");
     const vazio = document.getElementById("coursesEmpty");

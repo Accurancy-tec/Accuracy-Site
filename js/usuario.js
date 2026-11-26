@@ -164,10 +164,33 @@ function mensagemDeLogin(mensagem) {
     return "E-mail ou senha incorretos.";
 }
 
-if (formularioLogin && sessionStorage.getItem("accuracy_sessao_expirada")) {
-    sessionStorage.removeItem("accuracy_sessao_expirada");
-    const aviso = document.getElementById("erroEmail");
-    if (aviso) aviso.textContent = "Sua sessão expirou. Entre novamente para continuar.";
+/* Aviso deixado por outra tela: sessão encerrada, senha redefinida... */
+if (formularioLogin) {
+    const aviso = document.getElementById("avisoLogin");
+    const texto = sessionStorage.getItem("accuracy_aviso_login");
+    const emailSalvo = sessionStorage.getItem("email_login");
+
+    sessionStorage.removeItem("accuracy_aviso_login");
+    sessionStorage.removeItem("email_login");
+
+    if (aviso && texto) {
+        aviso.textContent = texto;
+        aviso.hidden = false;
+    }
+
+    if (emailSalvo) {
+        formularioLogin.elements.email_usuario.value = emailSalvo;
+        formularioLogin.elements.senha_usuario.focus();
+    }
+
+    // "Esqueci minha senha" já abre com o e-mail digitado aqui.
+    const linkEsqueci = document.getElementById("linkEsqueciSenha");
+    if (linkEsqueci) {
+        linkEsqueci.addEventListener("click", () => {
+            const digitado = formularioLogin.elements.email_usuario.value.trim();
+            if (digitado) sessionStorage.setItem("email_recuperacao", digitado);
+        });
+    }
 }
 
 if (formularioLogin) {

@@ -1,0 +1,66 @@
+/* Recuperar senha: usa o cartão de css/confirmacodigo.css e acrescenta os campos de texto. */
+
+form[hidden] {
+  display: none;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.campo label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.campo input {
+  width: 100%;
+  height: 50px;
+  padding: 0 16px;
+  color: var(--text-primary);
+  font: inherit;
+  font-size: 15px;
+  background: #0d1330;
+  border: 1.5px solid rgba(255, 255, 255, 0.09);
+  border-radius: 12px;
+  outline: none;
+  transition: border-color .15s, box-shadow .15s, background .15s;
+  caret-color: var(--blue-500);
+}
+
+.campo input:focus {
+  border-color: var(--blue-500);
+  box-shadow: 0 0 0 4px var(--blue-glow);
+  background: #101838;
+}
+
+.campo input.error {
+  border-color: var(--red);
+  box-shadow: 0 0 0 4px rgba(255, 102, 102, 0.18);
+}
+
+#codigo {
+  letter-spacing: 6px;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.status-row {
+  margin-top: 4px;
+}
+
+.resend a[aria-disabled="true"] {
+  color: var(--text-muted);
+  pointer-events: none;
+  font-weight: 500;
+}
+
+@media (max-width: 420px) {
+  .card {
+    padding: 32px 22px 26px;
+  }
+}

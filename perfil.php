@@ -5,7 +5,7 @@
 <head>
     <?php
     $tituloPagina = "Perfil";
-    $estilosPagina = ["css/dashboard.css?v=2", "css/perfil-v2.css?v=10"];
+    $estilosPagina = ["css/dashboard.css?v=2", "css/perfil-v2.css?v=11"];
     include __DIR__ . "/includes/head-app.php";
     ?>
 </head>
@@ -158,6 +158,55 @@
 
                                 <i class="bi bi-shield-lock"></i>
                                 Alterar senha
+                            </button>
+
+                        </div>
+
+                    </section>
+
+                    <!-- APARELHOS CONECTADOS -->
+                    <section
+                        class="v2-panel aparelhos-panel"
+                        aria-labelledby="aparelhosTitulo">
+
+                        <div class="v2-panel-head">
+                            <h2 id="aparelhosTitulo">Aparelhos conectados</h2>
+                        </div>
+
+                        <p class="accuracy-security-desc">
+                            Onde a sua conta está aberta. Se não reconhecer algum acesso,
+                            desconecte e troque a senha.
+                        </p>
+
+                        <ul class="aparelhos-lista" id="listaAparelhos">
+                            <li class="aparelho-vazio">Carregando aparelhos...</li>
+                        </ul>
+
+                        <p
+                            id="aparelhosStatus"
+                            class="accuracy-security-status"
+                            role="status"
+                            aria-live="polite">
+                        </p>
+
+                        <div class="accuracy-security-actions">
+
+                            <button
+                                type="button"
+                                id="desconectarOutros"
+                                disabled>
+
+                                <i class="bi bi-phone"></i>
+                                Desconectar os outros
+                            </button>
+
+                            <button
+                                type="button"
+                                id="sairDeTodos"
+                                class="acao-perigo">
+
+                                <i class="bi bi-box-arrow-right"></i>
+                                Sair de todos, inclusive deste
                             </button>
 
                         </div>
@@ -533,7 +582,44 @@
 </div>
 
 
+<!-- CONFIRMAÇÃO (aparelhos conectados) -->
+<div class="accuracy-security-overlay" id="confirmOverlay" hidden>
+
+    <section
+        class="accuracy-security-dialog"
+        role="alertdialog"
+        aria-modal="true"
+        aria-labelledby="confirmTitulo"
+        aria-describedby="confirmTexto">
+
+        <div class="accuracy-security-header">
+            <h2 id="confirmTitulo"></h2>
+        </div>
+
+        <p id="confirmTexto" class="accuracy-security-desc"></p>
+
+        <div class="accuracy-security-footer">
+
+            <button
+                type="button"
+                id="confirmCancelar"
+                class="v2-btn-outline">
+                Cancelar
+            </button>
+
+            <button
+                type="button"
+                id="confirmOk"
+                class="v2-btn acao-perigo-cheia">
+            </button>
+
+        </div>
+
+    </section>
+</div>
+
 <?php include __DIR__ . "/includes/scripts-app.php"; ?>
 <script src="js/perfil.js?v=10"></script>
+<script src="js/aparelhos.js?v=1"></script>
 </body>
 </html>

@@ -55,6 +55,9 @@ function iniciarGoogle(tentativa = 0) {
         ux_mode: "popup"
     });
     el.replaceChildren();
+    // O Google aceita de 200 a 400 px; no celular o botão acompanha a largura do formulário.
+    const espaco = (el.parentElement || el).clientWidth - 12;
+    const largura = Math.max(200, Math.min(360, espaco || 360));
     google.accounts.id.renderButton(el, {
         type: "standard",
         theme: "filled_blue",
@@ -63,7 +66,7 @@ function iniciarGoogle(tentativa = 0) {
         text: "continue_with",
         logo_alignment: "left",
         locale: "pt-BR",
-        width: 360
+        width: largura
     });
 }
 

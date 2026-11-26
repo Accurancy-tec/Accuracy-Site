@@ -57,7 +57,14 @@
                     !resultado.token
                 ) {
 
-                    encerrarSessao();
+                    // "Sessão revogada": desconectado em "Aparelhos conectados" ou senha trocada.
+                    const desconectado = /revogada/i.test(resultado.message || "");
+
+                    encerrarSessao(
+                        desconectado
+                            ? "Este navegador foi desconectado da sua conta. Entre de novo."
+                            : "Sua sessão expirou. Entre de novo para continuar."
+                    );
 
                     return false;
 
@@ -177,7 +184,8 @@
     =========================================================
     */
 
-    function encerrarSessao() {
+    // aviso: texto mostrado na tela de login (por que a sessão acabou)
+    function encerrarSessao(aviso) {
 
         localStorage.removeItem(TOKEN_KEY);
         localStorage.removeItem(REFRESH_TOKEN_KEY);
@@ -186,7 +194,33 @@
         localStorage.removeItem("accuracy_profile_data");
         localStorage.removeItem("accuracy_avatar");
 
+        if (typeof aviso === "string" && aviso) {
+            try {
+                sessionStorage.setItem("accuracy_aviso_login", aviso);
+            } catch (erro) { }
+        }
+
         window.location.href = LOGIN_URL;
+
+    }
+
+
+    // "Sair da conta": fecha a sessão também na API, para o navegador sair
+    // da lista de aparelhos conectados. Se a chamada falhar, sai do mesmo jeito.
+    function sairDaConta() {
+
+        const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY);
+
+        if (refreshToken) {
+            originalFetch(`${API_BASE_URL}/auth/sair`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ refresh_token: refreshToken }),
+                keepalive: true
+            }).catch(function () { });
+        }
+
+        encerrarSessao();
 
     }
 
@@ -327,8 +361,15 @@
 
                 logout.addEventListener(
                     "click",
-                    encerrarSessao
+                    sairDaConta
                 );
+
+                logout.addEventListener("keydown", function (evento) {
+                    if (evento.key === "Enter" || evento.key === " ") {
+                        evento.preventDefault();
+                        sairDaConta();
+                    }
+                });
 
             }
 
@@ -338,5 +379,8 @@
 
     // Disponibiliza a renovação para outros scripts, se necessário.
     window.accuracyRefreshToken = renovarAccessToken;
+
+    // Usado por "Aparelhos conectados" quando a sessão deste navegador é encerrada.
+    window.accuracyEncerrarSessao = encerrarSessao;
 
 })();

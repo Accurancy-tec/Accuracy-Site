@@ -486,14 +486,15 @@ input:focus{
     text-decoration-color:#3B82F6;
 }
 
+/* botão principal já preenchido: no celular não existe hover para revelar a cor */
 button{
     width:100%;
     height:54px;
-    background:transparent;
-    border:1px solid #4F6E9F;
+    background:linear-gradient(135deg,#3B82F6,#1d4ed8);
+    border:1px solid #3B82F6;
     border-radius:8px;
     color:white;
-    font-size:22px;
+    font-size:18px;
     font-weight:600;
     cursor:pointer;
     position:relative;
@@ -515,8 +516,8 @@ button::after{
 }
 
 button:hover{
-    background:linear-gradient(135deg,#3B82F6,#1d4ed8);
-    border-color:#3B82F6;
+    background:linear-gradient(135deg,#4b8ff7,#2058e0);
+    border-color:#60a5fa;
     transform:translateY(-3px);
     box-shadow:0 14px 30px rgba(37,99,235,.45);
 }
@@ -653,6 +654,23 @@ button:active{
 
     .row{
         grid-template-columns:1fr;
+    }
+}
+
+/* no celular o formulário vem logo depois do logo */
+@media(max-width:600px){
+
+    .sidebar{
+        padding:28px 22px 6px;
+    }
+
+    .timeline,
+    .benefits{
+        display:none;
+    }
+
+    .content{
+        padding:20px 20px 36px;
     }
 }
 

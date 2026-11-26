@@ -69,6 +69,8 @@ body{
     justify-content:center;
     align-items:center;
     min-height:100vh;
+    /* espaço do botão Voltar: em telas baixas o cartão não sobe para baixo dele */
+    padding:84px 16px 40px;
     color:white;
     position:relative;
     overflow-x:hidden;
@@ -107,6 +109,7 @@ body::after{
 
 .container{
     width:1200px;
+    max-width:100%;
     height:760px;
     background:#101d34;
     border-radius:18px;
@@ -195,7 +198,7 @@ body::after{
 }
 
 .hero h1{
-    font-size:54px;
+    font-size:clamp(38px, 4.2vw, 54px);
     line-height:1.1;
     margin-bottom:25px;
     background:linear-gradient(90deg,#ffffff,#9ec1ff,#ffffff);
@@ -210,7 +213,7 @@ body::after{
 .hero p{
     color:#8EA5D3;
     line-height:1.8;
-    width:330px;
+    max-width:330px;
 }
 
 .cards{
@@ -297,8 +300,17 @@ body::after{
     pointer-events:none;
 }
 
+/* o <form> envolve o .login: sem largura própria ele crescia além da tela no celular */
+.right > form{
+    width:100%;
+    max-width:430px;
+    position:relative;
+    z-index:1;
+}
+
 .login{
     width:430px;
+    max-width:100%;
     position:relative;
     z-index:1;
 }
@@ -497,7 +509,7 @@ input:focus{
 =========================*/
 
 .back-btn{
-    position:fixed;
+    position:absolute;
     top:24px;
     left:28px;
     z-index:10;
@@ -541,6 +553,10 @@ input:focus{
 
 @media(max-width:900px){
 
+    body{
+        padding:68px 0 24px;
+    }
+
     .back-btn{
         top:16px;
         left:16px;
@@ -557,11 +573,13 @@ input:focus{
         flex-direction:column;
         height:auto;
         width:95%;
-        margin:30px 0;
+        margin:0 0 30px;
     }
 
     .left{
         width:100%;
+        gap:28px;
+        padding:36px 28px;
     }
 
     .right{
@@ -587,6 +605,22 @@ input:focus{
         transition:none !important;
     }
 }
+/* aviso no topo do formulário (sessão encerrada, senha redefinida...) */
+.login p.aviso-login {
+    margin: -24px 0 28px;
+    padding: 12px 14px;
+    border: 1px solid rgba(59, 130, 246, .35);
+    border-radius: 10px;
+    background: rgba(59, 130, 246, .12);
+    color: #cfe0ff;
+    font-size: 14px;
+    line-height: 1.45;
+}
+
+.login p.aviso-login[hidden] {
+    display: none;
+}
+
 .mensagem-erro {
     display: flex;
     color: #ff4d4d;
@@ -715,6 +749,14 @@ input:focus{
 }
 @media(max-width: 480px) {
     .social-google-only .google-wrap { width: 100%; padding: 6px; border-radius: 22px; }
+}
+
+/* No celular o formulário aparece logo: os cartões de apresentação saem. */
+@media(max-width: 600px) {
+    .left .cards { display: none; }
+    .left { padding: 28px 22px 8px; }
+    .hero h1 { font-size: 34px; margin-bottom: 14px; }
+    .right { padding: 32px 22px 40px; }
 }
 @media(prefers-reduced-motion: reduce) {
     .social-google-only .google-wrap { transition: none; }

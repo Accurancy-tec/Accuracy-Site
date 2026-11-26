@@ -429,3 +429,15 @@ label[for="asset"] {
 .ac-rf-details { display: flex; flex-direction: column; gap: 5px; }
 .ac-rf-details strong { color: #34d399; font-size: 18px; }
 .ac-rf-details small { color: var(--texto-secundario); font-size: 11px; }
+
+/* category filters of the general search */
+.pp-search-filters {
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+}
+
+.pp-search-filters button span {
+    margin-left: 4px;
+    opacity: .7;
+    font-size: .9em;
+}

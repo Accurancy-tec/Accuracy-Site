@@ -4,7 +4,7 @@
 <head>
     <?php
     $tituloPagina = "Aportes";
-    $estilosPagina = ["css/dashboard.css?v=2", "css/aportes.css?v=3", "css/Aportesprodutos.css?v=12", "css/Aportesdetalhe.css?v=2", "css/Animacoes.css?v=2", "css/carteiras.css?v=3", "css/aportes-compra.css?v=1"];
+    $estilosPagina = ["css/dashboard.css?v=2", "css/aportes.css?v=3", "css/Aportesprodutos.css?v=13", "css/Aportesdetalhe.css?v=2", "css/Animacoes.css?v=2", "css/carteiras.css?v=3", "css/aportes-compra.css?v=1"];
     include __DIR__ . "/includes/head-app.php";
     ?>
 </head>
@@ -252,7 +252,7 @@
 <script src="js/cotacoes.js?v=13"></script>
 <script src="js/Aportes.js?v=20261125"></script>
 <script src="js/Aportesdetalhe.js?v=13"></script>
-<script src="js/Aportesprodutos.js?v=20261126"></script>
+<script src="js/Aportesprodutos.js?v=20261126b"></script>
 <script src="js/Animacoes.js?v=2"></script>
 </body>
 

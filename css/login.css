@@ -350,7 +350,8 @@ label{
 }
 
 /* o label acende quando o campo logo abaixo está em foco */
-label:has(+ input:focus){
+label:has(+ input:focus),
+label:has(+ .password-field input:focus){
     color:#3B82F6;
 }
 

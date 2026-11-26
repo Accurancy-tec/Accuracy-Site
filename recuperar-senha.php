@@ -8,6 +8,7 @@
   <title>Recuperar senha — Accuracy</title>
   <link rel="stylesheet" href="css/confirmacodigo.css">
   <link rel="stylesheet" href="css/recuperar-senha.css?v=1">
+  <link rel="stylesheet" href="css/password-toggle.css?v=1">
 </head>
 
 <body>
@@ -65,12 +66,12 @@
 
         <div class="campo">
           <label for="novaSenha">Nova senha</label>
-          <input id="novaSenha" type="password" autocomplete="new-password" minlength="8" maxlength="72" placeholder="Mínimo de 8 caracteres">
+          <input id="novaSenha" type="password" autocomplete="new-password" minlength="8" maxlength="72" placeholder="Mínimo de 8 caracteres" data-password-toggle>
         </div>
 
         <div class="campo">
           <label for="confirmaSenha">Confirme a nova senha</label>
-          <input id="confirmaSenha" type="password" autocomplete="new-password" minlength="8" maxlength="72" placeholder="Repita a nova senha">
+          <input id="confirmaSenha" type="password" autocomplete="new-password" minlength="8" maxlength="72" placeholder="Repita a nova senha" data-password-toggle>
         </div>
 
         <div class="status-row" id="statusSenha" role="status" aria-live="polite"></div>
@@ -87,6 +88,7 @@
     <a href="login.php" class="back-link">← Voltar ao login</a>
   </div>
 
+  <script src="js/password-toggle.js?v=1"></script>
   <script src="js/recuperar-senha.js?v=1"></script>
 
 </body>

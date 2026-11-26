@@ -5,7 +5,7 @@
 <head>
     <?php
     $tituloPagina = "Perfil";
-    $estilosPagina = ["css/dashboard.css?v=2", "css/perfil-v2.css?v=11"];
+    $estilosPagina = ["css/dashboard.css?v=2", "css/perfil-v2.css?v=11", "css/password-toggle.css?v=1"];
     include __DIR__ . "/includes/head-app.php";
     ?>
 </head>
@@ -538,7 +538,8 @@
                     id="securityNewPassword"
                     type="password"
                     autocomplete="new-password"
-                    minlength="8">
+                    minlength="8"
+                    data-password-toggle>
 
                 <label for="securityConfirmPassword">
                     Confirmar nova senha
@@ -548,7 +549,8 @@
                     id="securityConfirmPassword"
                     type="password"
                     autocomplete="new-password"
-                    minlength="8">
+                    minlength="8"
+                    data-password-toggle>
             </div>
 
             <p
@@ -619,6 +621,7 @@
 </div>
 
 <?php include __DIR__ . "/includes/scripts-app.php"; ?>
+<script src="js/password-toggle.js?v=1"></script>
 <script src="js/perfil.js?v=10"></script>
 <script src="js/aparelhos.js?v=1"></script>
 </body>

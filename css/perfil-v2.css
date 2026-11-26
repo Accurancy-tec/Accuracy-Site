@@ -571,6 +571,103 @@ body.v2 .accuracy-security-panel {
 }
 
 /* =========================================
+   APARELHOS CONECTADOS
+========================================= */
+
+body.v2 .aparelhos-panel {
+    margin-top: 16px;
+}
+
+.aparelhos-lista {
+    list-style: none;
+    margin: 0 0 4px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.aparelho {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 13px;
+    border: 1px solid var(--borda-suave);
+    border-radius: 11px;
+    background: var(--v2-sidebar);
+}
+
+.aparelho-icone {
+    flex: none;
+    width: 38px;
+    height: 38px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background: var(--icone-bg);
+    color: var(--primaria);
+    font-size: 17px;
+}
+
+.aparelho-textos {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 8px;
+}
+
+.aparelho-textos strong {
+    font-size: 14px;
+    color: var(--texto);
+    overflow-wrap: anywhere;
+}
+
+.aparelho-textos small {
+    flex-basis: 100%;
+    font-size: 12.5px;
+    color: var(--texto-secundario);
+}
+
+.aparelho-atual {
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: rgba(34, 197, 94, .14);
+    color: var(--verde);
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.aparelho-vazio {
+    padding: 14px 0;
+    font-size: 13px;
+    color: var(--texto-secundario);
+}
+
+.accuracy-security-actions button.acao-perigo {
+    color: var(--vermelho);
+    border-color: rgba(248, 113, 113, .35);
+}
+
+.accuracy-security-actions button.acao-perigo:hover {
+    border-color: var(--vermelho);
+    background: rgba(248, 113, 113, .1);
+}
+
+.accuracy-security-actions button:disabled {
+    opacity: .5;
+    cursor: default;
+    border-color: var(--borda);
+    background: var(--icone-bg);
+}
+
+.accuracy-security-footer .v2-btn.acao-perigo-cheia {
+    background: #dc2626;
+}
+
+/* =========================================
    RESPONSIVIDADE
 ========================================= */
 
@@ -596,6 +693,14 @@ body.v2 .accuracy-security-panel {
 
     .accuracy-security-dialog {
         padding: 18px;
+    }
+
+    .aparelho {
+        flex-wrap: wrap;
+    }
+
+    .aparelho .v2-ghost-danger {
+        margin-left: 50px;
     }
 
     .accuracy-security-footer {

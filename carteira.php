@@ -45,6 +45,7 @@
                         <button type="button" class="v2-btn" id="btnSimular" hidden>Simular investimento</button>
                         <button type="button" class="v2-btn-outline" id="btnDepositarSimulacao" hidden>Depositar na simulação</button>
                         <a class="v2-btn" id="btnAporte" href="aportes.php" hidden>Fazer um aporte</a>
+                        <button type="button" class="v2-btn-outline" id="v2RenameBtn" hidden>Renomear</button>
                         <button type="button" class="v2-ghost-danger" id="v2DeleteBtn" hidden>Excluir carteira</button>
                     </div>
                 </div>
@@ -84,8 +85,8 @@
 </div>
 
 <?php include __DIR__ . "/includes/scripts-app.php"; ?>
-<script src="js/carteiras.js?v=20261125"></script>
-<script src="js/carteira-v2.js?v=10"></script>
+<script src="js/carteiras.js?v=20261126"></script>
+<script src="js/carteira-v2.js?v=11"></script>
 </body>
 
 </html>

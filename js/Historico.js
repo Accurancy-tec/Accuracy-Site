@@ -71,7 +71,7 @@
             ativo: a.ativo_aporte,
             nomeAtivo: a.name_ativo,
             categoria: a.categoria_ativo,
-            carteira: a.nome_carteira,
+            carteira: a.carteira_excluida ? `${a.nome_carteira} (excluída)` : a.nome_carteira,
             tipoCarteira: a.tipo_carteira,
             quantidade: Number(a.quantidade_aporte) || 0,
             preco: a.detalhe_renda_variavel?.preco_unitario ?? (Number(a.quantidade_aporte) > 0 ? Number(a.valor_aporte) / Number(a.quantidade_aporte) : null),

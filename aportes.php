@@ -248,7 +248,7 @@
 
 
 <?php include __DIR__ . "/includes/scripts-app.php"; ?>
-<script src="js/carteiras.js?v=20261125"></script>
+<script src="js/carteiras.js?v=20261126"></script>
 <script src="js/cotacoes.js?v=13"></script>
 <script src="js/Aportes.js?v=20261125"></script>
 <script src="js/Aportesdetalhe.js?v=13"></script>

@@ -28,6 +28,7 @@
     const elCorpo = $("v2Body");
     const btnCriar = $("v2CreateBtn");
     const btnExcluir = $("v2DeleteBtn");
+    const btnRename = $("v2RenameBtn");
     const btnSimular = $("btnSimular");
     const btnDepositar = $("btnDepositarSimulacao");
     const btnAporte = $("btnAporte");
@@ -165,6 +166,7 @@
         const simulada = c && c.tipo_carteira === "Simulada";
 
         btnExcluir.hidden = !c;
+        btnRename.hidden = !c;
         btnSimular.hidden = !simulada;
         btnDepositar.hidden = !simulada;
         btnAporte.hidden = !c || simulada;
@@ -283,8 +285,8 @@
         if (!c) return;
 
         const aviso = c.tipo_carteira === "Simulada"
-            ? `Excluir a simulação "${c.nome_carteira}"?\n\nAs operações e o saldo fictício dela serão apagados. Seu saldo geral não muda.`
-            : `Excluir a carteira "${c.nome_carteira}"?\n\nO histórico de operações dela será apagado. Só é possível excluir uma carteira real depois de vender todos os ativos.`;
+            ? `Excluir a simulação "${c.nome_carteira}"?\n\nOs ativos dela serão vendidos pelo preço atual, com dinheiro fictício, e ela sai da lista. As operações continuam no histórico e o seu saldo geral não muda.`
+            : `Excluir a carteira "${c.nome_carteira}"?\n\nOs ativos dela serão vendidos pelo preço atual e o dinheiro volta para o seu saldo. As operações continuam no histórico. Carteiras com renda fixa não podem ser excluídas.`;
 
         if (!window.confirm(aviso)) return;
 
@@ -299,7 +301,31 @@
 
         ativaId = null;
         await recarregar();
-        window.V2Toast("Carteira excluída.");
+        window.V2Toast(resultado.message || "Carteira excluída.");
+    }
+
+    function renameWallet() {
+        const c = carteiraAtiva();
+        if (!c) return;
+
+        const form = janela({
+            titulo: "Renomear carteira",
+            subtitulo: `Escolha um novo nome para "${c.nome_carteira}".`,
+            confirmar: "Salvar",
+            conteudo: `
+                <label for="walletNewName">Nome</label>
+                <input id="walletNewName" type="text" maxlength="60" autocomplete="off">`,
+            aoConfirmar: async form => {
+                const name = form.querySelector("input").value.trim().replace(/\s+/g, " ");
+                if (!name) throw new Error("Dê um nome de até 60 caracteres para a carteira.");
+                await api("/carteiras/renomear-carteira", { id_carteira: Number(c.id_carteira), nome_carteira: name });
+                await recarregar();
+                window.V2Toast("Nome da carteira atualizado.");
+            }
+        });
+        const input = form.querySelector("input");
+        input.value = c.nome_carteira;
+        input.select();
     }
 
     function irParaAportes() {
@@ -478,6 +504,7 @@
 
     btnCriar.addEventListener("click", criarCarteira);
     btnExcluir.addEventListener("click", excluirCarteira);
+    btnRename.addEventListener("click", renameWallet);
     btnSimular.addEventListener("click", irParaAportes);
     btnDepositar.addEventListener("click", depositarNaSimulacao);
     btnAporte.addEventListener("click", e => { e.preventDefault(); irParaAportes(); });

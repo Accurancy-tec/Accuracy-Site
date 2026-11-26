@@ -677,7 +677,7 @@ const Carteiras = (function () {
 
             await load();
 
-            return { ok: true };
+            return { ok: true, message: data.message };
 
         } catch (erro) {
 

@@ -248,216 +248,195 @@
        3. GRÁFICO DA EVOLUÇÃO
     ===================================================== */
 
-    let periodoMeses = 6;
-
-    let dadosGrafico = {
-        aportes: [],
-        valorAtual: null
-    };
-
-
-    function chaveData(data) {
-
-        const mes = String(data.getMonth() + 1).padStart(2, "0");
-        const dia = String(data.getDate()).padStart(2, "0");
-
-        return `${data.getFullYear()}-${mes}-${dia}`;
+    // ACC_CHART_BANK_V2 - substitui apenas a evolucao patrimonial.
+    let dadosGrafico = { aportes: [], resumo: [], valorAtual: null };
+    let periodoGrafico = '1M';
+    let mostrarCapital = true, mostrarMovimentos = true;
+    const historicosGrafico = new Map();
+    let renderGraficoId = 0;
+    const diaMs = 86400000;
+    const periodosGrafico = { '7D': 7, '1M': 30, '3M': 90, '6M': 180, '1A': 365 };
+    const dataBR = new Intl.DateTimeFormat('pt-BR', { timeZone: 'America/Sao_Paulo', year: 'numeric', month: '2-digit', day: '2-digit' });
+    function diaGrafico(data) {
+        const [d,m,a] = dataBR.format(data).split('/');
+        return Date.UTC(+a,+m-1,+d);
     }
-
-
-    /* Total investido acumulado no fim de cada mês */
-    function montarSerie() {
-
-        const agora = new Date();
-
-        const pontos = [];
-
-        for (let k = periodoMeses - 1; k >= 0; k--) {
-
-            const fimDoMes = new Date(
-                agora.getFullYear(),
-                agora.getMonth() - k + 1,
-                0
-            );
-
-            const limite = chaveData(fimDoMes);
-            const acumulado = dadosGrafico.aportes
-                .filter(a => a.data_aporte && String(a.data_aporte).slice(0, 10) <= limite)
-                .reduce((soma, a) => {
-
-                    const valor = Number(a.valor_aporte) || 0;
-
-                    return a.tipo_aporte === "Venda"
-                        ? soma - valor
-                        : soma + valor;
-
-                }, 0);
-
-            pontos.push({
-                rotulo: fimDoMes.toLocaleDateString("pt-BR", {
-                    month: "short",
-                    year: "2-digit"
-                }).replace(".", ""),
-                valor: acumulado
-            });
-        }
-
-        return pontos;
+    const dataCurta = d => new Date(d).toLocaleDateString('pt-BR', { day:'2-digit', month:'short', timeZone:'UTC' });
+    const dataCompleta = d => new Date(d).toLocaleDateString('pt-BR', { timeZone:'UTC' });
+    const numeroGrafico = n => n.toLocaleString('pt-BR',{ maximumFractionDigits: 0 });
+    const valorGrafico = n => Number.isFinite(n) ? money(n) : '—';
+    const sinalGrafico = n => Number.isFinite(n) ? (n > 0 ? '+' : n < 0 ? '−' : '') + money(Math.abs(n)) : '—';
+    function operacoesGrafico() {
+        return dadosGrafico.aportes.map(a => {
+            const data = Date.parse(String(a.data_aporte || '').slice(0,10) + 'T00:00:00Z');
+            const tipo = String(a.tipo_aporte || '').toLowerCase();
+            const valor = Number(a.valor_aporte);
+            const qtd = Number(a.quantidade_aporte);
+            const simbolo = String(a.ativo_aporte || a.simbolo_ativo || '').trim();
+            const metadados = (dadosGrafico.resumo || []).flatMap(c => c.ativos || []).find(p => String(p.simbolo_ativo || '').toUpperCase() === simbolo.toUpperCase());
+            const categoria = String(a.categoria_ativo || metadados?.categoria_ativo || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+            return { data, tipo, valor, qtd, simbolo, categoria, id: Number(a.id_aporte)||0, carteira: a.id_carteira };
+        }).filter(a => Number.isFinite(a.data) && Number.isFinite(a.valor) && a.valor >= 0 && ['compra','venda','dividendo'].includes(a.tipo)).sort((a,b)=>a.data-b.data || a.id-b.id);
     }
-
-
-    function desenharGrafico() {
-        if (!blocoGrafico) return;
-
-        if (dadosGrafico.aportes.length === 0) {
-            blocoGrafico.innerHTML = `
-                <div class="chart-placeholder">
-                    <i class="bi bi-graph-up-arrow"></i>
-                    <span>Faça seu primeiro aporte para acompanhar a evolução</span>
-                </div>`;
-            return;
+    function rotaGrafico(a) {
+        if (a.categoria === 'renda fixa') return 'fixa';
+        if (a.categoria === 'fiis' || a.categoria === 'fii') return 'historico-acoes';
+        if (a.categoria === 'acoes' || a.categoria === 'acao') return 'historico-acoes';
+        if (a.categoria === 'cripto' || a.categoria === 'criptomoedas') return 'historico-criptomoedas';
+        if (a.categoria === 'moedas' || a.categoria === 'cambio' || /^(USD|EUR|GBP|JPY|CHF|CAD|AUD|CNY|ARS|BRL)[-\/]?BRL$/.test(a.simbolo.toUpperCase())) return 'historico-moedas';
+        if (a.categoria === 'futuros') return 'historico-futuros';
+        try {
+            const rota = (window.ASSET_ROTA || {})[a.simbolo] || (JSON.parse(localStorage.getItem('accuracy_rotas_cotacao') || '{}') || {})[a.simbolo];
+            if (rota === 'moedas') return 'historico-moedas';
+            if (rota === 'cripto') return 'historico-criptomoedas';
+            if (rota === 'futuros') return 'historico-futuros';
+            if (rota === 'acao' && a.categoria !== 'internacional') return 'historico-acoes';
+        } catch (_) {}
+        if (/^[A-Z]{4}\d{1,2}$/.test(a.simbolo.toUpperCase())) return 'historico-acoes';
+        return null;
+    }
+    async function buscarHistoricoGrafico(a, range) {
+        const rota = rotaGrafico(a);
+        if (!rota || rota === 'fixa' || !a.simbolo) return [];
+        const chave = rota + ':' + a.simbolo + ':' + range;
+        if (!historicosGrafico.has(chave)) {
+            const tarefa = (async () => {
+                const ctrl = new AbortController();
+                const timer = setTimeout(()=>ctrl.abort(), 12000);
+                try {
+                    const resp = await fetch(`${API_BASE_URL}/brapi/${rota}?symbol=${encodeURIComponent(a.simbolo)}&range=${range}`, {signal:ctrl.signal});
+                    if (!resp.ok) throw new Error('HTTP '+resp.status);
+                    const json = await resp.json();
+                    const item = json.results && json.results[0];
+                    const pontos = item && (item.historicalDataPrice || item.data?.historicalDataPrice || item.prices || item.history || item.historical || item.data);
+                    if (!Array.isArray(pontos)) return [];
+                    return pontos.map(p=>{
+                        const bruto = p.date ?? p.datetime ?? p.time;
+                        let t = typeof bruto === 'number' || (typeof bruto === 'string' && /^\d+$/.test(bruto)) ? Number(bruto) : Date.parse(bruto);
+                        if (t < 1e11) t *= 1000;
+                        return { data: Math.floor(t/diaMs)*diaMs, preco: Number(p.close ?? p.adjustedClose ?? p.price) };
+                    }).filter(p=>Number.isFinite(p.data)&&Number.isFinite(p.preco)&&p.preco>0).sort((p,q)=>p.data-q.data);
+                } catch(e) { console.warn('Historico indisponivel:',a.simbolo,e); return []; }
+                finally { clearTimeout(timer); }
+            })();
+            historicosGrafico.set(chave,tarefa);
         }
-
-        const serie = montarSerie();
-        const n = serie.length;
-        if (!n) return;
-        const investido = Number(serie[n - 1].valor) || 0;
-        const atual = dadosGrafico.valorAtual === null ? null : Number(dadosGrafico.valorAtual);
-        const variacao = atual === null ? null : atual - investido;
-        const variacaoPct = variacao !== null && investido > 0 ? (variacao / investido) * 100 : null;
-        const maior = Math.max(...serie.map(p => p.valor), atual === null ? 0 : atual, 1);
-        const menor = Math.min(0, ...serie.map(p => p.valor), atual === null ? 0 : atual);
-        const L = 1020, A = 340, left = 80, right = 44, top = 30, bottom = 48;
-        const w = L - left - right, h = A - top - bottom;
-        const pad = Math.max((maior - menor) * .14, 1);
-        const vmax = maior + pad;
-        const vmin = Math.min(0, menor - (menor < 0 ? pad : 0));
-        const x = i => left + (n === 1 ? w / 2 : i * w / (n - 1));
-        const y = v => top + (vmax - v) / (vmax - vmin || 1) * h;
-        const base = y(0);
-        const pathLine = pontos => {
-            if (pontos.length === 1) return `M ${pontos[0][0]} ${pontos[0][1]}`;
-            let s = `M ${pontos[0][0]} ${pontos[0][1]}`;
-            for (let i = 0; i < pontos.length - 1; i++) {
-                const p = pontos[i], q = pontos[i + 1], dx = (q[0] - p[0]) / 2;
-                s += ` C ${p[0] + dx} ${p[1]}, ${q[0] - dx} ${q[1]}, ${q[0]} ${q[1]}`;
+        const resultado = await historicosGrafico.get(chave);
+        if (!resultado.length) historicosGrafico.delete(chave);
+        return resultado;
+    }
+    async function serieGrafico(ops, inicio, hoje, range) {
+        const ativos = new Map();
+        const chave = a => rotaGrafico(a) + ':' + a.simbolo.toUpperCase();
+        ops.forEach(a=>{ if(a.tipo!=='dividendo') ativos.set(chave(a),a); });
+        const fila = Array.from(ativos.entries());
+        const precos = new Map();
+        let cursor = 0;
+        await Promise.all(Array.from({length:Math.min(3,fila.length)},async()=>{
+            while(cursor<fila.length){ const [k,a]=fila[cursor++]; precos.set(k,await buscarHistoricoGrafico(a,range)); }
+        }));
+        const pos = new Map(), saida = [];
+        let capital = 0, dividendos = 0, i = 0, comprasTotais = 0;
+        let erroQuantidade = false;
+        for(let d=Math.min(inicio,ops.length?ops[0].data:inicio);d<=hoje;d+=diaMs){
+            let compra=0,venda=0,div=0;
+            while(i<ops.length && ops[i].data<=d){
+                const a=ops[i++];
+                if(a.tipo==='dividendo'){ dividendos+=a.valor; div+=a.valor; continue; }
+                const sinal=a.tipo==='venda'?-1:1;
+                capital+=sinal*a.valor;
+                if(sinal>0){compra+=a.valor;comprasTotais+=a.valor;}else venda+=a.valor;
+                const k=chave(a), p=pos.get(k)||{q:0,rota:rotaGrafico(a),k,idx:-1};
+                const quantidade=p.rota==='fixa'?a.valor:a.qtd;
+                if(!Number.isFinite(quantidade)||quantidade<=0||!a.simbolo) erroQuantidade=true;
+                else p.q+=sinal*quantidade;
+                if(p.q < -1e-7) erroQuantidade=true;
+                pos.set(k,p);
             }
-            return s;
-        };
-        const pts = serie.map((p, i) => [x(i), y(p.valor)]);
-        const linha = pathLine(pts);
-        const area = `${linha} L ${x(n - 1)} ${base} L ${x(0)} ${base} Z`;
-        const percentual = p => p === null ? '—' : `${p > 0 ? '+' : ''}${p.toLocaleString('pt-BR', {maximumFractionDigits:2, minimumFractionDigits:2})}%`;
-        const fmtSigned = v => v === null ? '—' : `${v > 0 ? '+' : v < 0 ? '−' : ''}${money(Math.abs(v))}`;
-        const pico = Math.max(...serie.map(p => p.valor));
-        const bars = [
-            ['Total investido', money(investido), 'bi-wallet2', 'blue'],
-            ['Valor atual', atual === null ? 'Indisponível' : money(atual), 'bi-graph-up-arrow', 'cyan'],
-            ['Diferença atual', fmtSigned(variacao), 'bi-arrow-left-right', variacao === null ? 'muted' : variacao >= 0 ? 'green' : 'red'],
-            ['Variação sobre aportes', percentual(variacaoPct), 'bi-percent', variacaoPct === null ? 'muted' : variacaoPct >= 0 ? 'green' : 'red']
-        ];
-        const cards = bars.map(([label, value, icon, tone]) => `
-            <div class="acc-chart-stat acc-stat-${tone}">
-                <span class="acc-chart-stat-label"><i class="bi ${icon}" aria-hidden="true"></i> ${label}</span>
-                <strong>${value}</strong>
-            </div>`).join('');
-
-        let grade = '';
-        for (let i = 0; i <= 4; i++) {
-            const valor = vmin + (vmax - vmin) * (i / 4);
-            const yy = y(valor);
-            grade += `<line x1="${left}" x2="${L - right}" y1="${yy}" y2="${yy}" class="acc-chart-gridline" />
-                <text x="${left - 14}" y="${yy + 4}" text-anchor="end" class="acc-chart-axis">${moneyCurto(valor)}</text>`;
+            if(d<inicio) continue;
+            let patrimonio=0, valido=!erroQuantidade, fixa=false;
+            for(const p of pos.values()){
+                if(p.q<=1e-9) continue;
+                if(p.rota==='fixa'){ patrimonio+=p.q; fixa=true; continue; }
+                const lista=precos.get(p.k)||[];
+                while(p.idx+1<lista.length && lista[p.idx+1].data<=d) p.idx++;
+                const cot=lista[p.idx];
+                // Nao preencher datas anteriores a primeira cotacao ou lacunas longas.
+                if(!cot || d-cot.data>7*diaMs){valido=false;continue;}
+                patrimonio+=p.q*cot.preco;
+            }
+            saida.push({d,capital,dividendos,comprasTotais,compra,venda,div,p:valido?patrimonio:null,fixa});
         }
-        const meses = serie.map((p, i) => `<text x="${x(i)}" y="${A - 14}" text-anchor="middle" class="acc-chart-axis">${p.rotulo}</text>`).join('');
-        const pontos = serie.map((p, i) => `<circle class="acc-point" cx="${x(i)}" cy="${y(p.valor)}" r="5" tabindex="0" data-point="${i}" aria-label="${p.rotulo}: ${money(p.valor)} investidos" />`).join('');
-        const ultimoX = x(n - 1);
-        const valorAtual = atual === null ? '' : `
-            <line x1="${ultimoX}" x2="${ultimoX}" y1="${y(investido)}" y2="${y(atual)}" class="acc-chart-current-link" />
-            <circle cx="${ultimoX}" cy="${y(atual)}" r="9" class="acc-chart-current-halo" />
-            <circle cx="${ultimoX}" cy="${y(atual)}" r="5.5" class="acc-chart-current-dot" />`;
-
-        blocoGrafico.innerHTML = `
-            <div class="acc-chart-shell">
-                <div class="acc-chart-stats">${cards}</div>
-                <div class="acc-chart-plot" tabindex="0" aria-label="Gráfico de aportes acumulados. Use os pontos ou o mouse para consultar os meses.">
-                    <svg viewBox="0 0 ${L} ${A}" role="img" aria-label="Evolução do valor investido acumulado por mês">
-                        <defs>
-                            <linearGradient id="acc-invest-area" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="0%" stop-color="#438cff" stop-opacity=".37" />
-                                <stop offset="100%" stop-color="#438cff" stop-opacity="0" />
-                            </linearGradient>
-                            <linearGradient id="acc-invest-line" x1="0" y1="0" x2="1" y2="0">
-                                <stop offset="0%" stop-color="#4278ff" />
-                                <stop offset="100%" stop-color="#61b8ff" />
-                            </linearGradient>
-                        </defs>
-                        ${grade}
-                        <path d="${area}" fill="url(#acc-invest-area)" />
-                        <path d="${linha}" class="acc-chart-invest-line" />
-                        ${valorAtual}
-                        <line class="acc-chart-crosshair" x1="${ultimoX}" x2="${ultimoX}" y1="${top}" y2="${A - bottom}" style="display:none" />
-                        ${pontos}${meses}
-                    </svg>
-                    <div class="acc-chart-tooltip" role="status" aria-live="polite" hidden></div>
-                </div>
-                <div class="acc-chart-footer">
-                    <span><i class="acc-legend-dot acc-legend-blue"></i> Aportes acumulados</span>
-                    <span><i class="acc-legend-dot acc-legend-green"></i> Valor atual (apenas hoje)</span>
-                    <span class="acc-chart-note">Passe o mouse sobre os pontos para ver os valores mensais.</span>
-                </div>
-            </div>`;
-
-        const plot = blocoGrafico.querySelector('.acc-chart-plot');
-        const svg = plot.querySelector('svg');
-        const tooltip = plot.querySelector('.acc-chart-tooltip');
-        const crosshair = svg.querySelector('.acc-chart-crosshair');
-        const circles = Array.from(svg.querySelectorAll('.acc-point'));
-        const show = i => {
-            if (i < 0 || i >= n) return;
-            const p = serie[i];
-            circles.forEach((el, idx) => el.classList.toggle('acc-point-active', i === idx));
-            crosshair.style.display = '';
-            crosshair.setAttribute('x1', x(i));
-            crosshair.setAttribute('x2', x(i));
-            tooltip.hidden = false;
-            tooltip.textContent = `${p.rotulo} · Total investido: ${money(p.valor)}`;
-            tooltip.style.left = `${Math.min(82, Math.max(18, x(i) / L * 100))}%`;
-        };
-        const hide = () => {
-            crosshair.style.display = 'none';
-            circles.forEach(el => el.classList.remove('acc-point-active'));
-            tooltip.hidden = true;
-        };
-        circles.forEach((el, i) => {
-            el.addEventListener('mouseenter', () => show(i));
-            el.addEventListener('focus', () => show(i));
-            el.addEventListener('click', () => show(i));
-            el.addEventListener('blur', hide);
-        });
-        plot.addEventListener('mousemove', event => {
-            const rect = svg.getBoundingClientRect();
-            const relative = (event.clientX - rect.left) / (rect.width || 1);
-            const idx = Math.round((relative * L - left) / (w / Math.max(1, n - 1)));
-            show(Math.min(n - 1, Math.max(0, idx)));
-        });
-        plot.addEventListener('mouseleave', hide);
+        const atual=dadosGrafico.valorAtual;
+        if(saida.length && atual!==null && Number.isFinite(Number(atual))) saida[saida.length-1].p=Number(atual);
+        return saida;
     }
-
-    /* botão "Últimos 6 meses" passa a funcionar: 3 -> 6 -> 12 meses */
-    if (botaoFiltro) {
-
-        botaoFiltro.addEventListener("click", () => {
-
-            const opcoes = [3, 6, 12];
-
-            periodoMeses = opcoes[(opcoes.indexOf(periodoMeses) + 1) % opcoes.length];
-
-            botaoFiltro.innerHTML =
-                `Últimos ${periodoMeses} meses <i class="bi bi-chevron-down"></i>`;
-
-            desenharGrafico();
-        });
+    function desenharGrafico(){
+        if(!blocoGrafico) return;
+        const id=++renderGraficoId;
+        const hoje=diaGrafico(new Date());
+        const ops=operacoesGrafico().filter(a=>a.data<=hoje);
+        if(!ops.length){blocoGrafico.innerHTML='<div class="chart-placeholder"><i class="bi bi-graph-up-arrow"></i><span>Nenhuma movimentação disponível para o gráfico.</span></div>';return;}
+        if(botaoFiltro) botaoFiltro.style.display='none';
+        const inicio=hoje-(periodosGrafico[periodoGrafico]-1)*diaMs;
+        const range=periodoGrafico==='1A'?'1y':periodoGrafico==='6M'?'1y':periodoGrafico==='3M'?'6mo':'3mo';
+        const ultimoCapital=ops.reduce((s,a)=>s+(a.tipo==='compra'?a.valor:a.tipo==='venda'?-a.valor:0),0);
+        const dividendos=ops.reduce((s,a)=>s+(a.tipo==='dividendo'?a.valor:0),0);
+        const atual=dadosGrafico.valorAtual===null?null:Number(dadosGrafico.valorAtual);
+        const resultado=Number.isFinite(atual)?atual+dividendos-ultimoCapital:null;
+        const percentual=Number.isFinite(resultado)&&ultimoCapital>0?resultado/ultimoCapital*100:null;
+        const pct=Number.isFinite(percentual)?`${percentual>0?'+':''}${percentual.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}%`:'—';
+        const cor=resultado===null?'#92a7c0':resultado>=0?'#35d4a5':'#f17d8b';
+        const card=(label,v,c='#e8f0ff')=>`<div class="acc-bank-card"><span>${label}</span><strong style="color:${c}">${v}</strong></div>`;
+        blocoGrafico.innerHTML=`<style>
+        .chart:has(.acc-bank){background:#0c1627!important;border-color:#25364d!important}.chart-box:has(.acc-bank){height:auto!important;min-height:0!important;display:block!important;overflow:visible!important}.acc-bank{width:100%;min-width:0;color:#e8f0ff;display:grid;gap:16px;font-family:Inter,Arial,sans-serif}.acc-bank *{box-sizing:border-box}.acc-bank-caption{color:#91a6c1;font-size:12px}.acc-bank-value{font-size:clamp(24px,3vw,36px);font-weight:750;letter-spacing:-.03em;color:#f0f5ff}.acc-bank-result{font-size:13px;margin-top:4px}.acc-bank-cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.acc-bank-card{background:#101c2e;border:1px solid #25364d;border-radius:10px;padding:12px;min-width:0;display:grid;gap:6px}.acc-bank-card span{font-size:12px;color:#94a9c4}.acc-bank-card strong{font-size:clamp(14px,1.5vw,19px);overflow-wrap:anywhere;font-variant-numeric:tabular-nums}.acc-bank-tools{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;border-top:1px solid #26364b;padding-top:12px}.acc-bank-periods,.acc-bank-checks{display:flex;align-items:center;gap:7px;flex-wrap:wrap}.acc-bank-periods button{background:transparent;border:0;border-radius:6px;color:#94a9c4;padding:7px 11px;cursor:pointer;font:600 12px Inter,Arial,sans-serif}.acc-bank-periods button[aria-pressed=true]{background:#1c3658;color:#8dbfff}.acc-bank-checks label{display:flex;gap:5px;align-items:center;color:#9eb3ce;font-size:12px;cursor:pointer}.acc-bank-checks input{accent-color:#438ff5}.acc-bank-plot{position:relative;min-width:0;padding:12px;background:#101b2d;border:1px solid #1c2d44;border-radius:12px}.acc-bank-plot svg{display:block;width:100%;height:auto;touch-action:pan-y}.acc-bank-tip{position:absolute;top:10px;background:#15263f;border:1px solid #385579;border-radius:8px;color:#e8f0ff;padding:10px 12px;z-index:4;pointer-events:none;font-size:12px;line-height:1.55;max-width:90%;box-shadow:0 8px 25px #0005}.acc-bank-tip[hidden]{display:none}.acc-bank-note{color:#8ea5bf;font-size:11px;line-height:1.5}.acc-bank-loading{padding:85px 12px;text-align:center;color:#9cb3d1;font-size:13px}.acc-bank-axis{font-size:12px;fill:#96a9c3}.acc-bank-plot svg:focus{outline:1px solid #4b94f5;outline-offset:2px}@media(max-width:760px){.acc-bank-cards{grid-template-columns:repeat(2,minmax(0,1fr))}.acc-bank-plot{padding:3px}.acc-bank-axis{font-size:15px}.acc-bank-tools{gap:8px}} 
+        </style><div class="acc-bank"><div><div class="acc-bank-caption">Patrimônio atual da carteira</div><div class="acc-bank-value">${valorGrafico(atual)}</div><div class="acc-bank-result" style="color:${cor}">${sinalGrafico(resultado)} · ${pct} de resultado simples acumulado</div></div><div class="acc-bank-cards">${card('Compras líquidas',money(ultimoCapital))}${card('Resultado acumulado',sinalGrafico(resultado),cor)}${card('Maior patrimônio no período','—')}${card('Menor patrimônio no período','—')}</div><div class="acc-bank-tools"><div class="acc-bank-periods">${Object.keys(periodosGrafico).map(p=>`<button type="button" data-periodo="${p}" aria-pressed="${p===periodoGrafico}">${p}</button>`).join('')}</div><div class="acc-bank-checks"><label><input type="checkbox" data-capital ${mostrarCapital?'checked':''}> Compras líquidas</label><label><input type="checkbox" data-mov ${mostrarMovimentos?'checked':''}> Movimentações</label></div></div><div class="acc-bank-plot"><div class="acc-bank-loading">Consultando histórico de cotações...</div></div><div class="acc-bank-note">Linha azul: patrimônio • Linha azul-acinzentada: compras líquidas • Barras verdes: compras • Vermelhas: vendas • Douradas: dividendos.</div></div>`;
+        const raiz=blocoGrafico.querySelector('.acc-bank');
+        raiz.querySelectorAll('[data-periodo]').forEach(b=>b.addEventListener('click',()=>{periodoGrafico=b.dataset.periodo;desenharGrafico();}));
+        raiz.querySelector('[data-capital]').addEventListener('change',e=>{mostrarCapital=e.target.checked;desenharGrafico();});
+        raiz.querySelector('[data-mov]').addEventListener('change',e=>{mostrarMovimentos=e.target.checked;desenharGrafico();});
+        serieGrafico(ops,inicio,hoje,range).then(serie=>{
+            if(id!==renderGraficoId||!raiz.isConnected)return;
+            pintarSerieGrafico(raiz,serie);
+        }).catch(e=>{if(id===renderGraficoId){raiz.querySelector('.acc-bank-plot').textContent='Não foi possível montar o histórico.';console.error(e);}});
+    }
+    function pintarSerieGrafico(raiz,serie){
+        const validos=serie.map(p=>p.p).filter(Number.isFinite);
+        const cards=raiz.querySelectorAll('.acc-bank-card strong');
+        cards[2].textContent=validos.length?money(Math.max(...validos)):'—';
+        cards[3].textContent=validos.length?money(Math.min(...validos)):'—';
+        const plot=raiz.querySelector('.acc-bank-plot');
+        const n=serie.length, W=1000, left=25, right=890, top=24, bottom=330, H=mostrarMovimentos?490:380;
+        const valores=[...validos,...(mostrarCapital?serie.map(p=>p.capital):[])];
+        const min=Math.min(...(valores.length?valores:[0])), max=Math.max(...(valores.length?valores:[1]));
+        const margem=Math.max((max-min)*.12,Math.abs(max)*.015,1);
+        const low=min-margem,high=max+margem;
+        const x=i=>left+i*(right-left)/Math.max(1,n-1), y=v=>bottom-(v-low)/(high-low)*(bottom-top);
+        const linhas=Array.from({length:6},(_,i)=>{const v=low+(high-low)*i/5;return `<line x1="${left}" x2="${right}" y1="${y(v)}" y2="${y(v)}" stroke="#26384f" stroke-width=".9"/>${Number.isFinite(serie[n-1].p)&&Math.abs(y(v)-y(serie[n-1].p))<19?'':`<text x="${right+14}" y="${y(v)+4}" class="acc-bank-axis">${numeroGrafico(v)}</text>`}`;}).join('');
+        let segmentos=[], seg=[];
+        serie.forEach((p,i)=>{if(Number.isFinite(p.p))seg.push([x(i),y(p.p)]);else if(seg.length){segmentos.push(seg);seg=[];}});if(seg.length)segmentos.push(seg);
+        const caminho=s=>s.map((p,i)=>`${i?'L':'M'}${p[0]} ${p[1]}`).join(' ');
+        const areas=segmentos.filter(s=>s.length>1).map(s=>`<path d="${caminho(s)} L${s[s.length-1][0]} ${bottom} L${s[0][0]} ${bottom} Z" fill="url(#acc-bank-area)"/>`).join('');
+        const linhasPat=segmentos.map(s=>s.length===1?`<circle cx="${s[0][0]}" cy="${s[0][1]}" r="3.5" fill="#65aaff"/>`:`<path d="${caminho(s)}" fill="none" stroke="#4b96ff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>`).join('');
+        const capital=mostrarCapital?`<path d="M${x(0)} ${y(serie[0].capital)}${serie.slice(1).map((p,i)=>` H${x(i+1)} V${y(p.capital)}`).join('')}" stroke="#58779f" stroke-width="1.6" fill="none" vector-effect="non-scaling-stroke"/>`:'';
+        const ultimo=serie[n-1];
+        const etiqueta=Number.isFinite(ultimo.p)?`<line x1="${left}" x2="${right}" y1="${y(ultimo.p)}" y2="${y(ultimo.p)}" stroke="#3a6ca7" opacity=".5"/><circle cx="${right}" cy="${y(ultimo.p)}" r="4" fill="#65aaff"/><rect x="${right+3}" y="${y(ultimo.p)-12}" width="104" height="24" rx="4" fill="#2865b6"/><text x="${right+55}" y="${y(ultimo.p)+4}" fill="#f3f7ff" font-size="12" font-weight="600" text-anchor="middle">${ultimo.p.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}</text>`:'';
+        const movMax=Math.max(1,...serie.flatMap(p=>[p.compra+p.div,p.venda]));
+        const zero=427, escala=40/movMax, bw=Math.max(2,Math.min(11,(right-left)/n*.7));
+        const barras=mostrarMovimentos?`<line x1="${left}" x2="${right}" y1="350" y2="350" stroke="#293b53"/><text x="${left}" y="367" class="acc-bank-axis">Movimentações financeiras (R$)</text><line x1="${left}" x2="${right}" y1="${zero}" y2="${zero}" stroke="#34465e"/><text x="${right+14}" y="391" class="acc-bank-axis">+${numeroGrafico(movMax)}</text><text x="${right+14}" y="431" class="acc-bank-axis">0</text>${serie.map((p,i)=>{let b='';if(p.compra)b+=`<rect x="${x(i)-bw/2}" y="${zero-p.compra*escala}" width="${bw}" height="${p.compra*escala}" rx="1" fill="#2ab899"/>`;if(p.div)b+=`<rect x="${x(i)-bw/2}" y="${zero-(p.compra+p.div)*escala}" width="${bw}" height="${p.div*escala}" rx="1" fill="#e6b85f"/>`;if(p.venda)b+=`<rect x="${x(i)-bw/2}" y="${zero}" width="${bw}" height="${p.venda*escala}" rx="1" fill="#e87989"/>`;return b;}).join('')}`:'';
+        const marcadores=mostrarMovimentos?serie.map((p,i)=>Number.isFinite(p.p)&&(p.compra||p.venda||p.div)?`<circle cx="${x(i)}" cy="${y(p.p)}" r="4" fill="#101b2d" stroke="${p.venda?'#e87989':p.compra?'#39d4ae':'#e6b85f'}" stroke-width="1.5"/>`:'').join(''):'';
+        const ticks=Array.from({length:6},(_,i)=>Math.round(i*(n-1)/5));
+        plot.innerHTML=`<svg viewBox="0 0 ${W} ${H}" tabindex="0" role="img" aria-label="Evolução diária do patrimônio. Use as setas para consultar datas."><defs><linearGradient id="acc-bank-area" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#347ff0" stop-opacity=".3"/><stop offset="100%" stop-color="#347ff0" stop-opacity="0"/></linearGradient></defs>${linhas}${areas}${capital}${linhasPat}${marcadores}<line x1="${right}" x2="${right}" y1="${top}" y2="${mostrarMovimentos?467:bottom}" stroke="#36547b"/>${etiqueta}${barras}${ticks.map((i,j)=>`<text x="${x(i)}" y="${H-9}" text-anchor="${j===0?'start':j===5?'end':'middle'}" class="acc-bank-axis">${dataCurta(serie[i].d)}</text>`).join('')}<line data-cross x1="${right}" x2="${right}" y1="${top}" y2="${mostrarMovimentos?467:bottom}" stroke="#5189c9" stroke-width="1" visibility="hidden"/><circle data-dot r="4" fill="#7dbaff" stroke="#264f83" stroke-width="1.5" visibility="hidden"/></svg><div class="acc-bank-tip" role="status" hidden></div>`;
+        const nota=raiz.querySelector('.acc-bank-note');
+        if(validos.length<n)nota.textContent+=' Datas sem cotação suficiente ficam sem linha patrimonial.';
+        if(serie.some(p=>p.fixa))nota.textContent+=' Renda fixa contabilizada pelo principal aplicado, sem juros históricos.';
+        nota.textContent+=' Patrimônio histórico reconstruído pelas operações e preços de fechamento. Valor atual segue o cálculo do dashboard (pode usar preço médio quando não há cotação). Resultado simples inclui dividendos, não é rentabilidade ponderada.';
+        const svg=plot.querySelector('svg'), tip=plot.querySelector('.acc-bank-tip'), cross=svg.querySelector('[data-cross]'), dot=svg.querySelector('[data-dot]');
+        let ativo=n-1;
+        function show(i){ativo=Math.max(0,Math.min(n-1,i));const p=serie[ativo];const xx=x(ativo);cross.setAttribute('x1',xx);cross.setAttribute('x2',xx);cross.setAttribute('visibility','visible');dot.setAttribute('cx',xx);dot.setAttribute('cy',Number.isFinite(p.p)?y(p.p):0);dot.setAttribute('visibility',Number.isFinite(p.p)?'visible':'hidden');tip.innerHTML=`<strong>${dataCompleta(p.d)}</strong><br>Patrimônio: ${valorGrafico(p.p)}<br>Compras líquidas: ${money(p.capital)}<br>Resultado acumulado: ${sinalGrafico(Number.isFinite(p.p)?p.p+p.dividendos-p.capital:null)}<br>Compras: ${money(p.compra)} · Vendas: ${money(p.venda)}<br>Dividendos: ${money(p.div)}`;tip.hidden=false;const r=svg.getBoundingClientRect();const pr=plot.getBoundingClientRect();const px=r.left-pr.left+xx/W*r.width;tip.style.left=Math.max(4,Math.min(pr.width-tip.offsetWidth-4,px-tip.offsetWidth/2))+'px';}
+        function hide(){tip.hidden=true;cross.setAttribute('visibility','hidden');dot.setAttribute('visibility','hidden');}
+        function ponteiro(e){const r=svg.getBoundingClientRect();show(Math.round(((e.clientX-r.left)/r.width*W-left)/(right-left)*(n-1)));}
+        svg.addEventListener('pointermove',ponteiro);svg.addEventListener('pointerdown',ponteiro);svg.addEventListener('pointerleave',hide);svg.addEventListener('blur',hide);svg.addEventListener('keydown',e=>{if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.preventDefault();show(ativo+(e.key==='ArrowLeft'?-1:1));}if(e.key==='Escape')hide();});
     }
 
 
@@ -493,7 +472,8 @@
 
             dadosGrafico = {
                 aportes,
-                valorAtual: simbolos.length ? totalInvestimentos : null
+                resumo,
+                valorAtual: simbolos.length || aportes.length ? totalInvestimentos : null
             };
 
             desenharGrafico();

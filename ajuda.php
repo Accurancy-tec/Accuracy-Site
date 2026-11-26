@@ -84,7 +84,7 @@
 
                 <details>
                     <summary>O que é o estilo da carteira (renda fixa, variável, cripto...)?</summary>
-                    <p>O estilo define que tipo de ativo a carteira recebe. Uma carteira de renda fixa aceita títulos de renda fixa e Tesouro; uma de cripto aceita criptomoedas. A carteira <strong>mista</strong> aceita qualquer ativo.</p>
+                    <p>É o foco que você escolhe para a carteira: renda fixa, renda variável, cripto, internacional ou mista. Ele serve para organizar e identificar suas carteiras; qualquer ativo pode ser registrado em qualquer uma delas.</p>
                 </details>
 
                 <details>
@@ -113,7 +113,7 @@
 
                 <details>
                     <summary>Por que minha compra foi recusada?</summary>
-                    <p>Os motivos mais comuns são: saldo insuficiente; o ativo não combina com o estilo da carteira; o preço ficou muito diferente da cotação atual (atualize a tela e tente de novo); ou o código digitado não existe no mercado.</p>
+                    <p>Os motivos mais comuns são: saldo insuficiente (o saldo geral, numa carteira real, ou o saldo da simulação); o preço ficou muito diferente da cotação atual (atualize a tela e tente de novo); ou o código digitado não existe no mercado.</p>
                 </details>
 
                 <details>

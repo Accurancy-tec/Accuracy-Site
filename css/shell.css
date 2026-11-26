@@ -625,3 +625,66 @@ body.v2 .v2-toast.show {
         display: none;
     }
 }
+
+/* Terms of Use acceptance (js/terms-gate.js) */
+.terms-gate {
+    z-index: 2000;
+}
+
+.terms-gate-links {
+    margin: 0 0 16px;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 8px;
+}
+
+.terms-gate-links a {
+    display: block;
+    padding: 10px 12px;
+    border: 1px solid var(--borda-suave);
+    border-radius: 10px;
+    color: var(--primaria);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.terms-gate-links a:hover,
+.terms-gate-links a:focus-visible {
+    border-color: var(--primaria);
+}
+
+body.v2 .v2-modal .terms-gate-check {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    margin-bottom: 12px;
+    font-weight: 500;
+    line-height: 1.45;
+    cursor: pointer;
+}
+
+.terms-gate-check input {
+    width: 18px;
+    height: 18px;
+    margin: 1px 0 0;
+    flex: none;
+    accent-color: var(--primaria);
+}
+
+.terms-gate-leave {
+    display: block;
+    width: 100%;
+    margin-top: 10px;
+    padding: 10px;
+    border: 0;
+    background: transparent;
+    color: var(--texto-secundario);
+    font: inherit;
+    font-size: 13.5px;
+    cursor: pointer;
+}
+
+.terms-gate-leave:hover {
+    color: var(--texto);
+}

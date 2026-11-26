@@ -189,9 +189,9 @@
 
                 <span>
                     Concordo com os
-                    <a href="#">Termos de Uso</a>
+                    <a href="terms.php" target="_blank" rel="noopener">Termos de Uso</a>
                     e
-                    <a href="#">Política de Privacidade</a>
+                    <a href="privacy.php" target="_blank" rel="noopener">Política de Privacidade</a>
                 </span>
 
             </label>

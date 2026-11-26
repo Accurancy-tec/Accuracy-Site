@@ -120,7 +120,8 @@ if (formularioCadastro) {
         const dados = {
             nome_usuario: campos.nome_usuario.value.trim(),
             email_usuario: campos.email_usuario.value.trim().toLowerCase(),
-            senha_usuario: campos.senha_usuario.value
+            senha_usuario: campos.senha_usuario.value,
+            aceite_termos: true
         };
 
         const telefone = campos.telefone_usuario.value.replace(/\D/g, "");

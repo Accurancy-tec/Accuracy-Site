@@ -7,3 +7,4 @@
 <script src="js/resumoCarteiras.js?v=5"></script>
 <script src="js/shell-v2.js?v=30"></script>
 <script src="js/notificacoes.js?v=1"></script>
+<script src="js/terms-gate.js?v=1"></script>

@@ -9,7 +9,7 @@
 
     <title>Criar conta - Accuracy</title>
 
-    <link rel="stylesheet" href="css/cadastro.css">
+    <link rel="stylesheet" href="css/cadastro.css?v=2">
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
@@ -209,7 +209,7 @@
 
 </div>
 
-<script src="js/usuario.js?v=3"></script>
+<script src="js/usuario.js?v=4"></script>
 <script src="js/mascara.js?v=3"></script>
 </body>
 </html>

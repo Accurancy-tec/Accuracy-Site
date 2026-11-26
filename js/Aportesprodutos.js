@@ -542,12 +542,12 @@
 
             return `
                 <tr data-n="${n}">
-                    <td><span class="ac-table-ticker">${logoAtivo(i, "ac-asset-symbol ac-logo-small")}<strong>${esc(i.value)}</strong></span></td>
-                    <td>${esc(nomeLimpo(i.sub))}</td>
-                    <td class="muted">${esc(i.categoria)}</td>
-                    <td class="num">${i.preco != null ? esc(brl(i.preco)) : "—"}</td>
-                    <td class="center"><span class="v2-delta ${v.cls}">${esc(v.texto)}</span></td>
-                    <td class="num"><button type="button" class="v2-see" data-ver="${n}">Ver</button></td>
+                    <td class="v2-celula-larga"><span class="ac-table-ticker">${logoAtivo(i, "ac-asset-symbol ac-logo-small")}<strong>${esc(i.value)}</strong></span></td>
+                    <td class="v2-celula-larga" data-rotulo="Empresa">${esc(nomeLimpo(i.sub))}</td>
+                    <td class="muted v2-celula-larga" data-rotulo="Categoria">${esc(i.categoria)}</td>
+                    <td class="num" data-rotulo="Preço">${i.preco != null ? esc(brl(i.preco)) : "—"}</td>
+                    <td class="center" data-rotulo="Variação"><span class="v2-delta ${v.cls}">${esc(v.texto)}</span></td>
+                    <td class="num v2-celula-acao"><button type="button" class="v2-see" data-ver="${n}">Ver</button></td>
                 </tr>
             `;
         }).join("");
@@ -608,7 +608,7 @@
                 </div>
 
                 <div class="v2-table-wrap">
-                    <table class="v2-table">
+                    <table class="v2-table v2-tabela-cartoes">
                         <thead>
                             <tr>
                                 <th>Código</th>

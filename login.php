@@ -2,9 +2,10 @@
 <html lang="pt-BR">
 
 <head>
+    <script src="js/config.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>InvestFlow</title>
+    <title>Entrar - Accuracy</title>
 
     <link rel="stylesheet" href="css/login.css?v=5">
 
@@ -82,18 +83,18 @@
             <div class="cards">
 
                 <div class="info-card">
-                    <span>Rendimento médio mensal</span>
-                    <h3>+2.4% ao mês</h3>
+                    <span>Carteiras reais e simuladas</span>
+                    <h3>Pratique sem arriscar</h3>
                 </div>
 
                 <div class="info-card">
-                    <span>Ativos monitorados</span>
-                    <h3>BTC · USD · PETR4 · IBOV +38</h3>
+                    <span>Ações, FIIs, renda fixa e cripto</span>
+                    <h3>Cotações do mercado</h3>
                 </div>
 
                 <div class="info-card">
-                    <span>Usuários ativos</span>
-                    <h3>+14.000 investidores</h3>
+                    <span>Trilhas em vídeo</span>
+                    <h3>Aprenda no seu ritmo</h3>
                 </div>
 
             </div>

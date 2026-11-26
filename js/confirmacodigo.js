@@ -1,5 +1,4 @@
-const API_BASE_URL =
-    "https://accuracyappapi.onrender.com";
+const API_BASE_URL = window.ACCURACY_API_URL;
 
 
 const inputs =

@@ -1,376 +1,89 @@
-/*
-=========================================================
+/* =========================================================
+   RESUMO DAS CARTEIRAS
 
-RESUMO DAS CARTEIRAS
+   Busca as carteiras já calculadas pela API (/carteiras/resumo):
+   patrimônio, custo, rentabilidade, posições com preço atual e
+   os totais do usuário. O site só exibe esses números; nenhuma
+   regra financeira é recalculada aqui.
 
-Usado pela tela Carteira e pelo Dashboard.
-
-Busca:
-
-1. Carteiras do usuário
-2. Posições de cada carteira
-
-=========================================================
-*/
+   ResumoCarteiras.load()        -> lista de carteiras
+   ResumoCarteiras.loadResumo()  -> resposta completa (com totais)
+========================================================= */
 
 const ResumoCarteiras = (function () {
 
     "use strict";
 
+    const TEMPO_REUSO_MS = 15 * 1000;
 
-    const API_BASE_URL =
-        "https://accuracyappapi.onrender.com";
+    let emAndamento = null;
+    let ultimo = null;
+    let ultimoEm = 0;
 
-
-    /*
-    =====================================================
-    CLASSIFICAÇÃO DOS ATIVOS
-    =====================================================
-    */
-
-    const CLASSES = {
-
-        PETR4:
-            "Ações",
-
-        Bitcoin:
-            "Cripto",
-
-        "CDB Nubank":
-            "Renda Fixa",
-
-        XPML11:
-            "FIIs"
-
-    };
-
-
-    /*
-    =====================================================
-    GET
-    =====================================================
-    */
-
-    async function get(
-        caminho,
-        token
-    ) {
-
-        const response =
-            await (window.AccuracyPerf && window.AccuracyPerf.fetch ? window.AccuracyPerf.fetch : fetch)(
-
-                `${API_BASE_URL}${caminho}`,
-
-                {
-
-                    method: "GET",
-
-                    headers: {
-
-                        "Authorization":
-                            `Bearer ${token}`,
-
-                        "Content-Type":
-                            "application/json"
-
-                    }
-
-                }
-
-            );
-
-
-        const texto =
-            await response.text();
-
-
-        let data;
-
-
-        try {
-
-            data =
-                JSON.parse(texto);
-
-        } catch (erro) {
-
-            console.error(
-
-                "Resposta recebida da API:",
-                texto
-
-            );
-
-
-            throw new Error(
-
-                `A API não retornou JSON. HTTP ${response.status}`
-
-            );
-        }
-
-
-        /*
-        A API de carteiras usa "success".
-
-        A API de posições usa "sucesso".
-
-        Por isso aceitamos os dois.
-        */
-
-        if (
-
-            !response.ok ||
-
-            (
-                data.sucesso !== true &&
-                data.success !== true
-            )
-
-        ) {
-
-            throw new Error(
-
-                data.mensagem ||
-
-                data.message ||
-
-                data.erro ||
-
-                `HTTP ${response.status}`
-
-            );
-        }
-
-
-        return data;
+    /* Formato usado pelas telas: mantém os campos antigos (quantidade_item,
+       preco_medio_item) e acrescenta os calculados pela API. */
+    function normalizarCarteira(carteira) {
+        return {
+            ...carteira,
+            meta_carteira: Number(carteira.meta_carteira) || 0,
+            saldo_livre_carteira: Number(carteira.saldo_livre_carteira) || 0,
+            ativos: (carteira.ativos || []).map(ativo => ({
+                ...ativo,
+                quantidade_item: Number(ativo.quantidade) || 0,
+                preco_medio_item: Number(ativo.preco_medio) || 0,
+                preco_atual: Number(ativo.preco_atual) || 0
+            }))
+        };
     }
 
-
-    /*
-    =====================================================
-    CARREGAR RESUMO
-    =====================================================
-    */
-
-    async function load() {
-
-        const token =
-            localStorage.getItem(
-                "token"
-            );
-
+    async function buscar() {
+        const token = localStorage.getItem("token");
 
         if (!token) {
-
-            console.warn(
-                "Token não encontrado."
-            );
-
-            return [];
+            return null;
         }
 
-
-        try {
-
-            /*
-            -------------------------------------------------
-            1. BUSCAR CARTEIRAS
-            -------------------------------------------------
-            */
-
-            const dataCarteiras =
-                await get(
-
-                    "/carteiras/buscar-carteiras",
-
-                    token
-
-                );
-
-
-            const carteiras =
-                dataCarteiras.carteiras
-                || [];
-            // ACC_SALDOS_RAPIDOS_V1 - saldos livres antes das posicoes.
-            window.dispatchEvent(new CustomEvent("accuracy:saldos-carteiras-rapidas", {
-                detail: carteiras.map(c => ({ saldo_livre_carteira: c.saldo_livre_carteira }))
-            }));
-            // ACC_PERF_CARTEIRAS_V1 - exibe estrutura antes de carregar posicoes.
-            window.dispatchEvent(new CustomEvent("accuracy:carteiras-basicas", {
-                detail: carteiras.map(c => ({
-                    id_carteira: c.id_carteira,
-                    nome_carteira: c.nome_carteira,
-                    tipo_carteira: c.tipo_carteira
-                }))
-            }));
-
-
-            /*
-            -------------------------------------------------
-            2. BUSCAR POSIÇÕES DE CADA CARTEIRA
-            -------------------------------------------------
-            */
-
-            return await Promise.all(
-
-                carteiras.map(
-
-                    async carteira => {
-
-                        let posicoes = [];
-
-
-                        try {
-
-                            const data =
-                                await get(
-
-                                    `/carteiras/buscar-posicoes?id_carteira=${encodeURIComponent(
-                                        carteira.id_carteira
-                                    )}`,
-
-                                    token
-
-                                );
-
-
-                            posicoes =
-                                data.posicoes
-                                || [];
-
-                        } catch (error) {
-
-                            console.error(
-
-                                `Erro ao buscar posições da carteira ${carteira.id_carteira}:`,
-
-                                error
-
-                            );
-
-                        }
-
-
-                        /*
-                        -------------------------------------------------
-                        RETORNO DA CARTEIRA
-                        -------------------------------------------------
-                        */
-
-                        return {
-
-                            id_carteira:
-                                carteira.id_carteira,
-
-
-                            nome_carteira:
-                                carteira.nome_carteira,
-
-
-                            meta_carteira:
-                                Number(
-                                    carteira.meta_carteira
-                                ) || 0,
-
-
-                            tipo_carteira:
-                                carteira.tipo_carteira
-                                || "",
-
-
-                            estilo_carteira:
-                                carteira.estilo_carteira
-                                || "",
-
-
-                            saldo_livre_carteira:
-                                Number(
-                                    carteira.saldo_livre_carteira
-                                ) || 0,
-
-
-                            ativos:
-
-                                posicoes
-
-                                    .filter(
-
-                                        p =>
-                                            Number(
-                                                p.quantidade_item
-                                            ) > 0
-
-                                    )
-
-                                    .map(
-
-                                        p => ({
-
-                                            simbolo_ativo:
-                                                p.simbolo_ativo,
-
-
-                                            nome_ativo:
-                                                p.nome_ativo,
-
-
-                                            categoria_ativo:
-                                                CLASSES[
-                                                    p.simbolo_ativo
-                                                ]
-                                                || "Outros",
-
-
-                                            quantidade_item:
-                                                Number(
-                                                    p.quantidade_item
-                                                ),
-
-
-                                            preco_medio_item:
-                                                Number(
-                                                    p.preco_medio_item
-                                                )
-
-                                        })
-
-                                    )
-
-                        };
-
-                    }
-
-                )
-
-            );
-
-        } catch (error) {
-
-            console.error(
-
-                "Erro ao montar o resumo das carteiras:",
-
-                error
-
-            );
-
-
-            return [];
+        const resposta = await fetch(`${window.ACCURACY_API_URL}/carteiras/resumo`, {
+            headers: { Authorization: `Bearer ${token}` },
+            cache: "no-store"
+        });
+
+        const dados = await resposta.json().catch(() => ({}));
+
+        if (!resposta.ok || dados.success !== true) {
+            throw new Error(dados.message || `Não foi possível carregar as carteiras (HTTP ${resposta.status}).`);
         }
+
+        return { ...dados, carteiras: (dados.carteiras || []).map(normalizarCarteira) };
     }
 
+    /* Várias partes da página pedem o resumo ao mesmo tempo: uma única
+       requisição atende todas, e o resultado é reaproveitado por alguns segundos. */
+    function loadResumo(opcoes = {}) {
+        if (!opcoes.force && ultimo && Date.now() - ultimoEm < TEMPO_REUSO_MS) {
+            return Promise.resolve(ultimo);
+        }
 
-    /*
-    =====================================================
-    EXPORTAÇÃO
-    =====================================================
-    */
+        if (!emAndamento) {
+            emAndamento = buscar()
+                .then(resultado => {
+                    ultimo = resultado;
+                    ultimoEm = Date.now();
+                    return resultado;
+                })
+                .finally(() => {
+                    emAndamento = null;
+                });
+        }
 
-    return {
+        return emAndamento;
+    }
 
-        load
+    async function load(opcoes = {}) {
+        const resumo = await loadResumo(opcoes);
+        return resumo ? resumo.carteiras : [];
+    }
 
-    };
+    return { load, loadResumo };
 
 })();

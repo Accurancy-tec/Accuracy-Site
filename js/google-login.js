@@ -1,7 +1,7 @@
 // Google Identity Services (OAuth 2.0 / OpenID Connect ID token)
 // Client ID publico; deve coincidir com GOOGLE_CLIENT_ID_WEB na API Render.
 const GOOGLE_CLIENT_ID = "407661889736-05nr228ois2n3c103to7707fbter8s1l.apps.googleusercontent.com";
-const GOOGLE_API_LOGIN = "https://accuracyappapi.onrender.com/auth/loginGoogle";
+const GOOGLE_API_LOGIN = window.ACCURACY_API_URL + "/auth/loginGoogle";
 
 function mostrarErroGoogle(mensagem) {
     const erro = document.getElementById("erroGoogle");

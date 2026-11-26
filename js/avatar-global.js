@@ -7,8 +7,7 @@
 (function () {
     const CHAVE = "accuracy_avatar";
 
-    const API =
-        "https://accuracyappapi.onrender.com";
+    const API = window.ACCURACY_API_URL;
 
     function obterInicial() {
         try {

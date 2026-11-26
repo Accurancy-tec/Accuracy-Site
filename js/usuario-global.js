@@ -2,7 +2,7 @@
 
     const LOGIN_URL = "login.php";
 
-    const API_BASE_URL = "https://accuracyappapi.onrender.com";
+    const API_BASE_URL = window.ACCURACY_API_URL;
 
     const TOKEN_KEY = "token";
     const REFRESH_TOKEN_KEY = "refreshToken";

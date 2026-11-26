@@ -14,8 +14,7 @@ const Cotacoes = (function () {
     /*
      * API hospedada
      */
-    const API_URL =
-        "https://accuracyappapi.onrender.com/brapi/get-quote";
+    const API_URL = window.ACCURACY_API_URL + "/brapi/get-quote";
 
     /*
      * Cripto e futuros têm rota própria de cotação.

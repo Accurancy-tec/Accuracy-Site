@@ -1,0 +1,213 @@
+/* =========================================================
+   APORTES - busca e formulário de compra
+   (antes ficava num <style> dentro da página, com cores fixas
+   do tema escuro; agora segue as variáveis dos dois temas)
+========================================================= */
+
+.aportes-search-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: min(100%, 480px);
+    min-height: 44px;
+    box-sizing: border-box;
+    margin: 14px 0 20px;
+    padding: 0 14px;
+    border: 1px solid var(--borda);
+    border-radius: 10px;
+    background: var(--surface);
+    color: var(--texto-secundario);
+    transition: border-color .15s, box-shadow .15s;
+}
+
+.aportes-search-container:focus-within {
+    border-color: var(--primaria);
+    box-shadow: 0 0 0 3px var(--primaria-suave);
+}
+
+.aportes-search-container input {
+    width: 100%;
+    min-width: 0;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: var(--texto);
+    font: inherit;
+    font-size: 14px;
+}
+
+.aportes-search-container input::placeholder {
+    color: var(--texto-fraco);
+}
+
+body.v2 .v2-mine {
+    display: none !important;
+}
+
+.asset-price {
+    display: block;
+    margin: 6px 0 14px;
+    font-size: 13px;
+    opacity: .85;
+}
+
+.asset-price.up,
+.aporte-now.up {
+    color: var(--verde);
+}
+
+.asset-price.down,
+.aporte-now.down {
+    color: var(--vermelho);
+}
+
+.aporte-now {
+    display: block;
+    font-size: 12px;
+    opacity: .85;
+}
+
+body.v2 #formStep.aporte-form {
+    max-width: 680px;
+}
+
+.ac-compra-preco {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 16px 0;
+    padding: 18px;
+    border-radius: 14px;
+    background: var(--primaria);
+    color: #fff;
+}
+
+.ac-compra-preco[hidden],
+#quantidadeAporteBox[hidden],
+#valorAporteBox[hidden],
+.ac-compra-linha[hidden],
+.ac-compra-aviso[hidden] {
+    display: none !important;
+}
+
+.ac-compra-preco span {
+    color: rgba(255, 255, 255, .85);
+    font-size: 13px;
+}
+
+.ac-compra-preco strong {
+    font-size: 23px;
+}
+
+.ac-compra-ajuda {
+    margin: 2px 0 12px;
+    color: var(--texto-secundario);
+    font-size: 13px;
+}
+
+.ac-compra-qtd-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 46px 46px;
+    gap: 10px;
+    align-items: stretch;
+}
+
+body.v2 #formStep .ac-compra-qtd-row input {
+    min-width: 0;
+    font-size: 22px;
+}
+
+.ac-compra-qtd-row button {
+    border: 1px solid var(--borda);
+    border-radius: 12px;
+    background: var(--surface-hover);
+    color: var(--texto);
+    cursor: pointer;
+    font-size: 26px;
+}
+
+.ac-compra-qtd-row button:hover {
+    border-color: var(--primaria);
+}
+
+.ac-compra-resumo {
+    margin: 24px 0 12px;
+    padding: 22px;
+    border: 1px solid var(--borda-suave);
+    border-radius: 14px;
+    background: var(--bg);
+}
+
+.ac-compra-resumo h4 {
+    margin: 0 0 18px;
+    color: var(--texto);
+    font-size: 17px;
+}
+
+.ac-compra-linha,
+.ac-compra-total {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 7px 0;
+    color: var(--texto-secundario);
+    font-size: 14px;
+}
+
+.ac-compra-linha strong,
+.ac-compra-total strong {
+    color: var(--texto);
+    font-size: 15px;
+    text-align: right;
+}
+
+.ac-compra-total {
+    margin-top: 15px;
+    padding-top: 19px;
+    border-top: 1px solid var(--borda-fraca);
+    color: var(--texto);
+    font-weight: 700;
+}
+
+.ac-compra-total strong {
+    font-size: 21px;
+}
+
+.ac-compra-saldo {
+    margin: 13px 0;
+    color: var(--texto-secundario);
+    font-size: 13px;
+}
+
+.ac-compra-aviso {
+    margin: 12px 0;
+    padding: 12px;
+    border: 1px solid rgba(239, 68, 68, .35);
+    border-radius: 10px;
+    background: rgba(239, 68, 68, .1);
+    color: var(--vermelho);
+    font-size: 13px;
+}
+
+body.v2 #formStep #confirmBtn:disabled {
+    cursor: not-allowed;
+    opacity: .45;
+}
+
+@media (max-width: 520px) {
+
+    .ac-compra-resumo {
+        padding: 16px;
+    }
+
+    .ac-compra-qtd-row {
+        grid-template-columns: minmax(0, 1fr) 42px 42px;
+        gap: 6px;
+    }
+
+    .ac-compra-preco strong {
+        font-size: 19px;
+    }
+}

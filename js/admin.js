@@ -1,4 +1,4 @@
-const API_URL = "https://accuracyappapi.onrender.com/";
+const API_URL = window.ACCURACY_API_URL + "/";
 
 const $ = (s) => document.querySelector(s);
 const $$ = (s) => document.querySelectorAll(s);

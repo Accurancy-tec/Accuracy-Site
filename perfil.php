@@ -3,89 +3,18 @@
 <html lang="pt-BR">
 
 <head>
-    <link rel="preconnect" href="https://accuracyappapi.onrender.com" crossorigin>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Perfil - Accuracy</title>
-
-    <link rel="stylesheet" href="css/Tema.css">
-    <link rel="stylesheet" href="css/dashboard.css">
-    <link rel="stylesheet" href="css/perfil-v2.css?v=9">
-    <link rel="stylesheet" href="css/layout-v2.css?v=4">
-
-    <script src="js/usuario-global.js"></script>
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Manrope:wght@600;700;800&display=swap"
-        rel="stylesheet">
-
-    <link
-        rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
-    <script src="js/Tema.js"></script>
-    <script src="js/avatar-global.js?v=9"></script>
+    <?php
+    $tituloPagina = "Perfil";
+    $estilosPagina = ["css/dashboard.css?v=2", "css/perfil-v2.css?v=10"];
+    include __DIR__ . "/includes/head-app.php";
+    ?>
 </head>
 
 <body class="v2">
 
 <div class="v2-app">
 
-    <!-- SIDEBAR -->
-    <aside class="v2-sidebar">
-
-        <a href="dashboard.php" class="v2-logo">Accuracy</a>
-
-        <nav class="v2-nav">
-            <a href="dashboard.php">Início</a>
-            <a href="carteira.php">Carteira</a>
-            <a href="aportes.php">Aportes</a>
-            <a href="historico.php">Histórico</a>
-            <a href="Cursos.php">Cursos</a>
-            <a href="perfil.php" class="active">Perfil</a>
-        </nav>
-
-        <div class="v2-balance">
-            <span>Saldo disponível</span>
-            <strong id="v2Saldo">—</strong>
-            <button type="button" id="v2AddSaldo">
-                Adicionar saldo
-            </button>
-        </div>
-
-    </aside>
-
-    <div class="v2-main">
-
-        <!-- TOPO -->
-        <header class="v2-topbar">
-
-            <div class="v2-search">
-                <input
-                    type="text"
-                    id="v2Search"
-                    placeholder="Buscar empresa ou código do ativo"
-                    autocomplete="off"
-                    aria-label="Buscar empresa ou código do ativo">
-            </div>
-
-            <div class="v2-topbar-right">
-
-                <div class="v2-total">
-                    <span>Saldo disponivel</span>
-                    <strong id="v2Total">—</strong>
-                </div>
-
-                <a href="perfil.php" aria-label="Perfil">
-                    <div class="avatar" id="navAvatar">U</div>
-                </a>
-
-            </div>
-        </header>
+    <?php $paginaAtual = "perfil"; include __DIR__ . "/includes/menu-app.php"; ?>
 
         <!-- CONTEÚDO -->
         <main class="v2-content">
@@ -449,6 +378,7 @@
                         type="text"
                         id="editCpf"
                         name="cpf"
+                        placeholder="Não informado"
                         disabled>
 
                     <span class="profile-edit-lock-hint">
@@ -602,11 +532,8 @@
     </section>
 </div>
 
-<script src="js/cotacoes.js?v=3"></script>
-<script src="js/resumoCarteiras.js?v=3"></script>
-<script src="js/accuracy-saldos-rapidos.js?v=1"></script>
-<script src="js/shell-v2.js?v=22"></script>
-<script src="js/perfil.js?v=9"></script>
 
+<?php include __DIR__ . "/includes/scripts-app.php"; ?>
+<script src="js/perfil.js?v=10"></script>
 </body>
 </html>

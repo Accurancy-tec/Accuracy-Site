@@ -1,0 +1,450 @@
+/* =========================================================
+   COMO USAR (guia passo a passo)
+========================================================= */
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+}
+
+body.v2 .guia {
+    max-width: 1040px;
+}
+
+body.v2 .guia a {
+    color: var(--link);
+}
+
+body.v2 .guia a.v2-btn {
+    color: #fff;
+    text-decoration: none;
+}
+
+body.v2 .guia-topo {
+    padding: 8px 0 22px;
+    border-bottom: 1px solid var(--borda-fraca);
+}
+
+body.v2 .guia-selo {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: var(--primaria-suave);
+    color: var(--link);
+    font-size: 12px;
+    font-weight: 600;
+}
+
+body.v2 .guia-topo h1 {
+    margin: 12px 0 8px;
+    font-family: var(--v2-heading);
+    font-size: clamp(26px, 3.4vw, 34px);
+    letter-spacing: -.02em;
+}
+
+body.v2 .guia-topo > p {
+    max-width: 720px;
+    margin: 0;
+    color: var(--texto-suave);
+    font-size: 15px;
+    line-height: 1.65;
+}
+
+body.v2 .guia-sumario {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 18px;
+}
+
+body.v2 .guia-sumario a {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 6px 12px 6px 6px;
+    border: 1px solid var(--borda-suave);
+    border-radius: 999px;
+    color: var(--texto-suave);
+    font-size: 13px;
+    text-decoration: none;
+}
+
+body.v2 .guia-sumario a:hover {
+    border-color: var(--primaria);
+    color: var(--texto);
+}
+
+body.v2 .guia-sumario span {
+    display: inline-grid;
+    place-items: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--icone-bg);
+    color: var(--primaria);
+    font-size: 11.5px;
+    font-weight: 700;
+}
+
+body.v2 .guia-passo {
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+    gap: 24px 36px;
+    align-items: center;
+    padding: 30px 0;
+    border-bottom: 1px solid var(--borda-fraca);
+    scroll-margin-top: 70px;
+}
+
+body.v2 .guia-passo:not(:has(.guia-ilustracao, .guia-comparacao)) {
+    grid-template-columns: minmax(0, 1fr);
+}
+
+body.v2 .guia-texto {
+    position: relative;
+    padding-left: 54px;
+}
+
+body.v2 .guia-numero {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 11px;
+    background: var(--primaria);
+    color: #fff;
+    font-family: var(--v2-heading);
+    font-size: 17px;
+    font-weight: 800;
+}
+
+body.v2 .guia-texto h2 {
+    margin: 4px 0 10px;
+    font-family: var(--v2-heading);
+    font-size: 20px;
+    letter-spacing: -.01em;
+}
+
+body.v2 .guia-texto p,
+body.v2 .guia-texto li {
+    color: var(--texto-suave);
+    font-size: 14.5px;
+    line-height: 1.65;
+}
+
+body.v2 .guia-texto p {
+    margin: 0 0 10px;
+}
+
+body.v2 .guia-texto ul,
+body.v2 .guia-texto ol {
+    margin: 0 0 10px;
+    padding-left: 20px;
+}
+
+body.v2 .guia-texto li + li {
+    margin-top: 4px;
+}
+
+body.v2 .guia-texto strong {
+    color: var(--texto);
+}
+
+body.v2 .guia-dica {
+    display: flex;
+    gap: 8px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: var(--icone-bg);
+}
+
+body.v2 .guia-dica i {
+    color: var(--amarelo);
+}
+
+
+/* =========================
+   ILUSTRAÇÕES (mini telas)
+========================= */
+
+body.v2 .guia-ilustracao {
+    display: flex;
+    justify-content: center;
+}
+
+body.v2 .mini-tela {
+    display: grid;
+    gap: 9px;
+    width: min(100%, 300px);
+    padding: 18px;
+    border: 1px solid var(--borda);
+    border-radius: 18px;
+    background: var(--surface);
+    box-shadow: 0 16px 34px var(--sombra);
+    transform: rotate(-1.2deg);
+}
+
+body.v2 .guia-passo:nth-of-type(even) .mini-tela {
+    transform: rotate(1.2deg);
+}
+
+body.v2 .mini-titulo {
+    font-family: var(--v2-heading);
+    font-size: 15px;
+    font-weight: 700;
+}
+
+body.v2 .mini-campo,
+body.v2 .mini-destaque {
+    display: grid;
+    gap: 2px;
+    padding: 8px 10px;
+    border: 1px solid var(--borda-suave);
+    border-radius: 9px;
+    background: var(--bg);
+    font-size: 13px;
+}
+
+body.v2 .mini-campo small,
+body.v2 .mini-destaque small,
+body.v2 .mini-linha small,
+body.v2 .mini-preco small {
+    color: var(--texto-fraco);
+    font-size: 11px;
+}
+
+body.v2 .mini-destaque {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+body.v2 .mini-chips {
+    display: flex;
+    gap: 6px;
+}
+
+body.v2 .mini-chips i {
+    padding: 4px 9px;
+    border: 1px solid var(--borda);
+    border-radius: 999px;
+    font-size: 11.5px;
+    font-style: normal;
+}
+
+body.v2 .mini-chips i.ativo {
+    border-color: var(--primaria);
+    background: var(--primaria);
+    color: #fff;
+}
+
+body.v2 .mini-preco {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: var(--primaria);
+    color: #fff;
+    font-size: 17px;
+    font-weight: 700;
+}
+
+body.v2 .mini-preco small {
+    color: rgba(255, 255, 255, .8);
+}
+
+body.v2 .mini-linha {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+}
+
+body.v2 .mini-linha .positivo {
+    color: var(--verde);
+}
+
+body.v2 .mini-valor {
+    font-family: var(--v2-heading);
+    font-size: 24px;
+    font-weight: 800;
+}
+
+body.v2 .mini-grafico {
+    width: 100%;
+    height: 56px;
+}
+
+body.v2 .mini-grafico path {
+    fill: none;
+    stroke: var(--primaria);
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+body.v2 .mini-botao {
+    padding: 9px;
+    border-radius: 9px;
+    background: var(--primaria);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    text-align: center;
+}
+
+
+/* =========================
+   COMPARAÇÃO
+========================= */
+
+body.v2 .guia-comparacao {
+    overflow-x: auto;
+}
+
+body.v2 .guia-comparacao table {
+    width: 100%;
+    min-width: 380px;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+body.v2 .guia-comparacao th,
+body.v2 .guia-comparacao td {
+    padding: 9px 10px;
+    border-bottom: 1px solid var(--borda-fraca);
+    text-align: left;
+    vertical-align: top;
+}
+
+body.v2 .guia-comparacao thead th {
+    color: var(--texto);
+    font-weight: 700;
+}
+
+body.v2 .guia-comparacao tbody th {
+    color: var(--texto-secundario);
+    font-weight: 500;
+}
+
+body.v2 .guia-comparacao td {
+    color: var(--texto-suave);
+}
+
+
+/* =========================
+   GLOSSÁRIO E FIM
+========================= */
+
+body.v2 .guia-glossario {
+    padding: 30px 0 10px;
+}
+
+body.v2 .guia-glossario h2,
+body.v2 .guia-fim h2 {
+    margin: 0 0 14px;
+    font-family: var(--v2-heading);
+    font-size: 19px;
+}
+
+body.v2 .guia-glossario dl {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    margin: 0;
+}
+
+body.v2 .guia-glossario dl div {
+    padding: 14px;
+    border: 1px solid var(--borda-suave);
+    border-radius: 12px;
+    background: var(--surface);
+}
+
+body.v2 .guia-glossario dt {
+    font-weight: 700;
+}
+
+body.v2 .guia-glossario dd {
+    margin: 6px 0 0;
+    color: var(--texto-secundario);
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+body.v2 .guia-fim {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    margin-top: 24px;
+    padding: 20px 22px;
+    border: 1px solid var(--borda-suave);
+    border-left: 4px solid var(--primaria);
+    border-radius: 14px;
+    background: var(--surface);
+}
+
+body.v2 .guia-fim h2 {
+    margin-bottom: 4px;
+}
+
+body.v2 .guia-fim p {
+    margin: 0;
+    color: var(--texto-secundario);
+}
+
+body.v2 .guia-aviso {
+    margin: 22px 0 0;
+    color: var(--texto-fraco);
+    font-size: 12.5px;
+}
+
+@media (max-width: 900px) {
+
+    body.v2 .guia-passo {
+        grid-template-columns: 1fr;
+    }
+
+    body.v2 .guia-glossario dl {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 520px) {
+
+    body.v2 .guia-texto {
+        padding-left: 0;
+    }
+
+    body.v2 .guia-numero {
+        position: static;
+        margin-bottom: 8px;
+    }
+
+    body.v2 .guia-glossario dl {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Passo com tabela: o texto fica em cima e a tabela ocupa a largura toda */
+body.v2 .guia-passo.largo {
+    grid-template-columns: minmax(0, 1fr);
+}
+
+body.v2 .guia-passo.largo .guia-comparacao {
+    padding-left: 54px;
+}
+
+@media (max-width: 520px) {
+    body.v2 .guia-passo.largo .guia-comparacao {
+        padding-left: 0;
+    }
+}

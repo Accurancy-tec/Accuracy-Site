@@ -1,435 +1,275 @@
 /* =========================================================
-   HISTÓRICO - dados vindos da API (sem localStorage)
+   HISTÓRICO
 
-   Usa a rota GET /aportes/historico-aportes, a mesma que o
-   dashboard já usa. O token de login continua no localStorage
-   (é ele que identifica o usuário), mas o histórico em si
-   agora vem do banco e aparece em qualquer navegador.
+   Movimentações reais do usuário vindas da API
+   (/aportes/historico-aportes): compras, vendas, dividendos
+   e depósitos, com filtros por ativo, carteira, período e tipo.
+   Uma operação pode ser excluída: a API desfaz o efeito dela
+   no saldo e na posição (ou explica por que não pode).
 ========================================================= */
-
 (function () {
-
     "use strict";
 
-    const API_BASE_URL = "https://accuracyappapi.onrender.com";
+    const { brl } = window.V2Fmt;
+    const $ = id => document.getElementById(id);
 
-    const $ = (selector) => document.querySelector(selector);
+    const POR_PAGINA = 20;
+    const fmtQtd = new Intl.NumberFormat("pt-BR", { maximumFractionDigits: 8 });
 
-    let history = [];
-    let currentFilter = "all";
-    let searchTerm = "";
+    const corpo = $("historicoCorpo");
+    const paginacao = $("historicoPaginas");
 
+    const filtros = { busca: "", carteira: "", periodo: "", tipo: "" };
+    let movimentos = [];
+    let pagina = 1;
+    let pedido = 0;
 
-    /* =========================
-       FORMATAÇÕES
-    ========================= */
-
-    function money(value) {
-        return new Intl.NumberFormat("pt-BR", {
-            style: "currency",
-            currency: "BRL"
-        }).format(value);
+    function esc(texto) {
+        return String(texto ?? "").replace(/[&<>"']/g, c => ({
+            "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+        }[c]));
     }
 
-    function formatDate(dateString) {
-
-        if (!dateString) {
-            return "-";
-        }
-
-        const [year, month, day] = String(dateString).slice(0, 10).split("-");
-
-        return `${day}/${month}/${year}`;
+    function dataBr(iso) {
+        const [a, m, d] = String(iso || "").split("-");
+        return a ? `${d}/${m}/${a}` : "—";
     }
 
-        const MESES = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
-
-    /* 10 nov (e 10 nov 25 quando não é o ano atual) */
-    function formatDateShort(dateString) {
-        if (!dateString) {
-            return "-";
-        }
-
-        const [year, month, day] = String(dateString).slice(0, 10).split("-");
-        const nome = MESES[Number(month) - 1] || month;
-        const mesmoAno = Number(year) === new Date().getFullYear();
-
-        return `${Number(day)} ${nome}${mesmoAno ? "" : " " + String(year).slice(2)}`;
+    function dataInicio(dias) {
+        if (!dias) return "";
+        const data = new Date();
+        data.setDate(data.getDate() - Number(dias));
+        return data.toISOString().slice(0, 10);
     }
 
-    function recurrenceText(item) {
+    async function buscar() {
+        const parametros = new URLSearchParams();
 
-        if (item.recurrence === "Semanal") {
-            return "Semanal";
+        if (filtros.busca) parametros.set("busca", filtros.busca);
+        if (filtros.carteira) parametros.set("id_carteira", filtros.carteira);
+        if (filtros.periodo) parametros.set("inicio", dataInicio(filtros.periodo));
+        if (["Compra", "Venda", "Dividendo"].includes(filtros.tipo)) parametros.set("tipo", filtros.tipo);
+
+        // Depósitos não têm ativo: entram só sem busca por ativo e quando o tipo permite.
+        const comDepositos = !filtros.busca && (filtros.tipo === "" || filtros.tipo === "Deposito");
+        if (comDepositos) parametros.set("incluir_depositos", "1");
+
+        const resposta = await fetch(`${window.ACCURACY_API_URL}/aportes/historico-aportes?${parametros}`, {
+            headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+        });
+        const dados = await resposta.json().catch(() => ({}));
+
+        if (!resposta.ok || dados.sucesso !== true) {
+            throw new Error(dados.mensagem || `HTTP ${resposta.status}`);
         }
 
-        if (item.recurrence === "Mensal") {
-            return "Mensal";
-        }
-
-        return "Único";
-    }
-
-    function escapeHtml(text) {
-
-        const div = document.createElement("div");
-
-        div.textContent = text ?? "";
-
-        return div.innerHTML;
-    }
-
-    function typeClass(type) {
-
-        if (type === "Compra") {
-            return "green";
-        }
-
-        if (type === "Venda") {
-            return "red";
-        }
-
-        return "blue";
-    }
-
-    function plural(count, singular, pluralWord) {
-        return `${count} ${count === 1 ? singular : pluralWord}`;
-    }
-
-
-    /* =========================
-       DATA NO TOPO
-    ========================= */
-
-    const currentDate = $("#currentDate");
-
-    if (currentDate) {
-
-        currentDate.textContent =
-            new Date().toLocaleDateString("pt-BR", {
-                weekday: "long",
-                day: "2-digit",
-                month: "long",
-                year: "numeric"
-            });
-    }
-
-
-    /* =========================
-       BUSCAR NA API
-    ========================= */
-
-    async function carregarHistoricoAPI() {
-
-        const token = localStorage.getItem("token");
-
-        if (!token) {
-            window.location.href = "login.php";
-            return [];
-        }
-
-        const response = await fetch(
-            `${API_BASE_URL}/aportes/historico-aportes`,
-            {
-                headers: {
-                    "Authorization": `Bearer ${token}`
-                }
-            }
-        );
-
-        if (response.status === 401) {
-
-            localStorage.removeItem("token");
-            localStorage.removeItem("usuario");
-
-            window.location.href = "login.php";
-
-            return [];
-        }
-
-        const data = await response.json();
-
-        if (!response.ok || data.sucesso !== true) {
-            throw new Error(
-                data.mensagem || data.message || `Erro HTTP ${response.status}.`
-            );
-        }
-
-        /*
-         * Converte para o formato usado nas telas.
-         * Se a API passar a devolver "removido_em",
-         * o aporte já aparece como removido.
-         */
-        return (data.aportes || []).map(item => ({
-
-            id: item.id_aporte,
-            action: item.removido_em ? "removed" : "added",
-            asset: item.ativo_aporte,
-            type: item.tipo_aporte,
-            amount: Number(item.valor_aporte) || 0,
-            date: item.data_aporte ? String(item.data_aporte).slice(0, 10) : "",
-            recurrence: item.recorrencia_aporte,
-            observation: item.observacao_aporte || ""
+        const operacoes = filtros.tipo === "Deposito" ? [] : (dados.aportes || []).map(a => ({
+            tipo: a.tipo_aporte,
+            id: a.id_aporte,
+            data: a.data_aporte,
+            registrado: a.registrado_em || "",
+            ativo: a.ativo_aporte,
+            nomeAtivo: a.name_ativo,
+            categoria: a.categoria_ativo,
+            carteira: a.nome_carteira,
+            tipoCarteira: a.tipo_carteira,
+            quantidade: Number(a.quantidade_aporte) || 0,
+            preco: a.detalhe_renda_variavel?.preco_unitario ?? (Number(a.quantidade_aporte) > 0 ? Number(a.valor_aporte) / Number(a.quantidade_aporte) : null),
+            valor: Number(a.valor_aporte) || 0
         }));
+
+        const depositos = (dados.depositos || []).map(d => ({
+            tipo: "Deposito",
+            id: `d${d.id_transacao}`,
+            data: d.data,
+            registrado: d.registrado_em || "",
+            ativo: null,
+            nomeAtivo: d.descricao,
+            carteira: d.nome_carteira || "Saldo geral",
+            tipoCarteira: d.id_carteira ? "Simulada" : null,
+            quantidade: null,
+            preco: null,
+            valor: Number(d.valor) || 0
+        }));
+
+        return {
+            lista: [...operacoes, ...depositos].sort((a, b) => b.data.localeCompare(a.data) || b.registrado.localeCompare(a.registrado)),
+            resumo: dados.resumo,
+            comDepositos
+        };
     }
 
+    function pintarTotais(resumo, comDepositos) {
+        const valores = {
+            totalCompras: filtros.tipo === "Deposito" ? 0 : resumo.total_compras,
+            totalVendas: filtros.tipo === "Deposito" ? 0 : resumo.total_vendas,
+            totalDividendos: filtros.tipo === "Deposito" ? 0 : resumo.total_dividendos,
+            totalDepositos: comDepositos ? resumo.total_depositos || 0 : 0
+        };
 
-    /* =========================
-       CARDS
-    ========================= */
-
-    function updateCards() {
-
-        const added = history.filter(e => e.action === "added");
-        const removed = history.filter(e => e.action === "removed");
-
-        const sum = list => list.reduce((total, e) => total + e.amount, 0);
-
-        const totalAdded = sum(added);
-        const totalRemoved = sum(removed);
-
-        $("#cardTotal").textContent = money(totalAdded);
-        $("#cardTotalInfo").textContent =
-            plural(added.length, "aporte ativo", "aportes ativos");
-
-        $("#cardAdded").textContent = "+" + money(totalAdded + totalRemoved);
-        $("#cardAddedInfo").textContent =
-            plural(added.length + removed.length, "operação", "operações");
-
-        $("#cardRemoved").textContent = (totalRemoved > 0 ? "-" : "") + money(totalRemoved);
-        $("#cardRemovedInfo").textContent =
-            plural(removed.length, "remoção", "remoções");
-
-        $("#cardMoves").textContent = history.length;
-        $("#cardMovesInfo").textContent =
-            history.length ? "Aportes e remoções" : "Nenhuma ainda";
+        Object.entries(valores).forEach(([id, valor]) => {
+            const el = $(id);
+            el.textContent = brl(valor);
+            el.classList.remove("carregando-texto");
+        });
     }
 
+    const ROTULOS = { Compra: "Compra", Venda: "Venda", Dividendo: "Dividendo", Deposito: "Depósito" };
 
-    /* =========================
-       GRÁFICO (ÚLTIMOS 6 MESES)
-    ========================= */
+    function linha(m) {
+        const ativo = m.ativo
+            ? `<strong>${esc(m.ativo)}</strong>${m.nomeAtivo && m.nomeAtivo !== m.ativo ? ` <span class="muted">${esc(m.nomeAtivo)}</span>` : ""}`
+            : `<span class="muted">${esc(m.nomeAtivo || "Depósito")}</span>`;
 
-    function renderChart() {
+        const carteira = `${esc(m.carteira)}${m.tipoCarteira === "Simulada" ? ' <span class="historico-sim">simulada</span>' : ""}`;
+        const entrada = m.tipo !== "Compra";
 
-        const box = $("#chartBox");
+        return `
+            <tr>
+                <td data-rotulo="Data">${esc(dataBr(m.data))}</td>
+                <td data-rotulo="Operação"><span class="historico-op ${m.tipo.toLowerCase()}">${esc(ROTULOS[m.tipo] || m.tipo)}</span></td>
+                <td class="v2-wide v2-celula-larga" data-rotulo="Ativo">${ativo}</td>
+                <td class="v2-wide" data-rotulo="Carteira">${carteira}</td>
+                <td class="num" data-rotulo="Quantidade">${m.quantidade ? esc(fmtQtd.format(m.quantidade)) : "—"}</td>
+                <td class="num" data-rotulo="Preço unit.">${m.preco ? esc(brl(m.preco)) : "—"}</td>
+                <td class="num ${entrada ? "green" : ""}" data-rotulo="Valor">${entrada ? "+" : "−"}${esc(brl(m.valor))}</td>
+                <td class="num v2-celula-acao">${typeof m.id === "number" ? `<button type="button" class="historico-excluir" data-id="${m.id}" aria-label="Excluir ${esc(ROTULOS[m.tipo])} de ${esc(m.ativo)}"><i class="bi bi-trash3" aria-hidden="true"></i></button>` : ""}</td>
+            </tr>`;
+    }
 
-        if (!box) {
+    function desenhar() {
+        const total = movimentos.length;
+        const paginas = Math.max(1, Math.ceil(total / POR_PAGINA));
+        pagina = Math.min(pagina, paginas);
+
+        if (!total) {
+            corpo.innerHTML = `<tr><td colspan="8" class="v2-empty historico-vazio">
+                ${filtros.busca || filtros.carteira || filtros.periodo || filtros.tipo
+                    ? "Nenhuma movimentação com esses filtros."
+                    : 'Você ainda não tem movimentações. <a href="aportes.php">Faça o primeiro aporte</a>.'}
+            </td></tr>`;
+            paginacao.hidden = true;
             return;
         }
 
-        const names = [
-            "jan", "fev", "mar", "abr", "mai", "jun",
-            "jul", "ago", "set", "out", "nov", "dez"
-        ];
+        corpo.innerHTML = movimentos.slice((pagina - 1) * POR_PAGINA, pagina * POR_PAGINA).map(linha).join("");
+        corpo.classList.remove("v2-entrar");
+        void corpo.offsetWidth;
+        corpo.classList.add("v2-entrar");
 
-        const now = new Date();
+        paginacao.hidden = paginas <= 1;
+        $("paginaAtual").textContent = `Página ${pagina} de ${paginas} · ${total} movimentações`;
+        $("paginaAnterior").disabled = pagina <= 1;
+        $("paginaSeguinte").disabled = pagina >= paginas;
+    }
 
-        const months = [];
+    async function carregar() {
+        const meu = ++pedido;
+        corpo.setAttribute("aria-busy", "true");
 
-        for (let i = 5; i >= 0; i--) {
+        try {
+            const { lista, resumo, comDepositos } = await buscar();
+            if (meu !== pedido) return;
 
-            const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+            movimentos = lista;
+            pintarTotais(resumo, comDepositos);
+            desenhar();
+        } catch (erro) {
+            if (meu !== pedido) return;
+            corpo.innerHTML = '<tr><td colspan="8" class="v2-empty">Não foi possível carregar o histórico. Tente novamente em instantes.</td></tr>';
+        } finally {
+            if (meu === pedido) corpo.setAttribute("aria-busy", "false");
+        }
+    }
 
-            months.push({
-                key: `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`,
-                label: `${names[d.getMonth()]}/${String(d.getFullYear()).slice(2)}`,
-                added: 0,
-                removed: 0
+    async function excluir(id) {
+        const movimento = movimentos.find(m => m.id === id);
+        if (!movimento) return;
+
+        const efeito = movimento.tipo === "Compra"
+            ? `O valor de ${brl(movimento.valor)} volta para o saldo e a posição é recalculada.`
+            : `O valor de ${brl(movimento.valor)} sai do saldo e a posição é recalculada.`;
+
+        if (!window.confirm(`Excluir esta ${ROTULOS[movimento.tipo].toLowerCase()} de ${movimento.ativo}?\n\n${efeito}`)) return;
+
+        try {
+            const resposta = await fetch(`${window.ACCURACY_API_URL}/aportes/excluir-aporte`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json", Authorization: `Bearer ${localStorage.getItem("token")}` },
+                body: JSON.stringify({ id_aporte: id })
             });
-        }
+            const dados = await resposta.json().catch(() => ({}));
 
-        history.forEach(entry => {
-
-            const month = months.find(m => m.key === entry.date.slice(0, 7));
-
-            if (!month) {
-                return;
+            if (!resposta.ok || dados.sucesso !== true) {
+                throw new Error(dados.mensagem || "Não foi possível excluir a operação.");
             }
 
-            if (entry.action === "removed") {
-                month.removed += entry.amount;
-            } else {
-                month.added += entry.amount;
-            }
-        });
-
-        const max = Math.max(...months.map(m => Math.max(m.added, m.removed)));
-
-        if (!max) {
-            box.textContent = "Nenhum aporte nos últimos 6 meses.";
-            return;
+            window.V2Toast("Operação excluída e saldo ajustado.");
+            window.V2Atualizar?.();
+            carregar();
+        } catch (erro) {
+            window.V2Toast(erro.message);
         }
-
-        const AREA = 170;
-
-        const px = value =>
-            value ? Math.max(4, Math.round(value / max * AREA)) : 0;
-
-        const short = value => money(value).replace(",00", "");
-
-        box.innerHTML = `
-            <div class="bar-chart">
-                ${months.map(m => {
-
-            const net = m.added - m.removed;
-
-            return `
-                        <div class="bar-group">
-                            <div class="bar-cols">
-                                <div class="bar add"
-                                     style="height:${px(m.added)}px"
-                                     title="Aportado: ${money(m.added)}"></div>
-                                <div class="bar rem"
-                                     style="height:${px(m.removed)}px"
-                                     title="Removido: ${money(m.removed)}"></div>
-                            </div>
-                            <span class="bar-label">${m.label}</span>
-                            <small class="bar-net ${net < 0 ? "red" : "green"}">${short(net)}</small>
-                        </div>
-                    `;
-
-        }).join("")}
-            </div>
-        `;
     }
 
 
     /* =========================
-       TABELA
+       EVENTOS
     ========================= */
 
-    function renderTable() {
-
-        const sorted = [...history].sort((a, b) =>
-            b.date.localeCompare(a.date) || Number(b.id) - Number(a.id)
-        );
-
-        const norm = t => String(t ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
-        const term = norm(searchTerm.trim());
-
-        const visible = sorted.filter(entry => {
-
-            if (term && !norm(`${entry.asset} ${entry.observation} ${entry.type}`).includes(term)) {
-                return false;
-            }
-
-
-            if (currentFilter === "all") {
-                return true;
-            }
-
-            if (currentFilter === "removed") {
-                return entry.action === "removed";
-            }
-
-            return entry.type === currentFilter;
-        });
-
-        const body = $("#historyBody");
-
-        if (!visible.length) {
-
-            body.innerHTML = `
-                <tr class="empty-row">
-                    <td colspan="4">Nenhuma movimentação encontrada.</td>
-                </tr>
-            `;
-
-            return;
-        }
-
-        body.innerHTML = visible.map(entry => {
-
-            const isRemoved = entry.action === "removed";
-            const detalhe = [recurrenceText(entry), entry.observation].filter(Boolean).join(" · ");
-
-            return `
-                <tr>
-                    <td class="muted">${formatDateShort(entry.date)}</td>
-                    <td class="v2-wide">
-                        ${escapeHtml(entry.asset)}
-                        <small>${escapeHtml(detalhe)}</small>
-                    </td>
-                    <td>${escapeHtml(entry.type)}${isRemoved ? ' <span class="red">· Removido</span>' : ""}</td>
-                    <td class="num ${isRemoved ? "red" : "green"}">
-                        ${isRemoved ? "-" : "+"}${money(entry.amount)}
-                    </td>
-                </tr>
-            `;
-        }).join("");
-    }
-
-
-    function render() {
-
-        updateCards();
-        renderChart();
-        renderTable();
-    }
-
-
-    /* =========================
-       FILTROS
-    ========================= */
-
-    document.querySelectorAll("[data-filter]").forEach(button => {
-
-        button.addEventListener("click", () => {
-
-            currentFilter = button.dataset.filter;
-
-            document
-                .querySelectorAll("[data-filter]")
-                .forEach(btn => btn.classList.remove("active"));
-
-            button.classList.add("active");
-
-            renderTable();
-        });
+    let espera = null;
+    $("filtroBusca").addEventListener("input", e => {
+        clearTimeout(espera);
+        espera = setTimeout(() => {
+            filtros.busca = e.target.value.trim();
+            pagina = 1;
+            carregar();
+        }, 350);
     });
 
+    $("historicoFiltros").addEventListener("submit", e => e.preventDefault());
 
-    window.addEventListener("v2:busca", e => {
-        searchTerm = String(e.detail || "");
-        renderTable();
+    $("filtroCarteira").addEventListener("change", e => {
+        filtros.carteira = e.target.value;
+        pagina = 1;
+        carregar();
     });
 
+    $("filtroPeriodo").addEventListener("change", e => {
+        filtros.periodo = e.target.value;
+        pagina = 1;
+        carregar();
+    });
 
-    /* =========================
-       INICIALIZAÇÃO
-    ========================= */
-
-    const body = $("#historyBody");
-
-    if (body) {
-
-        body.innerHTML = `
-            <tr class="empty-row">
-                <td colspan="4">Carregando histórico...</td>
-            </tr>
-        `;
-    }
-
-    carregarHistoricoAPI()
-        .then(lista => {
-
-            history = lista
-
-            render();
-        })
-        .catch(error => {
-
-            console.error("Erro no histórico:", error);
-
-            if (body) {
-
-                body.innerHTML = `
-                    <tr class="empty-row">
-                        <td colspan="4">Erro ao carregar o histórico: ${escapeHtml(error.message)}</td>
-                    </tr>
-                `;
-            }
+    document.querySelectorAll(".historico-tipos button").forEach(botao => botao.addEventListener("click", () => {
+        document.querySelectorAll(".historico-tipos button").forEach(b => {
+            const ativo = b === botao;
+            b.classList.toggle("ativo", ativo);
+            b.setAttribute("aria-pressed", String(ativo));
         });
+        filtros.tipo = botao.dataset.tipo;
+        pagina = 1;
+        carregar();
+    }));
 
+    $("paginaAnterior").addEventListener("click", () => { pagina--; desenhar(); });
+    $("paginaSeguinte").addEventListener("click", () => { pagina++; desenhar(); });
+
+    corpo.addEventListener("click", e => {
+        const botao = e.target.closest(".historico-excluir");
+        if (botao) excluir(Number(botao.dataset.id));
+    });
+
+    // Carteiras para o filtro
+    window.V2Dados.carregar().then(dados => {
+        const select = $("filtroCarteira");
+        dados.carteiras.forEach(c => {
+            const opcao = document.createElement("option");
+            opcao.value = c.id_carteira;
+            opcao.textContent = `${c.nome_carteira}${c.tipo_carteira === "Simulada" ? " (simulada)" : ""}`;
+            select.appendChild(opcao);
+        });
+    }).catch(() => { /* o filtro por carteira fica só com "Todas" */ });
+
+    carregar();
 })();

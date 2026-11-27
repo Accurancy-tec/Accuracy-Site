@@ -1,0 +1,126 @@
+/* Quiz of a trail (js/trail-quiz.js) */
+
+body.v2 .trail-quiz {
+    margin-top: 20px;
+}
+
+.trail-quiz-head p {
+    margin: 4px 0 0;
+    color: var(--texto-secundario);
+    font-size: 13px;
+}
+
+.trail-quiz-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 14px;
+}
+
+.trail-quiz-item {
+    padding: 16px;
+    border: 1px solid var(--borda-suave);
+    border-radius: 12px;
+}
+
+.trail-quiz-question {
+    margin: 0 0 12px;
+    font-weight: 600;
+    line-height: 1.5;
+    color: var(--texto);
+}
+
+.trail-quiz-options {
+    display: grid;
+    gap: 8px;
+}
+
+.trail-quiz-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--borda);
+    border-radius: 10px;
+    background: transparent;
+    color: var(--texto);
+    font: inherit;
+    font-size: 14px;
+    text-align: left;
+    cursor: pointer;
+}
+
+.trail-quiz-option:hover:not(:disabled),
+.trail-quiz-option:focus-visible {
+    border-color: var(--primaria);
+    outline: none;
+}
+
+.trail-quiz-option:disabled {
+    cursor: default;
+}
+
+.trail-quiz-letter {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--icone-bg);
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.trail-quiz-option.correct {
+    border-color: var(--verde);
+    background: rgba(34, 197, 94, .12);
+}
+
+.trail-quiz-option.correct .trail-quiz-letter {
+    background: var(--verde);
+    color: #fff;
+}
+
+.trail-quiz-option.wrong {
+    border-color: var(--vermelho);
+    background: rgba(239, 68, 68, .1);
+}
+
+.trail-quiz-option.wrong .trail-quiz-letter {
+    background: var(--vermelho);
+    color: #fff;
+}
+
+.trail-quiz-feedback {
+    display: grid;
+    gap: 4px;
+    margin-top: 12px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    font-size: 13.5px;
+    line-height: 1.5;
+    color: var(--texto);
+}
+
+.trail-quiz-feedback.correct {
+    background: rgba(34, 197, 94, .1);
+}
+
+.trail-quiz-feedback.wrong {
+    background: rgba(239, 68, 68, .08);
+}
+
+.trail-quiz-retry {
+    margin-top: 10px;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--primaria);
+    font: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}

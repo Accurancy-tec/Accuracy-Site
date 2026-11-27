@@ -439,3 +439,61 @@ dialog .card { margin: 0; border: 0; }
     .formulario .duas { grid-template-columns: 1fr; }
     .titulo h1 { font-size: 22px; }
 }
+
+/* quiz das trilhas */
+#quizTrail {
+    width: auto;
+    min-width: 160px;
+    margin: 0;
+}
+
+.quiz-options {
+    display: grid;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.quiz-option-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.quiz-option-row input[type=radio] {
+    flex: none;
+    width: 18px;
+    height: 18px;
+}
+
+.quiz-option-row .campo {
+    margin: 0;
+}
+
+.quiz-list {
+    display: grid;
+    gap: 12px;
+}
+
+.quiz-card-question {
+    margin: 0 0 10px;
+    font-weight: 600;
+}
+
+.quiz-card-options {
+    margin: 0 0 10px;
+    padding-left: 0;
+    list-style: none;
+    display: grid;
+    gap: 6px;
+}
+
+.quiz-card-options li.correct {
+    font-weight: 600;
+}
+
+.quiz-card-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}

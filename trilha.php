@@ -4,7 +4,7 @@
 <head>
     <?php
     $tituloPagina = "Trilha";
-    $estilosPagina = ["css/dashboard.css?v=2", "css/cursos-v2.css?v=5", "css/trilha.css?v=2"];
+    $estilosPagina = ["css/dashboard.css?v=2", "css/cursos-v2.css?v=5", "css/trilha.css?v=2", "css/trail-quiz.css?v=1"];
     include __DIR__ . "/includes/head-app.php";
     ?>
 </head>
@@ -67,6 +67,16 @@
 
             </div>
 
+            <section class="v2-panel trail-quiz" id="trailQuiz" aria-labelledby="trailQuizTitle" hidden>
+                <div class="v2-panel-head trail-quiz-head">
+                    <div>
+                        <h2 id="trailQuizTitle">Teste o que você aprendeu</h2>
+                        <p id="trailQuizScore"></p>
+                    </div>
+                </div>
+                <ol class="trail-quiz-list" id="trailQuizList"></ol>
+            </section>
+
         </main>
 
     </div>
@@ -77,5 +87,6 @@
 <?php include __DIR__ . "/includes/scripts-app.php"; ?>
 <script src="js/progresso.js?v=20261125"></script>
 <script src="js/trilha.js?v=20261125"></script>
+<script src="js/trail-quiz.js?v=1"></script>
 </body>
 </html>

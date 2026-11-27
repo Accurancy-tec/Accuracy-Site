@@ -31,7 +31,7 @@ $estilosPagina = $estilosPagina ?? [];
 <?php endforeach; ?>
 
 <link rel="stylesheet" href="css/layout-v2.css?v=5">
-<link rel="stylesheet" href="css/shell.css?v=1">
+<link rel="stylesheet" href="css/shell.css?v=2">
 
 <script src="js/usuario-global.js?v=3"></script>
 <script src="js/avatar-global.js?v=10"></script>

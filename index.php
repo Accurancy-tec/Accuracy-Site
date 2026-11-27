@@ -201,7 +201,7 @@
   </div>
 
 </section>
-<footer><div class="wrap">© 2026 Accuracy. Projeto de TCC.</div></footer>
+<footer><div class="wrap">© 2026 Accuracy. Projeto de TCC. · <a href="terms.php">Termos de Uso</a> · <a href="privacy.php">Política de Privacidade</a></div></footer>
 <script>
 (function () {
   var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;

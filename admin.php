@@ -29,7 +29,6 @@
                 <nav class="menu" id="menu">
                     <a data-sec="usuarios" class="ativo">Usuários</a>
                     <a data-sec="cursos">Cursos</a>
-                    <a data-sec="noticias">Notícias</a>
                     <a data-sec="perguntas">Perguntas <span id="contadorPerguntas" class="contador" hidden>0</span></a>
                     <a data-sec="admins">Administradores</a>
                 </nav>
@@ -129,48 +128,6 @@
                     <div id="gradeCursos" class="grade"></div>
                 </section>
 
-                <!-- ============ NOTÍCIAS ============ -->
-                <section id="sec-noticias" class="secao" hidden>
-                    <div class="titulo">
-                        <div>
-                            <h1>Notícias</h1>
-                            <p>Publique novidades para os usuários.</p>
-                        </div>
-                        <div class="acoes-topo">
-                            <button class="btn" id="btnNovaNoticia">Nova notícia</button>
-                        </div>
-                    </div>
-
-                    <form id="formNoticia" class="card formulario" hidden>
-                        <h3>Nova notícia</h3>
-                        <input class="campo" name="titulo_noticia" placeholder="Título" required maxlength="200">
-                        <input class="campo" name="resumo_noticia" placeholder="Resumo (opcional)" maxlength="300">
-                        <select class="campo" name="categoria_noticia" id="categoriaNoticia"></select>
-                        <textarea class="campo" name="conteudo_noticia" placeholder="Conteúdo" rows="7" required></textarea>
-                        <div class="botoes">
-                            <button class="btn" type="submit">Publicar</button>
-                            <button class="btn btn-claro" type="button" id="cancelarNoticia">Cancelar</button>
-                        </div>
-                    </form>
-
-                    <div class="card">
-                        <div class="rolagem">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Título</th>
-                                        <th>Categoria</th>
-                                        <th>Publicada</th>
-                                        <th>Autor</th>
-                                        <th class="dir"></th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tabelaNoticias"></tbody>
-                            </table>
-                        </div>
-                    </div>
-                </section>
-
                 <!-- ============ PERGUNTAS ============ -->
                 <section id="sec-perguntas" class="secao" hidden>
                     <div class="titulo">
@@ -257,7 +214,7 @@
         </form>
     </dialog>
 
-    <script src="js/admin.js"></script>
+    <script src="js/admin.js?v=2"></script>
 </body>
 
 </html>

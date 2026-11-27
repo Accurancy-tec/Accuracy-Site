@@ -962,7 +962,48 @@
             return;
         }
 
-        desenharLinhas(alvo, lista);
+        renderSearchResults(alvo, lista);
+    }
+
+    /* Category chips above the results (only the categories that have results). */
+    const SEARCH_CATEGORIES = [
+        ["Ações", "Ações"],
+        ["FIIs", "FIIs"],
+        ["Renda Fixa", "Renda fixa"],
+        ["Cripto", "Cripto"],
+        ["Futuros", "Futuros"],
+        ["Internacional", "Moedas"]
+    ];
+    let searchFilter = "";
+
+    function renderSearchResults(alvo, lista) {
+        const counts = new Map();
+        lista.forEach(item => counts.set(item.cls, (counts.get(item.cls) || 0) + 1));
+        if (searchFilter && !counts.has(searchFilter)) searchFilter = "";
+
+        const known = SEARCH_CATEGORIES.filter(([cls]) => counts.has(cls));
+        const others = [...counts.keys()].filter(cls => !SEARCH_CATEGORIES.some(([known]) => known === cls)).map(cls => [cls, cls]);
+        const filters = [["", "Todos", lista.length], ...[...known, ...others].map(([cls, label]) => [cls, label, counts.get(cls)])];
+
+        alvo.innerHTML = `
+            ${filters.length > 2 ? `
+                <div class="pp-chips pp-search-filters" role="group" aria-label="Filtrar resultados por categoria">
+                    ${filters.map(([cls, label, total]) => `
+                        <button type="button" class="${cls === searchFilter ? "active" : ""}" data-filter="${esc(cls)}" aria-pressed="${cls === searchFilter}">
+                            ${esc(label)} <span>${total}</span>
+                        </button>`).join("")}
+                </div>` : ""}
+            <div class="pp-search-results"></div>`;
+
+        alvo.querySelectorAll("[data-filter]").forEach(button => button.addEventListener("click", () => {
+            searchFilter = button.dataset.filter;
+            renderSearchResults(alvo, lista);
+        }));
+
+        desenharLinhas(
+            alvo.querySelector(".pp-search-results"),
+            searchFilter ? lista.filter(item => item.cls === searchFilter) : lista
+        );
     }
 
     function itensFixos() {

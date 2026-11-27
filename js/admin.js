@@ -89,7 +89,6 @@ $("#btnSairTopo").addEventListener("click", sair);
 const SECOES = {
     usuarios:  { busca: "Buscar usuário por nome ou e-mail", carregar: () => carregarUsuarios() },
     cursos:    { busca: "Buscar curso por título ou categoria", carregar: () => carregarCursos() },
-    noticias:  { busca: "Buscar notícia por título", carregar: () => carregarNoticias() },
     perguntas: { busca: "Buscar pergunta por assunto ou usuário", carregar: () => carregarPerguntas() },
     admins:    { busca: "Buscar administrador por nome ou e-mail", carregar: () => carregarAdmins() }
 };
@@ -123,7 +122,6 @@ window.addEventListener("hashchange", () => mostrar(secaoDoHash()));
 const RENDERIZAR = {
     usuarios: () => renderUsuarios(),
     cursos: () => renderCursos(),
-    noticias: () => renderNoticias(),
     perguntas: () => renderPerguntas(),
     admins: () => renderAdmins()
 };
@@ -339,69 +337,6 @@ $("#gradeCursos").addEventListener("click", async (e) => {
         await acao(() => api("adminExcluirCurso", { id_curso: c.id_curso }), "Curso excluído.");
         carregarCursos();
     }
-});
-
-/* =========================================================
-   NOTÍCIAS
-   ========================================================= */
-
-let noticias = [];
-
-async function carregarNoticias() {
-    if (!$("#categoriaNoticia").options.length) {
-        const cat = await acao(() => api("adminCategoriasNoticia"));
-        if (cat) {
-            $("#categoriaNoticia").innerHTML = cat.categorias
-                .map((c) => `<option value="${esc(c)}">${esc(c)}</option>`).join("");
-        }
-    }
-
-    const res = await acao(() => api("adminListarNoticias"));
-    if (!res) return;
-    noticias = res.noticias;
-    renderNoticias();
-}
-
-function renderNoticias() {
-    const lista = noticias.filter((n) => contem(n.titulo_noticia) || contem(n.resumo_noticia));
-
-    $("#tabelaNoticias").innerHTML = lista.length
-        ? lista.map((n) => `
-        <tr>
-            <td><strong>${esc(n.titulo_noticia)}</strong>${n.resumo_noticia ? `<br><span class="dica">${esc(n.resumo_noticia)}</span>` : ""}</td>
-            <td><span class="chip">${esc(n.categoria_noticia)}</span></td>
-            <td class="sec">${data(n.publicada_em)}</td>
-            <td class="sec">${esc(n.nome_administrador)}</td>
-            <td class="dir"><button class="btn btn-perigo btn-pq" data-delnot="${n.id_noticia}">Excluir</button></td>
-        </tr>`).join("")
-        : '<tr><td colspan="5" class="vazio">Nenhuma notícia encontrada.</td></tr>';
-}
-
-$("#btnNovaNoticia").addEventListener("click", () => {
-    $("#formNoticia").hidden = false;
-    $("#formNoticia").scrollIntoView({ behavior: "smooth", block: "start" });
-});
-$("#cancelarNoticia").addEventListener("click", () => {
-    $("#formNoticia").hidden = true;
-    $("#formNoticia").reset();
-});
-
-$("#formNoticia").addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const corpo = Object.fromEntries(new FormData(e.target).entries());
-    const ok = await acao(() => api("adminCriarNoticia", corpo), "Notícia publicada.");
-    if (ok) {
-        e.target.reset();
-        e.target.hidden = true;
-        carregarNoticias();
-    }
-});
-
-$("#tabelaNoticias").addEventListener("click", async (e) => {
-    const b = e.target.closest("[data-delnot]");
-    if (!b || !confirm("Excluir esta notícia?")) return;
-    await acao(() => api("adminExcluirNoticia", { id_noticia: Number(b.dataset.delnot) }), "Notícia excluída.");
-    carregarNoticias();
 });
 
 /* =========================================================

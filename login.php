@@ -7,7 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Entrar - Accuracy</title>
 
-    <link rel="stylesheet" href="css/login.css?v=6">
+    <link rel="stylesheet" href="css/login.css?v=7">
+    <link rel="stylesheet" href="css/password-toggle.css?v=1">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -84,11 +85,11 @@
                     <p class="aviso-login" id="avisoLogin" role="status" hidden></p>
 
                     <label>E-mail</label>
-                    <input type="email" placeholder="seu@email.com" name="email_usuario" id="email_usuario">
+                    <input type="email" placeholder="seu@email.com" name="email_usuario" id="email_usuario" autocomplete="email">
                     <small id="erroEmail" class="mensagem-erro"></small>
 
                     <label>Senha</label>
-                    <input type="password" placeholder="••••••••" name="senha_usuario" id="senha_usuario">
+                    <input type="password" placeholder="••••••••" name="senha_usuario" id="senha_usuario" autocomplete="current-password" data-password-toggle>
                     <small id="erroSenha" class="mensagem-erro"></small>
 
                     <a href="recuperar-senha.php" id="linkEsqueciSenha">Esqueci minha senha</a>
@@ -122,7 +123,8 @@
 
     </div>
 
-    <script src="js/usuario.js?v=4"></script>
+    <script src="js/password-toggle.js?v=1"></script>
+    <script src="js/usuario.js?v=5"></script>
     <script src="js/google-login.js?v=6"></script>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
 </body>

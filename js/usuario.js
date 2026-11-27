@@ -37,15 +37,17 @@ function mostrarErroCampo(input, mensagem) {
     input.classList.add("input-erro");
     input.setAttribute("aria-invalid", "true");
 
-    let erro = input.parentElement.querySelector(".mensagem-erro");
+    // The message goes right below the field (or below its show-password wrapper).
+    const campo = input.closest(".password-field") || input;
+    let erro = campo.nextElementSibling;
 
-    if (!erro) {
+    if (!erro || !erro.classList.contains("mensagem-erro")) {
         erro = document.createElement("small");
         erro.className = "mensagem-erro";
         erro.id = `${input.id}-erro`;
-        input.insertAdjacentElement("afterend", erro);
-        input.setAttribute("aria-describedby", erro.id);
+        campo.insertAdjacentElement("afterend", erro);
     }
+    input.setAttribute("aria-describedby", erro.id);
 
     erro.textContent = mensagem;
 }
@@ -209,6 +211,14 @@ if (formularioLogin) {
         const botao = formularioLogin.querySelector("button[type=submit]");
         ocupado(botao, true, "Entrando...");
 
+        // The free API server sleeps when idle and the first request can take up to a minute.
+        const avisoLogin = document.getElementById("avisoLogin");
+        const avisoLento = setTimeout(() => {
+            if (!avisoLogin) return;
+            avisoLogin.textContent = "O servidor está iniciando. A primeira entrada depois de um tempo parado pode levar até um minuto.";
+            avisoLogin.hidden = false;
+        }, 6000);
+
         try {
             const resultado = await enviarParaApi("auth/loginUnico", {
                 email_usuario: email.value.trim(),
@@ -249,6 +259,8 @@ if (formularioLogin) {
         } catch (erro) {
             mostrarErroCampo(email, "Não foi possível conectar. Verifique a internet e tente de novo.");
         } finally {
+            clearTimeout(avisoLento);
+            if (avisoLogin) avisoLogin.hidden = true;
             ocupado(botao, false);
         }
     });

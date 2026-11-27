@@ -10,6 +10,7 @@
     <title>Criar conta - Accuracy</title>
 
     <link rel="stylesheet" href="css/cadastro.css?v=2">
+    <link rel="stylesheet" href="css/password-toggle.css?v=1">
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
@@ -164,6 +165,7 @@
                         id="senha"
                         autocomplete="new-password"
                         minlength="8"
+                        data-password-toggle
                         required>
                 </div>
 
@@ -209,7 +211,8 @@
 
 </div>
 
-<script src="js/usuario.js?v=4"></script>
+<script src="js/password-toggle.js?v=1"></script>
+<script src="js/usuario.js?v=5"></script>
 <script src="js/mascara.js?v=3"></script>
 </body>
 </html>

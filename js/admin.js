@@ -89,6 +89,7 @@ $("#btnSairTopo").addEventListener("click", sair);
 const SECOES = {
     usuarios:  { busca: "Buscar usuário por nome ou e-mail", carregar: () => carregarUsuarios() },
     cursos:    { busca: "Buscar curso por título ou categoria", carregar: () => carregarCursos() },
+    quiz:      { busca: "Buscar pergunta do quiz", carregar: () => window.AdminQuiz.load() },
     perguntas: { busca: "Buscar pergunta por assunto ou usuário", carregar: () => carregarPerguntas() },
     admins:    { busca: "Buscar administrador por nome ou e-mail", carregar: () => carregarAdmins() }
 };
@@ -122,6 +123,7 @@ window.addEventListener("hashchange", () => mostrar(secaoDoHash()));
 const RENDERIZAR = {
     usuarios: () => renderUsuarios(),
     cursos: () => renderCursos(),
+    quiz: () => window.AdminQuiz.render(),
     perguntas: () => renderPerguntas(),
     admins: () => renderAdmins()
 };

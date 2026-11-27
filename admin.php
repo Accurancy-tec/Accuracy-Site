@@ -14,7 +14,7 @@
         }
     </script>
 
-    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="css/admin.css?v=2">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@500;600;700&display=swap" rel="stylesheet">
 </head>
 
@@ -29,6 +29,7 @@
                 <nav class="menu" id="menu">
                     <a data-sec="usuarios" class="ativo">Usuários</a>
                     <a data-sec="cursos">Cursos</a>
+                    <a data-sec="quiz">Quiz</a>
                     <a data-sec="perguntas">Perguntas <span id="contadorPerguntas" class="contador" hidden>0</span></a>
                     <a data-sec="admins">Administradores</a>
                 </nav>
@@ -128,6 +129,55 @@
                     <div id="gradeCursos" class="grade"></div>
                 </section>
 
+                <!-- ============ QUIZ ============ -->
+                <section id="sec-quiz" class="secao" hidden>
+                    <div class="titulo">
+                        <div>
+                            <h1>Quiz das trilhas</h1>
+                            <p>Perguntas que aparecem para os alunos no fim de cada trilha.</p>
+                        </div>
+                        <div class="acoes-topo">
+                            <select class="campo" id="quizTrail" aria-label="Trilha do quiz"></select>
+                            <button class="btn" id="btnNewQuizQuestion">Nova pergunta</button>
+                        </div>
+                    </div>
+
+                    <form id="formQuizQuestion" class="card formulario" hidden>
+                        <h3>Nova pergunta</h3>
+                        <textarea class="campo" name="question" placeholder="Pergunta" rows="2" minlength="5" maxlength="500" required></textarea>
+                        <p class="dica">Escreva de 2 a 5 alternativas e marque a correta.</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option-row">
+                                <input type="radio" name="correct_option" value="0" checked aria-label="Alternativa A é a correta">
+                                <input class="campo" name="option" placeholder="Alternativa A" maxlength="200">
+                            </label>
+                            <label class="quiz-option-row">
+                                <input type="radio" name="correct_option" value="1" aria-label="Alternativa B é a correta">
+                                <input class="campo" name="option" placeholder="Alternativa B" maxlength="200">
+                            </label>
+                            <label class="quiz-option-row">
+                                <input type="radio" name="correct_option" value="2" aria-label="Alternativa C é a correta">
+                                <input class="campo" name="option" placeholder="Alternativa C (opcional)" maxlength="200">
+                            </label>
+                            <label class="quiz-option-row">
+                                <input type="radio" name="correct_option" value="3" aria-label="Alternativa D é a correta">
+                                <input class="campo" name="option" placeholder="Alternativa D (opcional)" maxlength="200">
+                            </label>
+                            <label class="quiz-option-row">
+                                <input type="radio" name="correct_option" value="4" aria-label="Alternativa E é a correta">
+                                <input class="campo" name="option" placeholder="Alternativa E (opcional)" maxlength="200">
+                            </label>
+                        </div>
+                        <textarea class="campo" name="explanation" placeholder="Explicação mostrada depois da resposta (opcional)" rows="2" maxlength="500"></textarea>
+                        <div class="botoes">
+                            <button class="btn" type="submit">Adicionar pergunta</button>
+                            <button class="btn btn-claro" type="button" id="cancelQuizQuestion">Cancelar</button>
+                        </div>
+                    </form>
+
+                    <div id="quizQuestions" class="quiz-list"></div>
+                </section>
+
                 <!-- ============ PERGUNTAS ============ -->
                 <section id="sec-perguntas" class="secao" hidden>
                     <div class="titulo">
@@ -214,7 +264,8 @@
         </form>
     </dialog>
 
-    <script src="js/admin.js?v=2"></script>
+    <script src="js/admin-quiz.js?v=1"></script>
+    <script src="js/admin.js?v=3"></script>
 </body>
 
 </html>

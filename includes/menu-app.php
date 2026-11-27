@@ -13,7 +13,7 @@ $itensMenu = [
     "aportes" => ["aportes.php", "bi-graph-up-arrow", "Aportes"],
     "historico" => ["historico.php", "bi-clock-history", "Histórico"],
     "cursos" => ["Cursos.php", "bi-mortarboard", "Cursos"],
-    "relatorio" => ["relatorio.php", "bi-clipboard-data", "Relatório"],
+    "relatorio" => ["report.php", "bi-clipboard-data", "Relatório"],
 ];
 
 $itensAjuda = [

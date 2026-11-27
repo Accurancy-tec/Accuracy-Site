@@ -1,6 +1,4 @@
-/* =========================================================
-   RELATÓRIO
-========================================================= */
+/* Account report */
 
 .sr-only {
     position: absolute;
@@ -11,7 +9,7 @@
     white-space: nowrap;
 }
 
-body.v2 .rel-acoes select {
+body.v2 .report-actions select {
     height: 38px;
     padding: 0 10px;
     border: 1px solid var(--borda);
@@ -21,55 +19,55 @@ body.v2 .rel-acoes select {
     font-size: 13px;
 }
 
-body.v2 .rel-acoes .v2-btn-outline {
+body.v2 .report-actions .v2-btn-outline {
     display: inline-flex;
     align-items: center;
     gap: 7px;
     height: 38px;
 }
 
-.rel-estado {
+.report-status {
     padding: 40px 0;
     color: var(--texto-secundario);
     text-align: center;
 }
 
-body.v2 .v2-stats.rel-numeros {
+body.v2 .v2-stats.report-numbers {
     grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
-body.v2 .rel-numeros strong {
+body.v2 .report-numbers strong {
     font-size: 24px;
 }
 
-body.v2 .rel-numeros small {
+body.v2 .report-numbers small {
     display: block;
     margin-top: 4px;
     color: var(--texto-secundario);
     font-size: 12.5px;
 }
 
-.rel-positivo { color: var(--verde) !important; }
-.rel-negativo { color: var(--vermelho) !important; }
+.report-positive { color: var(--verde) !important; }
+.report-negative { color: var(--vermelho) !important; }
 
-.rel-grade {
+.report-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 16px;
     margin-bottom: 16px;
 }
 
-body.v2 .rel-grade > .v2-panel,
-body.v2 .relatorio > div > .v2-panel {
+body.v2 .report-grid > .v2-panel,
+body.v2 .report > div > .v2-panel {
     margin: 0;
 }
 
-body.v2 .relatorio #relConteudo > .v2-panel {
+body.v2 .report #reportContent > .v2-panel {
     margin-bottom: 16px;
 }
 
-/* observações */
-.rel-observacoes {
+/* notes */
+.report-notes {
     list-style: none;
     margin: 0;
     padding: 0;
@@ -77,7 +75,7 @@ body.v2 .relatorio #relConteudo > .v2-panel {
     gap: 10px;
 }
 
-.rel-observacoes li {
+.report-notes li {
     display: flex;
     gap: 10px;
     align-items: flex-start;
@@ -86,67 +84,111 @@ body.v2 .relatorio #relConteudo > .v2-panel {
     color: var(--texto);
 }
 
-.rel-observacoes i {
+.report-notes i {
     flex: none;
     margin-top: 1px;
     font-size: 16px;
     color: var(--primaria);
 }
 
-.rel-observacoes .positivo i { color: var(--verde); }
-.rel-observacoes .atencao i { color: var(--amarelo); }
+.report-notes .positive i { color: var(--verde); }
+.report-notes .warning i { color: var(--amarelo); }
 
-/* análise com IA */
-.rel-ia-texto p {
+/* assistant */
+.report-diagnosis {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    margin-bottom: 14px;
+}
+
+.report-diagnosis div {
+    padding: 10px 12px;
+    border: 1px solid var(--borda-suave);
+    border-radius: 10px;
+}
+
+.report-diagnosis span {
+    display: block;
+    font-size: 11.5px;
+    color: var(--texto-secundario);
+}
+
+.report-diagnosis strong {
+    display: block;
+    margin-top: 2px;
+    font-size: 15px;
+    color: var(--texto);
+}
+
+.report-diagnosis small {
+    font-size: 12px;
+    color: var(--texto-secundario);
+}
+
+.report-analysis p {
     margin: 0 0 10px;
     font-size: 13.5px;
     line-height: 1.65;
     color: var(--texto);
 }
 
-.rel-ia-status {
-    min-height: 18px;
-    margin: 4px 0 12px;
-    font-size: 12.5px;
-    color: var(--texto-secundario);
-}
-
-body.v2 .rel-ia .v2-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 9px 16px;
-    border: 0;
-    border-radius: 8px;
-    background: var(--primaria);
-    color: #fff;
+.report-study h3 {
+    margin: 14px 0 8px;
+    font-size: 13px;
     font-weight: 600;
-    cursor: pointer;
+    color: var(--texto);
 }
 
-body.v2 .rel-ia .v2-btn:disabled {
-    opacity: .55;
-    cursor: default;
+.report-study ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 8px;
 }
 
-body.v2 .rel-ia .v2-btn[hidden] {
-    display: none;
+.report-study a {
+    display: block;
+    padding: 10px 12px;
+    border: 1px solid var(--borda-suave);
+    border-radius: 10px;
+    color: var(--texto);
+    text-decoration: none;
+    font-size: 13px;
 }
 
-.rel-ia-nota {
+.report-study a:hover,
+.report-study a:focus-visible {
+    border-color: var(--primaria);
+}
+
+.report-study a strong {
+    color: var(--primaria);
+}
+
+.report-study a small {
+    display: block;
+    margin-top: 2px;
+    color: var(--texto-secundario);
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.report-assistant-note {
     margin: 14px 0 0;
     font-size: 11.5px;
     line-height: 1.5;
     color: var(--texto-fraco);
 }
 
-/* distribuição */
-.rel-barras {
+/* distribution */
+.report-bars {
     display: grid;
     gap: 12px;
 }
 
-.rel-barra-topo {
+.report-bar-head {
     display: flex;
     justify-content: space-between;
     gap: 10px;
@@ -155,46 +197,46 @@ body.v2 .rel-ia .v2-btn[hidden] {
     color: var(--texto);
 }
 
-.rel-barra-topo span:last-child {
+.report-bar-head span:last-child {
     color: var(--texto-secundario);
 }
 
-.rel-barra-trilho {
+.report-bar-track {
     height: 8px;
     border-radius: 999px;
     background: var(--icone-bg);
     overflow: hidden;
 }
 
-.rel-barra-trilho span {
+.report-bar-track span {
     display: block;
     height: 100%;
     border-radius: inherit;
     background: var(--primaria);
 }
 
-/* movimentação */
-.rel-mov {
+/* activity */
+.report-activity {
     display: grid;
     grid-template-columns: 1fr auto auto;
     gap: 8px 16px;
     font-size: 13px;
 }
 
-.rel-mov .cabecalho {
+.report-activity .header {
     color: var(--texto-fraco);
     font-size: 11.5px;
     text-transform: uppercase;
     letter-spacing: .04em;
 }
 
-.rel-mov .num {
+.report-activity .num {
     text-align: right;
     font-variant-numeric: tabular-nums;
 }
 
-/* altas e quedas */
-.rel-ativos {
+/* best and worst assets */
+.report-assets {
     list-style: none;
     margin: 0;
     padding: 0;
@@ -202,7 +244,7 @@ body.v2 .rel-ia .v2-btn[hidden] {
     gap: 8px;
 }
 
-.rel-ativos li {
+.report-assets li {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -213,18 +255,18 @@ body.v2 .rel-ia .v2-btn[hidden] {
     font-size: 13px;
 }
 
-.rel-ativos small {
+.report-assets small {
     display: block;
     color: var(--texto-secundario);
     font-size: 12px;
 }
 
-.rel-vazio {
+.report-empty {
     color: var(--texto-secundario);
     font-size: 13px;
 }
 
-.rel-aviso {
+.report-disclaimer {
     margin: 4px 0 24px;
     font-size: 12px;
     color: var(--texto-fraco);
@@ -232,41 +274,44 @@ body.v2 .rel-ia .v2-btn[hidden] {
 }
 
 @media (max-width: 1100px) {
-    body.v2 .v2-stats.rel-numeros {
+    body.v2 .v2-stats.report-numbers {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
 
 @media (max-width: 760px) {
-    .rel-grade {
+    .report-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .report-diagnosis {
         grid-template-columns: 1fr;
     }
 }
 
 @media (max-width: 560px) {
-    body.v2 .v2-stats.rel-numeros {
+    body.v2 .v2-stats.report-numbers {
         grid-template-columns: 1fr;
     }
 
-    body.v2 .rel-acoes {
+    body.v2 .report-actions {
         width: 100%;
     }
 
-    body.v2 .rel-acoes label {
+    body.v2 .report-actions label {
         flex: 1;
     }
 
-    body.v2 .rel-acoes select {
+    body.v2 .report-actions select {
         width: 100%;
     }
 }
 
-/* impressão: só o conteúdo do relatório */
+/* print only the report */
 @media print {
     body.v2 .v2-sidebar,
     body.v2 .v2-topbar,
-    body.v2 .rel-acoes,
-    body.v2 #relIaGerar,
+    body.v2 .report-actions,
     .v2-toast {
         display: none !important;
     }
@@ -277,7 +322,7 @@ body.v2 .rel-ia .v2-btn[hidden] {
         padding: 0 !important;
     }
 
-    .rel-grade,
+    .report-grid,
     body.v2 .v2-panel {
         break-inside: avoid;
     }

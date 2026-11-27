@@ -574,11 +574,11 @@ body.v2 .accuracy-security-panel {
    APARELHOS CONECTADOS
 ========================================= */
 
-body.v2 .aparelhos-panel {
+body.v2 .devices-panel {
     margin-top: 16px;
 }
 
-.aparelhos-lista {
+.devices-list {
     list-style: none;
     margin: 0 0 4px;
     padding: 0;
@@ -587,7 +587,7 @@ body.v2 .aparelhos-panel {
     gap: 8px;
 }
 
-.aparelho {
+.device {
     display: flex;
     align-items: center;
     gap: 12px;
@@ -597,7 +597,7 @@ body.v2 .aparelhos-panel {
     background: var(--v2-sidebar);
 }
 
-.aparelho-icone {
+.device-icon {
     flex: none;
     width: 38px;
     height: 38px;
@@ -610,7 +610,7 @@ body.v2 .aparelhos-panel {
     font-size: 17px;
 }
 
-.aparelho-textos {
+.device-texts {
     flex: 1;
     min-width: 0;
     display: flex;
@@ -619,19 +619,19 @@ body.v2 .aparelhos-panel {
     gap: 4px 8px;
 }
 
-.aparelho-textos strong {
+.device-texts strong {
     font-size: 14px;
     color: var(--texto);
     overflow-wrap: anywhere;
 }
 
-.aparelho-textos small {
+.device-texts small {
     flex-basis: 100%;
     font-size: 12.5px;
     color: var(--texto-secundario);
 }
 
-.aparelho-atual {
+.device-current {
     padding: 2px 8px;
     border-radius: 999px;
     background: rgba(34, 197, 94, .14);
@@ -640,7 +640,7 @@ body.v2 .aparelhos-panel {
     font-weight: 700;
 }
 
-.aparelho-vazio {
+.device-empty {
     padding: 14px 0;
     font-size: 13px;
     color: var(--texto-secundario);
@@ -695,11 +695,11 @@ body.v2 .aparelhos-panel {
         padding: 18px;
     }
 
-    .aparelho {
+    .device {
         flex-wrap: wrap;
     }
 
-    .aparelho .v2-ghost-danger {
+    .device .v2-ghost-danger {
         margin-left: 50px;
     }
 

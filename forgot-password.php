@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Recuperar senha — Accuracy</title>
   <link rel="stylesheet" href="css/confirmacodigo.css">
-  <link rel="stylesheet" href="css/recuperar-senha.css?v=1">
+  <link rel="stylesheet" href="css/forgot-password.css?v=1">
   <link rel="stylesheet" href="css/password-toggle.css?v=1">
 </head>
 
@@ -34,53 +34,53 @@
       </div>
 
       <!-- 1) e-mail da conta -->
-      <form id="formEmail" novalidate>
+      <form id="emailForm" novalidate>
         <h1>Recuperar senha</h1>
         <p class="subtitle">
           Informe o e-mail da sua conta. Vamos enviar um código de 6 números
           para você criar uma senha nova.
         </p>
 
-        <div class="campo">
+        <div class="field">
           <label for="email">E-mail</label>
           <input id="email" type="email" autocomplete="email" maxlength="254" placeholder="seu@email.com" required>
         </div>
 
-        <div class="status-row" id="statusEmail" role="status" aria-live="polite"></div>
+        <div class="status-row" id="emailStatus" role="status" aria-live="polite"></div>
 
-        <button class="btn" type="submit" id="btnEnviar">Enviar código</button>
+        <button class="btn" type="submit" id="sendCodeButton">Enviar código</button>
       </form>
 
       <!-- 2) código + senha nova -->
-      <form id="formSenha" novalidate hidden>
+      <form id="passwordForm" novalidate hidden>
         <h1>Crie uma senha nova</h1>
         <p class="subtitle">
-          Se houver uma conta com <strong id="emailInformado"></strong>, o código chegou
+          Se houver uma conta com <strong id="sentToEmail"></strong>, o código chegou
           nesse e-mail (confira também o spam). Ele vale por 10 minutos.
         </p>
 
-        <div class="campo">
-          <label for="codigo">Código</label>
-          <input id="codigo" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}" placeholder="000000">
+        <div class="field">
+          <label for="code">Código</label>
+          <input id="code" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}" placeholder="000000">
         </div>
 
-        <div class="campo">
-          <label for="novaSenha">Nova senha</label>
-          <input id="novaSenha" type="password" autocomplete="new-password" minlength="8" maxlength="72" placeholder="Mínimo de 8 caracteres" data-password-toggle>
+        <div class="field">
+          <label for="newPassword">Nova senha</label>
+          <input id="newPassword" type="password" autocomplete="new-password" minlength="8" maxlength="72" placeholder="Mínimo de 8 caracteres" data-password-toggle>
         </div>
 
-        <div class="campo">
-          <label for="confirmaSenha">Confirme a nova senha</label>
-          <input id="confirmaSenha" type="password" autocomplete="new-password" minlength="8" maxlength="72" placeholder="Repita a nova senha" data-password-toggle>
+        <div class="field">
+          <label for="confirmPassword">Confirme a nova senha</label>
+          <input id="confirmPassword" type="password" autocomplete="new-password" minlength="8" maxlength="72" placeholder="Repita a nova senha" data-password-toggle>
         </div>
 
-        <div class="status-row" id="statusSenha" role="status" aria-live="polite"></div>
+        <div class="status-row" id="passwordStatus" role="status" aria-live="polite"></div>
 
-        <button class="btn" type="submit" id="btnRedefinir">Redefinir senha</button>
+        <button class="btn" type="submit" id="resetButton">Redefinir senha</button>
 
         <div class="resend">
-          Não chegou? <a href="#" id="reenviar">Reenviar código</a>
-          · <a href="#" id="outroEmail">Usar outro e-mail</a>
+          Não chegou? <a href="#" id="resendCode">Reenviar código</a>
+          · <a href="#" id="otherEmail">Usar outro e-mail</a>
         </div>
       </form>
     </div>
@@ -89,7 +89,7 @@
   </div>
 
   <script src="js/password-toggle.js?v=1"></script>
-  <script src="js/recuperar-senha.js?v=1"></script>
+  <script src="js/forgot-password.js?v=1"></script>
 
 </body>
 

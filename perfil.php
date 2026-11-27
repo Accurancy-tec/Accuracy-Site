@@ -5,7 +5,7 @@
 <head>
     <?php
     $tituloPagina = "Perfil";
-    $estilosPagina = ["css/dashboard.css?v=2", "css/perfil-v2.css?v=11", "css/password-toggle.css?v=1"];
+    $estilosPagina = ["css/dashboard.css?v=2", "css/perfil-v2.css?v=12", "css/password-toggle.css?v=1"];
     include __DIR__ . "/includes/head-app.php";
     ?>
 </head>
@@ -166,11 +166,11 @@
 
                     <!-- APARELHOS CONECTADOS -->
                     <section
-                        class="v2-panel aparelhos-panel"
-                        aria-labelledby="aparelhosTitulo">
+                        class="v2-panel devices-panel"
+                        aria-labelledby="devicesTitle">
 
                         <div class="v2-panel-head">
-                            <h2 id="aparelhosTitulo">Aparelhos conectados</h2>
+                            <h2 id="devicesTitle">Aparelhos conectados</h2>
                         </div>
 
                         <p class="accuracy-security-desc">
@@ -178,12 +178,12 @@
                             desconecte e troque a senha.
                         </p>
 
-                        <ul class="aparelhos-lista" id="listaAparelhos">
-                            <li class="aparelho-vazio">Carregando aparelhos...</li>
+                        <ul class="devices-list" id="devicesList">
+                            <li class="device-empty">Carregando aparelhos...</li>
                         </ul>
 
                         <p
-                            id="aparelhosStatus"
+                            id="devicesStatus"
                             class="accuracy-security-status"
                             role="status"
                             aria-live="polite">
@@ -193,7 +193,7 @@
 
                             <button
                                 type="button"
-                                id="desconectarOutros"
+                                id="disconnectOthers"
                                 disabled>
 
                                 <i class="bi bi-phone"></i>
@@ -202,7 +202,7 @@
 
                             <button
                                 type="button"
-                                id="sairDeTodos"
+                                id="signOutAll"
                                 class="acao-perigo">
 
                                 <i class="bi bi-box-arrow-right"></i>
@@ -591,20 +591,20 @@
         class="accuracy-security-dialog"
         role="alertdialog"
         aria-modal="true"
-        aria-labelledby="confirmTitulo"
-        aria-describedby="confirmTexto">
+        aria-labelledby="confirmTitle"
+        aria-describedby="confirmText">
 
         <div class="accuracy-security-header">
-            <h2 id="confirmTitulo"></h2>
+            <h2 id="confirmTitle"></h2>
         </div>
 
-        <p id="confirmTexto" class="accuracy-security-desc"></p>
+        <p id="confirmText" class="accuracy-security-desc"></p>
 
         <div class="accuracy-security-footer">
 
             <button
                 type="button"
-                id="confirmCancelar"
+                id="confirmCancel"
                 class="v2-btn-outline">
                 Cancelar
             </button>
@@ -623,6 +623,6 @@
 <?php include __DIR__ . "/includes/scripts-app.php"; ?>
 <script src="js/password-toggle.js?v=1"></script>
 <script src="js/perfil.js?v=10"></script>
-<script src="js/aparelhos.js?v=1"></script>
+<script src="js/devices.js?v=2"></script>
 </body>
 </html>

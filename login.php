@@ -92,7 +92,7 @@
                     <input type="password" placeholder="••••••••" name="senha_usuario" id="senha_usuario" autocomplete="current-password" data-password-toggle>
                     <small id="erroSenha" class="mensagem-erro"></small>
 
-                    <a href="recuperar-senha.php" id="linkEsqueciSenha">Esqueci minha senha</a>
+                    <a href="forgot-password.php" id="linkEsqueciSenha">Esqueci minha senha</a>
 
                     <button class="login-btn" name="btnLogin" type="submit">
                         Entrar na conta
